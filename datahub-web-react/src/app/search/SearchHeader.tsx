@@ -80,7 +80,7 @@ export const SearchHeader = ({
     return (
         <Header style={styles.header as any}>
             <LogoSearchContainer>
-                <Link to="/">
+                <Link to="/index">
                     <LogoImage
                         src={appConfig.config.visualConfig.logoUrl || themeConfig.assets.logoUrl}
                         preview={false}

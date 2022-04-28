@@ -15,6 +15,7 @@ import { useEntityRegistry } from '../../../../../../useEntityRegistry';
 import { CustomAvatar } from '../../../../../../shared/avatar';
 import analytics, { EventType, EntityActionType } from '../../../../../../analytics';
 import { OWNERSHIP_DISPLAY_TYPES } from './ownershipUtils';
+import { getUserAvatar } from '../../../../../../../utils/formatter/dataProcess';
 
 const SearchResultContainer = styled.div`
     display: flex;
@@ -154,7 +155,7 @@ export const AddOwnerModal = ({ urn, type, visible, hideOwnerType, defaultOwnerT
     const renderSearchResult = (result: SearchResult) => {
         const avatarUrl =
             result.entity.type === EntityType.CorpUser
-                ? (result.entity as CorpUser).editableProperties?.pictureLink || undefined
+                ? getUserAvatar((result.entity as CorpUser).username) || undefined
                 : undefined;
         const displayName = entityRegistry.getDisplayName(result.entity.type, result.entity);
         return (
