@@ -150,6 +150,8 @@ interface Props {
     // this is provided by the impact analysis view. it is used to display
     // how the listed node is connected to the source node
     degree?: number;
+    delEle?: React.ReactNode;
+    editEle?: React.ReactNode;
 }
 
 export default function DefaultPreviewCard({
@@ -176,6 +178,8 @@ export default function DefaultPreviewCard({
     dataTestID,
     onClick,
     degree,
+    delEle,
+    editEle,
 }: Props) {
     // sometimes these lists will be rendered inside an entity container (for example, in the case of impact analysis)
     // in those cases, we may want to enrich the preview w/ context about the container entity
@@ -271,6 +275,12 @@ export default function DefaultPreviewCard({
                     </InsightContainer>
                 )}
             </div>
+            {(delEle || editEle) && (
+                <div>
+                    {delEle}
+                    {editEle}
+                </div>
+            )}
         </PreviewContainer>
     );
 }

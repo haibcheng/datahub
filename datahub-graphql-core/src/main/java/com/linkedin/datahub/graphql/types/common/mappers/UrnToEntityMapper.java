@@ -11,6 +11,7 @@ import com.linkedin.datahub.graphql.generated.DataFlow;
 import com.linkedin.datahub.graphql.generated.DataJob;
 import com.linkedin.datahub.graphql.generated.DataPlatform;
 import com.linkedin.datahub.graphql.generated.Dataset;
+import com.linkedin.datahub.graphql.generated.Datasource;
 import com.linkedin.datahub.graphql.generated.Domain;
 import com.linkedin.datahub.graphql.generated.Entity;
 import com.linkedin.datahub.graphql.generated.EntityType;
@@ -40,6 +41,11 @@ public class UrnToEntityMapper implements ModelMapper<com.linkedin.common.urn.Ur
       partialEntity = new Dataset();
       ((Dataset) partialEntity).setUrn(input.toString());
       ((Dataset) partialEntity).setType(EntityType.DATASET);
+    }
+    if (input.getEntityType().equals("datasource")) {
+      partialEntity = new Datasource();
+      ((Datasource) partialEntity).setUrn(input.toString());
+      ((Datasource) partialEntity).setType(EntityType.DATASOURCE);
     }
     if (input.getEntityType().equals("glossaryTerm")) {
       partialEntity = new GlossaryTerm();

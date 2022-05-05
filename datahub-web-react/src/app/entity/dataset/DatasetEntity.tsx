@@ -26,6 +26,7 @@ import { getDataForEntityType } from '../shared/containers/profile/utils';
 import { SidebarDomainSection } from '../shared/containers/profile/sidebar/Domain/SidebarDomainSection';
 import { ValidationsTab } from '../shared/tabs/Dataset/Validations/ValidationsTab';
 import { OperationsTab } from './profile/OperationsTab';
+import { DatasourcesTab } from '../shared/tabs/Dataset/Source/DatasourcesTab';
 
 const SUBTYPES = {
     VIEW: 'view',
@@ -117,6 +118,14 @@ export class DatasetEntity implements Entity<Dataset> {
                                 (dataset?.dataset?.downstream?.total || 0) > 0
                             );
                         },
+                    },
+                },
+                {
+                    name: 'Sources',
+                    component: DatasourcesTab,
+                    display: {
+                        visible: (_, _1) => true,
+                        enabled: (_, dataset: GetDatasetQuery) => (dataset?.dataset?.sources?.count || 0) > 0,
                     },
                 },
                 {
