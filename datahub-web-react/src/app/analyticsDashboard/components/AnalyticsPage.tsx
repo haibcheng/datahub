@@ -94,7 +94,7 @@ export const AnalyticsPage = () => {
                     <Alert type="error" message={highlightError?.message || 'Highlights failed to load'} />
                 )}
                 {highlightData?.getHighlights?.map((highlight) => (
-                    <Highlight highlight={highlight} shortenValue />
+                    <Highlight highlight={highlight} shortenValue key={highlight.value} />
                 ))}
             </HighlightGroup>
             <>
@@ -105,7 +105,7 @@ export const AnalyticsPage = () => {
                 {chartData?.getAnalyticsCharts
                     ?.filter((chartGroup) => chartGroup.groupId === 'GlobalMetadataAnalytics')
                     .map((chartGroup) => (
-                        <ChartGroup chartGroup={chartGroup} />
+                        <ChartGroup chartGroup={chartGroup} key={chartGroup.title} />
                     ))}
             </>
             <>
