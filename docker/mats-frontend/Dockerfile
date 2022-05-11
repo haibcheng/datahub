@@ -19,8 +19,11 @@ ARG ENABLE_EMBER="false"
 ARG USE_SYSTEM_NODE="true"
 ENV CI=true
 ENV GRADLE_OPTS="-Xms256m -Xmx512m"
-COPY . .
-RUN unzip datahub-frontend.zip
+
+COPY . datahub-src
+RUN cd datahub-src && ./gradlew :datahub-frontend:dist -PenableEmber=${ENABLE_EMBER} -PuseSystemNode=${USE_SYSTEM_NODE} -x test -x yarnTest -x yarnLint \
+    && cp datahub-frontend/build/distributions/datahub-frontend.zip ../datahub-frontend.zip \
+    && cd .. && rm -rf datahub-src && unzip datahub-frontend.zip
 
 FROM base as prod-install
 COPY --from=prod-build /datahub-frontend /datahub-frontend/
