@@ -69,6 +69,7 @@ enum IlinkType {
     PIPELINE = 'pipeline',
     DASHBOARD = 'dashboard',
     DATASOURCES = 'datasources',
+    SCHEMA_REGISTRY = 'schema_registry',
     DATAHUB = 'datahub',
 }
 
@@ -89,6 +90,10 @@ const goToLink = (type: IlinkType) => {
             }
             case IlinkType.DATASOURCES: {
                 window.location.href = './browse/datasource';
+                break;
+            }
+            case IlinkType.SCHEMA_REGISTRY: {
+                window.location.href = '/wap/registry';
                 break;
             }
             default: {
@@ -1896,14 +1901,14 @@ export const WelcomePageBody = () => {
                         </defs>
                     </svg>
                 </CardFigure>
-                <CardFigureP>Datasources</CardFigureP>
+                <CardFigureP>Schema Registry</CardFigureP>
                 <CardFigurePSlibing>
-                    Manage the datasource information in your org. This module works as an centralized data source
-                    configuration services, you can get the data source information you need with the correct
-                    permissions.
+                    Request for adding or updating schema information in DataHub. For users who want to on board data to
+                    WAP Data Platforms, they need to submit request in Schema Registry, the request will go through a
+                    review and approval process.
                 </CardFigurePSlibing>
                 <CardFigureP>
-                    <ButtonGhost onClick={goToLink(IlinkType.DATASOURCES)}>VIEW DATASOURCES</ButtonGhost>
+                    <ButtonGhost onClick={goToLink(IlinkType.SCHEMA_REGISTRY)}>VIEW SCHEMA REGISTRY</ButtonGhost>
                 </CardFigureP>
             </CardContainer>
         );
