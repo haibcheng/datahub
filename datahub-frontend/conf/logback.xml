@@ -13,7 +13,7 @@
     </appender>
 
     <appender name="MATS_ES_INFO" class="com.webex.mats.logback.ElasticAppender">
-        <esURL>${ES_API_URL:-https://esaas-sjc02-dfw02-mats.webex.com/esapi}</esURL>
+        <esURL>${ES_API_URL:-https://esaaslab-esbtpt1-s.webex.com/esapi}</esURL>
         <esIndex>${ES_LOG_INDEX:-mats_datahub_logs}</esIndex>
         <esUserName>${ES_USERNAME}</esUserName>
         <esPassword>${ES_PASSWORD}</esPassword>
@@ -26,7 +26,7 @@
     </appender>
 
     <appender name="MATS_ES_DEBUG" class="com.webex.mats.logback.ElasticAppender">
-        <esURL>${ES_API_URL:-https://esaas-sjc02-dfw02-mats.webex.com/esapi}</esURL>
+        <esURL>${ES_API_URL:-https://esaaslab-esbtpt1-s.webex.com/esapi}</esURL>
         <esIndex>${ES_LOG_INDEX:-mats_datahub_debug}</esIndex>
         <esUserName>${ES_USERNAME}</esUserName>
         <esPassword>${ES_PASSWORD}</esPassword>
@@ -42,10 +42,10 @@
 
     <appender name="MATS_WEBEX" class="com.webex.mats.logback.WebexAlertAppender">
         <messageApiURL>${WBX_API:-https://api.ciscospark.com/v1/messages}</messageApiURL>
-        <roomId>${WBX_ROOM_ID:-Y2lzY29zcGFyazovL3VzL1JPT00vMWYzMmFmNzAtYWZmMC0xMWVjLTg2ZjItM2ZjOTc3ZWMyYzQx}</roomId>
-        <kibanaLink>${WBX_KIBANA_LINK:-https://esaas-sjc02-dfw02-mats.webex.com/mats/goto/b49606b2711375e26cf431378a543266}</kibanaLink>
-        <alertPersonEmail>${WBX_ALERT_EMAIL:-zhoxie@cisco.com}</alertPersonEmail>
-        <botBearToken>${WBX_BOT_TOKEN:-ZTU5NzM1ZTAtNzY4My00NjY0LTlkNjktNmQ4ZTg2Y2ZmMWRkZDYyY2EyMjctODQ4_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f}</botBearToken>
+        <roomId>${WBX_ROOM_ID:-Y2lzY29zcGFyazovL3VzL1JPT00vNGZiNzg2ODAtZDdkYi0xMWVjLWExYzYtY2RmNGFiOWI5Y2Vk}</roomId>
+        <kibanaLink>${WBX_KIBANA_LINK:-https://esaaslab-esbtpt1-s.webex.com/mats/goto/148ddf044cda5c77a1ce5a58bea27ced}</kibanaLink>
+        <alertPersonEmail>${WBX_ALERT_EMAIL:-csg-mats-data@cisco.com}</alertPersonEmail>
+        <botBearToken>${WBX_BOT_TOKEN:-MTlkNDQwYjktN2QzYS00ODY4LWEzZDctNGUwNjk3OThmOWJhNjU1MDZmMmUtMWJh_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f}</botBearToken>
         <intervalMins>${WBX_ALERT_INTERVAL:-30}</intervalMins>
         <hostName>${HOST_NAME}</hostName>
         <messageExclusionPattern>${WBX_ALERT_EXCLUSION_PATTERN:-Unable to renew the session.*}</messageExclusionPattern>
