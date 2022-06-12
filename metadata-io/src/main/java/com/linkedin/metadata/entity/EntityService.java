@@ -670,8 +670,8 @@ public abstract class EntityService {
     but aspects given does not have that aspect
    */
   private boolean isAspectProvided(String entityType, String aspectName, Set<String> aspects) {
-    return _entityRegistry.getEntitySpec(entityType).getAspectSpecMap().containsKey(aspectName)
-        && !aspects.contains(aspectName);
+    Map<String, AspectSpec> aspectSpecs = _entityRegistry.getEntitySpec(entityType).getAspectSpecMap();
+    return aspectSpecs.containsKey(aspectName) && !aspects.contains(aspectName);
   }
 
   public List<Pair<String, RecordTemplate>> generateDefaultAspectsIfMissing(@Nonnull final Urn urn,
@@ -703,8 +703,10 @@ public abstract class EntityService {
 
     RecordTemplate keyAspect = latestAspects.get(keyAspectName);
     if (keyAspect == null) {
-      keyAspect = buildKeyAspect(urn);
-      aspects.add(Pair.of(keyAspectName, keyAspect));
+      if(isAspectProvided(entityType, keyAspectName, includedAspects)) {
+        keyAspect = buildKeyAspect(urn);
+        aspects.add(Pair.of(keyAspectName, keyAspect));
+      }
     }
 
     if (shouldCheckBrowsePath && latestAspects.get(BROWSE_PATHS) == null) {

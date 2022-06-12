@@ -28,16 +28,21 @@ FROM --platform=$BUILDPLATFORM alpine:3.14 AS prod-build
 RUN apk --no-cache --update-cache --available upgrade \
     && apk --no-cache add openjdk8 perl
 
-COPY . /datahub-src
-RUN cd /datahub-src && ./gradlew :metadata-service:war:build -x test
-RUN cp /datahub-src/metadata-service/war/build/libs/war.war /war.war
+COPY ./metadata-service/war/build/libs/war.war /datahub-src/war.war
+COPY ./metadata-models/src/main/resources/entity-registry.yml /datahub-src/entity-registry.yml
+COPY ./docker/mats-gms/start.sh /datahub-src/start.sh
+COPY ./docker/mats-gms/jetty.xml /datahub-src/jetty.xml
+COPY ./docker/monitoring/client-prometheus-config.yaml /datahub-src/client-prometheus-config.yaml
 
 FROM base as prod-install
-COPY --from=prod-build /war.war /datahub/datahub-gms/bin/war.war
-COPY --from=prod-build /datahub-src/metadata-models/src/main/resources/entity-registry.yml /datahub/datahub-gms/resources/entity-registry.yml
-COPY --from=prod-build /datahub-src/docker/mats-gms/start.sh /datahub/datahub-gms/scripts/start.sh
-COPY --from=prod-build /datahub-src/docker/mats-gms/jetty.xml /datahub/datahub-gms/scripts/jetty.xml
-COPY --from=prod-build /datahub-src/docker/monitoring/client-prometheus-config.yaml /datahub/datahub-gms/scripts/prometheus-config.yaml
+
+COPY --from=prod-build /datahub-src/war.war /datahub/datahub-gms/bin/war.war
+COPY --from=prod-build /datahub-src/entity-registry.yml /datahub/datahub-gms/resources/entity-registry.yml
+COPY --from=prod-build /datahub-src/start.sh /datahub/datahub-gms/scripts/start.sh
+COPY --from=prod-build /datahub-src/jetty.xml /datahub/datahub-gms/scripts/jetty.xml
+COPY --from=prod-build /datahub-src/client-prometheus-config.yaml /datahub/datahub-gms/scripts/prometheus-config.yaml
+
+RUN rm -rf datahub-src
 
 RUN chmod 777 /datahub/datahub-gms/scripts/start.sh
 RUN chmod 777 /datahub/datahub-gms/bin/war.war

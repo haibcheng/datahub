@@ -157,3 +157,9 @@ spring:
   mvc:
     servlet:
       path: /openapi
+  kafka:
+    producer:
+      properties:
+        max:
+          request:
+            size: ${KAFKA_MAX_REQUEST_SIZE:10485760}

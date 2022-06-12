@@ -7,6 +7,7 @@ import com.linkedin.data.template.LongMap;
 import com.linkedin.metadata.models.EntitySpec;
 import com.linkedin.metadata.models.SearchableFieldSpec;
 import com.linkedin.metadata.models.annotation.SearchableAnnotation;
+import com.linkedin.metadata.query.filter.ConjunctiveCriterionArray;
 import com.linkedin.metadata.query.filter.Filter;
 import com.linkedin.metadata.query.filter.SortCriterion;
 import com.linkedin.metadata.search.AggregationMetadata;
@@ -104,9 +105,12 @@ public class SearchRequestHandler {
 
     boolean removedInOrFilter = false;
     if (filter != null) {
-      removedInOrFilter = filter.getOr().stream().anyMatch(
-              or -> or.getAnd().stream().anyMatch(criterion -> criterion.getField().equals(REMOVED))
-      );
+      ConjunctiveCriterionArray array = filter.getOr();
+      if(array != null) {
+        removedInOrFilter = array.stream().anyMatch(
+                or -> or.getAnd().stream().anyMatch(criterion -> criterion.getField().equals(REMOVED))
+        );
+      }
     }
     // Filter out entities that are marked "removed" if and only if filter does not contain a criterion referencing it.
     if (!removedInOrFilter) {
