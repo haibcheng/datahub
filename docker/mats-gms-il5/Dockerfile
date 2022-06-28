@@ -1,7 +1,7 @@
 # Defining environment
 ARG APP_ENV=prod
 
-FROM containers.cisco.com/rhel8/osaas-nonfips:1.8.202206 as base
+FROM containers.cisco.com/rhel8/osaas-fips:1.8.202206 as base
 RUN yum install -y WBXjava-1.8.0-openjdk-hardening curl wget
 
 ENV DR_VERSION v0.6.1
