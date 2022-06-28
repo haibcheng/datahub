@@ -1,63 +1,43 @@
 # Defining environment
 ARG APP_ENV=prod
 
-FROM alpine:3.14 AS base
+#FROM containers.cisco.com/ubuntu20/osaas-nonfips:1.3.202205 AS base
+#RUN apt update && apt install -y tar curl bash coreutils
 
-ENV DOCKERIZE_VERSION v0.6.1
+FROM containers.cisco.com/rhel8/osaas-nonfips:1.8.202206 as base
+RUN yum install -y WBXjava-1.8.0-openjdk-hardening curl wget
 
-# Upgrade Alpine and base packages
-RUN apk --no-cache --update-cache --available upgrade \
-    && if [ $(arch) = "aarch64" ]; then \
-       DOCKERIZE_ARCH='aarch64';\
+ENV DR_VERSION v0.6.1
+
+RUN if [ $(arch) = "aarch64" ]; then \
+      DR_ARCH='aarch64';\
     elif [ $(arch) = "x86_64" ]; then \
-      DOCKERIZE_ARCH='amd64'; \
+      DR_ARCH='amd64'; \
     else \
       echo >&2 "Unsupported architecture $(arch)" ; exit 1; \
     fi \
-    && apk --no-cache add tar curl openjdk8-jre bash coreutils gcompat \
     && curl https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-runner/9.4.20.v20190813/jetty-runner-9.4.20.v20190813.jar --output jetty-runner.jar \
     && curl https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-jmx/9.4.20.v20190813/jetty-jmx-9.4.20.v20190813.jar --output jetty-jmx.jar \
     && curl https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-util/9.4.20.v20190813/jetty-util-9.4.20.v20190813.jar --output jetty-util.jar \
     && wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.4.1/opentelemetry-javaagent-all.jar \
     && wget https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.16.1/jmx_prometheus_javaagent-0.16.1.jar -O jmx_prometheus_javaagent.jar \
-    && curl -L https://github.com/treff7es/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-${DOCKERIZE_ARCH}-$DOCKERIZE_VERSION.tar.gz | tar -C /usr/local/bin -xzv
-
-FROM --platform=$BUILDPLATFORM alpine:3.14 AS prod-build
-
-# Upgrade Alpine and base packages
-RUN apk --no-cache --update-cache --available upgrade \
-    && apk --no-cache add openjdk8 perl
-
-COPY ./metadata-service/war/build/libs/war.war /datahub-src/war.war
-COPY ./metadata-models/src/main/resources/entity-registry.yml /datahub-src/entity-registry.yml
-COPY ./docker/mats-gms/start.sh /datahub-src/start.sh
-COPY ./docker/mats-gms/jetty.xml /datahub-src/jetty.xml
-COPY ./docker/monitoring/client-prometheus-config.yaml /datahub-src/client-prometheus-config.yaml
+    && curl -L https://github.com/treff7es/dockerize/releases/download/$DR_VERSION/dockerize-linux-${DR_ARCH}-$DR_VERSION.tar.gz | tar -C /usr/local/bin -xzv
 
 FROM base as prod-install
 
-COPY --from=prod-build /datahub-src/war.war /datahub/datahub-gms/bin/war.war
-COPY --from=prod-build /datahub-src/entity-registry.yml /datahub/datahub-gms/resources/entity-registry.yml
-COPY --from=prod-build /datahub-src/start.sh /datahub/datahub-gms/scripts/start.sh
-COPY --from=prod-build /datahub-src/jetty.xml /datahub/datahub-gms/scripts/jetty.xml
-COPY --from=prod-build /datahub-src/client-prometheus-config.yaml /datahub/datahub-gms/scripts/prometheus-config.yaml
+COPY ./metadata-service/war/build/libs/war.war /datahub/datahub-gms/bin/war.war
+COPY ./metadata-models/src/main/resources/entity-registry.yml /datahub/datahub-gms/resources/entity-registry.yml
+COPY ./docker/mats-gms/start.sh /datahub/datahub-gms/scripts/start.sh
+COPY ./docker/mats-gms/jetty.xml /datahub/datahub-gms/scripts/jetty.xml
+COPY ./docker/monitoring/client-prometheus-config.yaml /datahub/datahub-gms/scripts/prometheus-config.yaml
 
-RUN rm -rf datahub-src
-
-RUN chmod 777 /datahub/datahub-gms/scripts/start.sh
-RUN chmod 777 /datahub/datahub-gms/bin/war.war
-RUN chmod 777 /datahub/datahub-gms/resources/entity-registry.yml
-RUN chmod 777 /datahub/datahub-gms/scripts/prometheus-config.yaml
-RUN chmod 777 /datahub/datahub-gms/scripts/jetty.xml
+RUN chmod +x /datahub/datahub-gms/scripts/start.sh
 
 FROM base as dev-install
 # Dummy stage for development. Assumes code is built on your machine and mounted to this image.
 # See this excellent thread https://github.com/docker/cli/issues/1134
 
 FROM ${APP_ENV}-install as final
-
-RUN addgroup -S datahub && adduser -S datahub -G datahub
-USER datahub
 
 ENV JMX_OPTS=""
 ENV JAVA_OPTS=""

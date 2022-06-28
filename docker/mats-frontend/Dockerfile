@@ -1,21 +1,14 @@
 # Defining environment
 ARG APP_ENV=prod
 
-FROM alpine:3.14 AS base
+#FROM containers.cisco.com/ubuntu20/osaas-nonfips:1.3.202205 AS base
+#RUN apt update && apt install -y unzip bash coreutils
 
-RUN addgroup -S datahub && adduser -S datahub -G datahub
-
-# Upgrade Alpine and base packages
-RUN apk --no-cache --update-cache --available upgrade \
-    && apk --no-cache add curl openjdk8-jre
-
-FROM --platform=$BUILDPLATFORM node:16.13.0-alpine3.14 AS prod-build
-
-# Upgrade Alpine and base packages
-RUN apk --no-cache --update-cache --available upgrade \
-    && apk --no-cache add perl openjdk8
+FROM containers.cisco.com/rhel8/osaas-nonfips:1.8.202206 as base
+RUN yum install -y WBXjava-1.8.0-openjdk-hardening unzip
 
 ENV CI=true
+ENV USER=rhel
 ENV GRADLE_OPTS="-Xms256m -Xmx512m"
 
 COPY ./datahub-frontend/build/distributions/datahub-frontend.zip datahub-frontend.zip
@@ -23,8 +16,8 @@ RUN unzip datahub-frontend.zip && rm -f datahub-frontend.zip
 
 FROM base as prod-install
 
-COPY --from=prod-build /datahub-frontend /datahub-frontend/
-RUN chown -R datahub:datahub /datahub-frontend && chmod 755 /datahub-frontend
+COPY /datahub-frontend /datahub-frontend/
+RUN chown -R $USER:$USER /datahub-frontend && chmod 755 /datahub-frontend
 
 FROM base as dev-install
 # Dummy stage for development. Assumes code is built on your machine and mounted to this image.
@@ -32,7 +25,6 @@ FROM base as dev-install
 VOLUME [ "/datahub-frontend" ]
 
 FROM ${APP_ENV}-install as final
-USER datahub
 
 ARG SERVER_PORT=9002
 ENV SERVER_PORT=$SERVER_PORT

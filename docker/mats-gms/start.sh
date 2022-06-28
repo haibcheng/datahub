@@ -54,7 +54,7 @@ COMMON="
     java $JAVA_OPTS $JMX_OPTS \
     $OTEL_AGENT \
     $PROMETHEUS_AGENT \
-    -jar /jetty-runner.jar \
+    -jar jetty-runner.jar \
     --jar jetty-util.jar \
     --jar jetty-jmx.jar \
     --config /datahub/datahub-gms/scripts/jetty.xml \
