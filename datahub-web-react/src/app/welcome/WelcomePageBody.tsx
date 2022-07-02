@@ -93,7 +93,7 @@ const goToLink = (type: IlinkType) => {
                 break;
             }
             case IlinkType.SCHEMA_REGISTRY: {
-                window.location.href = '/wap/registry';
+                window.location.href = './wap/registry/';
                 break;
             }
             default: {
