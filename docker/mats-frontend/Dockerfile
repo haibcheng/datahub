@@ -23,8 +23,6 @@ RUN cd /datahub-src && ./gradlew :datahub-frontend:dist -PenableEmber=${ENABLE_E
     && cp datahub-frontend/build/distributions/datahub-frontend.zip ../datahub-frontend.zip \
     && cd .. && rm -rf datahub-src && unzip datahub-frontend.zip
 
-RUN ls /
-
 FROM base as prod-install
 
 COPY --from=prod-build /datahub-frontend /datahub-frontend/
