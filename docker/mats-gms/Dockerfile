@@ -23,6 +23,8 @@ RUN if [ $(arch) = "aarch64" ]; then \
     && wget https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.16.1/jmx_prometheus_javaagent-0.16.1.jar -O jmx_prometheus_javaagent.jar \
     && curl -L https://github.com/treff7es/dockerize/releases/download/$DR_VERSION/dockerize-linux-${DR_ARCH}-$DR_VERSION.tar.gz | tar -C /usr/local/bin -xzv
 
+RUN yum remove -y wget || true
+
 FROM --platform=$BUILDPLATFORM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} AS prod-build
 
 RUN yum install -y java-1.8.0-openjdk-devel perl
@@ -35,8 +37,8 @@ FROM base as prod-install
 
 COPY --from=prod-build /war.war /datahub/datahub-gms/bin/war.war
 COPY --from=prod-build /datahub-src/metadata-models/src/main/resources/entity-registry.yml /datahub/datahub-gms/resources/entity-registry.yml
-COPY --from=prod-build /datahub-src/docker/datahub-gms/start.sh /datahub/datahub-gms/scripts/start.sh
-COPY --from=prod-build /datahub-src/docker/datahub-gms/jetty.xml /datahub/datahub-gms/scripts/jetty.xml
+COPY --from=prod-build /datahub-src/docker/mats-gms/start.sh /datahub/datahub-gms/scripts/start.sh
+COPY --from=prod-build /datahub-src/docker/mats-gms/jetty.xml /datahub/datahub-gms/scripts/jetty.xml
 COPY --from=prod-build /datahub-src/docker/monitoring/client-prometheus-config.yaml /datahub/datahub-gms/scripts/prometheus-config.yaml
 
 RUN chmod +x /datahub/datahub-gms/scripts/start.sh
