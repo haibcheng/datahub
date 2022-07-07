@@ -1,19 +1,33 @@
 # Defining environment
 ARG APP_ENV=prod
+ARG FIPS=nonfips
+ARG OSAAS_VERSION=1.9.202207
 
-FROM containers.cisco.com/rhel8/osaas-nonfips:1.8.202206 as base
-RUN yum install -y WBXjava-1.8.0-openjdk-hardening unzip
+FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
 
-ENV CI=true
 ENV USER=rhel
+RUN yum install -y WBXjava-1.8.0-openjdk-hardening
+
+FROM --platform=$BUILDPLATFORM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} AS prod-build
+
+RUN yum install -y java-1.8.0-openjdk-devel && yum module -y enable nodejs:16 \
+    && yum install -y unzip npm perl && npm install --global yarn
+
+ARG ENABLE_EMBER="false"
+ARG USE_SYSTEM_NODE="true"
+ENV CI=true
 ENV GRADLE_OPTS="-Xms256m -Xmx512m"
 
-COPY ./datahub-frontend/build/distributions/datahub-frontend.zip datahub-frontend.zip
-RUN unzip datahub-frontend.zip && rm -f datahub-frontend.zip
+COPY . /datahub-src
+RUN cd /datahub-src && ./gradlew :datahub-frontend:dist -PenableEmber=${ENABLE_EMBER} -PuseSystemNode=${USE_SYSTEM_NODE} -x test -x yarnTest -x yarnLint \
+    && cp datahub-frontend/build/distributions/datahub-frontend.zip ../datahub-frontend.zip \
+    && cd .. && rm -rf datahub-src && unzip datahub-frontend.zip
+
+RUN ls /
 
 FROM base as prod-install
 
-COPY /datahub-frontend /datahub-frontend/
+COPY --from=prod-build /datahub-frontend /datahub-frontend/
 RUN chown -R $USER:$USER /datahub-frontend && chmod 755 /datahub-frontend
 
 FROM base as dev-install

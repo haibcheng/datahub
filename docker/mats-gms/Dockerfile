@@ -1,7 +1,10 @@
 # Defining environment
 ARG APP_ENV=prod
+ARG FIPS=nonfips
+ARG OSAAS_VERSION=1.9.202207
 
-FROM containers.cisco.com/rhel8/osaas-nonfips:1.8.202206 as base
+FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
+
 RUN yum install -y WBXjava-1.8.0-openjdk-hardening curl wget
 
 ENV DR_VERSION v0.6.1
@@ -20,13 +23,21 @@ RUN if [ $(arch) = "aarch64" ]; then \
     && wget https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.16.1/jmx_prometheus_javaagent-0.16.1.jar -O jmx_prometheus_javaagent.jar \
     && curl -L https://github.com/treff7es/dockerize/releases/download/$DR_VERSION/dockerize-linux-${DR_ARCH}-$DR_VERSION.tar.gz | tar -C /usr/local/bin -xzv
 
+FROM --platform=$BUILDPLATFORM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} AS prod-build
+
+RUN yum install -y java-1.8.0-openjdk-devel perl
+
+COPY . /datahub-src
+RUN cd /datahub-src && ./gradlew :metadata-service:war:build -x test
+RUN cp /datahub-src/metadata-service/war/build/libs/war.war /war.war
+
 FROM base as prod-install
 
-COPY ./metadata-service/war/build/libs/war.war /datahub/datahub-gms/bin/war.war
-COPY ./metadata-models/src/main/resources/entity-registry.yml /datahub/datahub-gms/resources/entity-registry.yml
-COPY ./docker/mats-gms/start.sh /datahub/datahub-gms/scripts/start.sh
-COPY ./docker/mats-gms/jetty.xml /datahub/datahub-gms/scripts/jetty.xml
-COPY ./docker/monitoring/client-prometheus-config.yaml /datahub/datahub-gms/scripts/prometheus-config.yaml
+COPY --from=prod-build /war.war /datahub/datahub-gms/bin/war.war
+COPY --from=prod-build /datahub-src/metadata-models/src/main/resources/entity-registry.yml /datahub/datahub-gms/resources/entity-registry.yml
+COPY --from=prod-build /datahub-src/docker/datahub-gms/start.sh /datahub/datahub-gms/scripts/start.sh
+COPY --from=prod-build /datahub-src/docker/datahub-gms/jetty.xml /datahub/datahub-gms/scripts/jetty.xml
+COPY --from=prod-build /datahub-src/docker/monitoring/client-prometheus-config.yaml /datahub/datahub-gms/scripts/prometheus-config.yaml
 
 RUN chmod +x /datahub/datahub-gms/scripts/start.sh
 
