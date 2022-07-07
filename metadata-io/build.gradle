@@ -56,7 +56,10 @@ dependencies {
         because("previous versions are vulnerable to CVE-2021-45105")
     }
     implementation("com.alibaba:fastjson:1.2.83") {
-      because("previous versions are vulnerable to CVE-2022-25845")
+        because("previous versions are vulnerable to CVE-2022-25845")
+    }
+    implementation("org.springframework:spring-core:5.3.21") {
+        because("previous versions are vulnerable to CVE-2022-2296/CVE-2016-1000027")
     }
   }
 }

@@ -20,7 +20,7 @@ dependencies {
   }
 
   constraints {
-    play('org.springframework:spring-core:5.2.3.RELEASE')
+    play('org.springframework:spring-core:5.2.22.RELEASE')
     play('com.fasterxml.jackson.core:jackson-databind:2.9.10.4')
     play('com.nimbusds:nimbus-jose-jwt:7.9')
     play('com.typesafe.akka:akka-actor_2.11:2.5.16')
