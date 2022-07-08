@@ -30,7 +30,10 @@ FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} AS prod-build
 RUN yum install -y java-1.8.0-openjdk-devel perl
 
 COPY . /datahub-src
-RUN cd /datahub-src && ./gradlew :metadata-service:war:build -x test
+RUN cd /datahub-src \
+    && ./gradlew :metadata-service:restli-servlet-impl:build -Prest.model.compatibility=ignore \
+    && ./gradlew :metadata-service:war:build -x test
+
 RUN cp /datahub-src/metadata-service/war/build/libs/war.war /war.war
 
 FROM base as prod-install
