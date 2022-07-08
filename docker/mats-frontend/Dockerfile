@@ -29,8 +29,8 @@ RUN cd /datahub-src \
 
 FROM base as prod-install
 
-COPY --from=prod-build /datahub-frontend /datahub-frontend/
-RUN chown -R $USER:$USER /datahub-frontend && chmod 755 /datahub-frontend
+COPY --from=prod-build /datahub-frontend datahub-frontend/
+RUN chown -R $USER:$USER datahub-frontend && chmod 755 datahub-frontend
 
 FROM base as dev-install
 # Dummy stage for development. Assumes code is built on your machine and mounted to this image.
