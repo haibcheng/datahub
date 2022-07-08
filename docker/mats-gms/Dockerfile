@@ -29,7 +29,9 @@ FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} AS prod-build
 
 RUN yum install -y java-1.8.0-openjdk-devel perl
 
+COPY ./docker/mats-log/mats-monitoring-logback ~/.m2/repository/com/cisco/webex/mats/
 COPY . /datahub-src
+
 RUN cd /datahub-src \
     && ./gradlew :metadata-service:restli-servlet-impl:build -Prest.model.compatibility=ignore \
     && ./gradlew :metadata-service:war:build -x test

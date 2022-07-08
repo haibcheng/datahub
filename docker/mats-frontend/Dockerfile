@@ -18,8 +18,9 @@ ARG USE_SYSTEM_NODE="true"
 ENV CI=true
 ENV GRADLE_OPTS="-Xms256m -Xmx512m"
 
+COPY ./docker/mats-log/mats-monitoring-logback ~/.m2/repository/com/cisco/webex/mats/
 COPY . /datahub-src
-COPY ./docker/mats-frontend/mats-monitoring-logback ~/.m2/repository/com/cisco/webex/mats/
+
 RUN cd /datahub-src \
     && ./gradlew :metadata-service:restli-servlet-impl:build -Prest.model.compatibility=ignore \
     && ./gradlew :datahub-frontend:dist -PenableEmber=${ENABLE_EMBER} -PuseSystemNode=${USE_SYSTEM_NODE} -x test -x yarnTest -x yarnLint \
