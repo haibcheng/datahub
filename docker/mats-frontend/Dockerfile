@@ -19,10 +19,12 @@ ENV CI=true
 ENV GRADLE_OPTS="-Xms256m -Xmx512m"
 
 COPY . /datahub-src
-RUN cd /datahub-src  \
-    && ./gradlew :metadata-service:restli-servlet-impl:build -Prest.model.compatibility=ignore \
-    && ./gradlew :datahub-frontend:dist -PenableEmber=${ENABLE_EMBER} -PuseSystemNode=${USE_SYSTEM_NODE} -x test -x yarnTest -x yarnLint \
-    && cp datahub-frontend/build/distributions/datahub-frontend.zip ../datahub-frontend.zip \
+RUN cp -rp /datahub-src/docker/mats-frontend/mats-monitoring-logback ~/.m2/repository/com/cisco/webex/mats/
+RUN cd /datahub-src
+#RUN ./gradlew :metadata-service:restli-servlet-impl:build -Prest.model.compatibility=ignore
+RUN ./gradlew :datahub-frontend:dist -PenableEmber=${ENABLE_EMBER} -PuseSystemNode=${USE_SYSTEM_NODE} -x test -x yarnTest -x yarnLint
+
+RUN cp datahub-frontend/build/distributions/datahub-frontend.zip ../datahub-frontend.zip \
     && cd .. && rm -rf datahub-src && unzip datahub-frontend.zip
 
 FROM base as prod-install
