@@ -5,6 +5,7 @@ ARG OSAAS_VERSION=1.9.202207
 
 FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
 
+ENV USER=rhel
 RUN yum install -y WBXjava-1.8.0-openjdk-hardening curl wget
 
 ENV DR_VERSION v0.6.1
@@ -46,6 +47,7 @@ COPY --from=prod-build /datahub-src/docker/mats-gms/start.sh /datahub/datahub-gm
 COPY --from=prod-build /datahub-src/docker/mats-gms/jetty.xml /datahub/datahub-gms/scripts/jetty.xml
 COPY --from=prod-build /datahub-src/docker/monitoring/client-prometheus-config.yaml /datahub/datahub-gms/scripts/prometheus-config.yaml
 
+RUN chown -R $USER:$USER /datahub
 RUN chmod +x /datahub/datahub-gms/scripts/start.sh
 
 FROM base as dev-install
