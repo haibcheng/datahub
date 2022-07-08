@@ -7,13 +7,29 @@ FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
 
 RUN yum install -y WBXjava-1.8.0-openjdk-hardening
 
+FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} AS prod-build
+
+RUN yum install -y java-1.8.0-openjdk-devel && yum module -y enable nodejs:16 \
+    && yum install -y unzip npm perl && npm install --global yarn
+
+ARG ENABLE_EMBER="false"
+ARG USE_SYSTEM_NODE="true"
+ENV CI=true
+ENV GRADLE_OPTS="-Xms256m -Xmx512m"
+
+ADD ./docker/mats-log/mats-monitoring-logback /root/.m2/repository/com/cisco/webex/mats/mats-monitoring-logback
+COPY . datahub-src
+
+RUN cd datahub-src \
+    && rm -rf datahub-frontend/build \
+    && ./gradlew :metadata-service:restli-servlet-impl:build -Prest.model.compatibility=ignore \
+    && ./gradlew :datahub-frontend:dist -PenableEmber=${ENABLE_EMBER} -PuseSystemNode=${USE_SYSTEM_NODE} -x test -x yarnTest -x yarnLint \
+    && cp datahub-frontend/build/distributions/datahub-frontend.zip ../datahub-frontend.zip \
+    && cd .. && rm -rf datahub-src && unzip datahub-frontend.zip
+
 FROM base as prod-install
 
-RUN yum install -y unzip
-COPY ./datahub-frontend/build/distributions/datahub-frontend.zip datahub-frontend.zip
-RUN unzip datahub-frontend.zip && rm -f datahub-frontend.zip
-
-RUN yum remove -y unzip || true
+COPY --from=prod-build datahub-frontend datahub-frontend/
 
 FROM base as dev-install
 # Dummy stage for development. Assumes code is built on your machine and mounted to this image.
