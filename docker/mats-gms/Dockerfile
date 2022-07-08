@@ -25,7 +25,7 @@ RUN if [ $(arch) = "aarch64" ]; then \
 
 RUN yum remove -y wget || true
 
-FROM --platform=$BUILDPLATFORM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} AS prod-build
+FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} AS prod-build
 
 RUN yum install -y java-1.8.0-openjdk-devel perl
 

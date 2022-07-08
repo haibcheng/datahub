@@ -8,7 +8,7 @@ FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
 ENV USER=rhel
 RUN yum install -y WBXjava-1.8.0-openjdk-hardening
 
-FROM --platform=$BUILDPLATFORM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} AS prod-build
+FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} AS prod-build
 
 RUN yum install -y java-1.8.0-openjdk-devel && yum module -y enable nodejs:16 \
     && yum install -y unzip npm perl && npm install --global yarn
