@@ -61,6 +61,27 @@ dependencies {
     implementation("org.springframework:spring-core:5.3.21") {
         because("previous versions are vulnerable to CVE-2022-2296/CVE-2016-1000027")
     }
+    implementation("org.apache.shiro:shiro-core:1.9.1") {
+      because("previous versions are vulnerable to CVE-2022-32532")
+    }
+    implementation("org.apache.shiro:shiro-cache:1.9.1") {
+      because("previous versions are vulnerable to CVE-2022-32532")
+    }
+    implementation("org.apache.shiro:shiro-config-core:1.9.1") {
+      because("previous versions are vulnerable to CVE-2022-32532")
+    }
+    implementation("org.apache.shiro:shiro-config-ogdl:1.9.1") {
+      because("previous versions are vulnerable to CVE-2022-32532")
+    }
+    implementation("org.apache.shiro:shiro-crypto-cipher:1.9.1") {
+      because("previous versions are vulnerable to CVE-2022-32532")
+    }
+    implementation("org.apache.shiro:shiro-crypto-core:1.9.1") {
+      because("previous versions are vulnerable to CVE-2022-32532")
+    }
+    implementation("org.apache.shiro:shiro-crypto-hash:1.9.1") {
+      because("previous versions are vulnerable to CVE-2022-32532")
+    }
   }
 }
 
