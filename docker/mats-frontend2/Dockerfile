@@ -5,6 +5,7 @@ ARG OSAAS_VERSION=1.9.202207
 
 FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
 
+ENV USER=rhel
 RUN yum install -y WBXjava-1.8.0-openjdk-hardening
 
 FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} AS prod-build
@@ -30,6 +31,7 @@ RUN cd /datahub-src \
 FROM base as prod-install
 
 COPY --from=prod-build /datahub-frontend datahub-frontend/
+RUN chown -R $USER:$USER datahub-frontend
 
 FROM base as dev-install
 # Dummy stage for development. Assumes code is built on your machine and mounted to this image.
