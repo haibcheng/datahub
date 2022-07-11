@@ -18,9 +18,9 @@ ENV CI=true
 ENV GRADLE_OPTS="-Xms256m -Xmx512m"
 
 ADD ./docker/mats-log/mats-monitoring-logback /root/.m2/repository/com/cisco/webex/mats/mats-monitoring-logback
-COPY . datahub-src
+COPY . /datahub-src
 
-RUN cd datahub-src \
+RUN cd /datahub-src \
     && rm -rf datahub-frontend/build \
     && ./gradlew :metadata-service:restli-servlet-impl:build -Prest.model.compatibility=ignore \
     && ./gradlew :datahub-frontend:dist -PenableEmber=${ENABLE_EMBER} -PuseSystemNode=${USE_SYSTEM_NODE} -x test -x yarnTest -x yarnLint \
@@ -29,7 +29,7 @@ RUN cd datahub-src \
 
 FROM base as prod-install
 
-COPY --from=prod-build datahub-frontend datahub-frontend/
+COPY --from=prod-build /datahub-frontend datahub-frontend/
 
 FROM base as dev-install
 # Dummy stage for development. Assumes code is built on your machine and mounted to this image.
