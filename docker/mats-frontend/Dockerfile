@@ -10,8 +10,12 @@ RUN yum install -y WBXjava-1.8.0-openjdk-hardening
 FROM base as prod-install
 
 RUN yum install -y unzip
-COPY ./datahub-frontend/build/distributions/datahub-frontend.zip datahub-frontend.zip
-RUN unzip datahub-frontend.zip && rm -f datahub-frontend.zip
+COPY ./datahub-frontend/build/distributions/datahub-frontend.zip /datahub-frontend.zip
+RUN cd / \
+    && unzip datahub-frontend.zip \
+    && rm -f datahub-frontend.zip \
+    && chown -R 1000:1000 /datahub-frontend \
+    && chmod -R 755 /datahub-frontend
 
 RUN yum remove -y unzip || true
 
@@ -22,6 +26,7 @@ VOLUME [ "/datahub-frontend" ]
 
 FROM ${APP_ENV}-install as final
 
+WORKDIR /
 ARG SERVER_PORT=9002
 ENV SERVER_PORT=$SERVER_PORT
 RUN echo $SERVER_PORT
