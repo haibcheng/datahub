@@ -5,7 +5,6 @@ ARG OSAAS_VERSION=1.9.202207
 
 FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
 
-ENV USER=rhel
 RUN yum install -y WBXjava-1.8.0-openjdk-hardening
 
 FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} AS prod-build
@@ -30,8 +29,8 @@ RUN cd /datahub-src \
 
 FROM base as prod-install
 
-COPY --from=prod-build /datahub-frontend datahub-frontend/
-RUN chown -R $USER:$USER datahub-frontend
+COPY --from=prod-build /datahub-frontend /datahub-frontend/
+RUN chown -R 1000:1000 /datahub-frontend && chmod 755 /datahub-frontend
 
 FROM base as dev-install
 # Dummy stage for development. Assumes code is built on your machine and mounted to this image.
@@ -40,6 +39,7 @@ VOLUME [ "/datahub-frontend" ]
 
 FROM ${APP_ENV}-install as final
 
+WORKDIR /
 ARG SERVER_PORT=9002
 ENV SERVER_PORT=$SERVER_PORT
 RUN echo $SERVER_PORT
@@ -57,4 +57,5 @@ ENV JAVA_OPTS=" \
    -Dlogback.configurationFile=datahub-frontend/conf/logback.xml \
    -Dlogback.debug=false \
    -Dpidfile.path=/dev/null"
+
 CMD ["datahub-frontend/bin/playBinary"]

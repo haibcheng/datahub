@@ -44,4 +44,5 @@ ENV JAVA_OPTS=" \
    -Dlogback.configurationFile=datahub-frontend/conf/logback.xml \
    -Dlogback.debug=false \
    -Dpidfile.path=/dev/null"
+
 CMD ["datahub-frontend/bin/playBinary"]
