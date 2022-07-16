@@ -29,8 +29,11 @@ FROM --platform=$BUILDPLATFORM alpine:3.14 AS prod-build
 RUN apk --no-cache --update-cache --available upgrade \
     && apk --no-cache add openjdk8 perl
 
+ADD ./docker/mats-log/mats-monitoring-logback /root/.m2/repository/com/cisco/webex/mats/mats-monitoring-logback
 COPY . /datahub-src
-RUN cd /datahub-src && ./gradlew :metadata-service:war:build -x test
+RUN cd /datahub-src \
+    && ./gradlew :metadata-service:restli-servlet-impl:build -Prest.model.compatibility=ignore \
+    && ./gradlew :metadata-service:war:build -x test
 RUN cp /datahub-src/metadata-service/war/build/libs/war.war /war.war
 
 FROM base as prod-install
