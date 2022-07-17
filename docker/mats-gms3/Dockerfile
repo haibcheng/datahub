@@ -44,6 +44,7 @@ FROM base as prod-install
 
 #COPY ./docker/mats-gms3/start.sh /datahub/datahub-gms/scripts/start.sh
 #COPY ./docker/mats-gms3/server.xml /opt/apache-tomcat/conf/server.xml
+#COPY ./docker/mats-gms3/tomcat-users.xml /opt/apache-tomcat/conf/tomcat-users.xml
 #COPY ./docker/mats-gms3/catalina.sh /opt/apache-tomcat/bin/catalina.sh
 
 COPY --from=prod-build /war.war /datahub/datahub-gms/bin/war.war
@@ -52,6 +53,7 @@ COPY --from=prod-build /datahub-src/docker/monitoring/client-prometheus-config.y
 
 COPY --from=prod-build /datahub-src/docker/mats-gms3/start.sh /datahub/datahub-gms/scripts/start.sh
 COPY --from=prod-build /datahub-src/docker/mats-gms3/server.xml /opt/apache-tomcat/conf/server.xml
+COPY --from=prod-build /datahub-src/docker/mats-gms3/tomcat-users.xml /opt/apache-tomcat/conf/tomcat-users.xml
 COPY --from=prod-build /datahub-src/docker/mats-gms3/catalina.sh /opt/apache-tomcat/bin/catalina.sh
 
 RUN rm -f /opt/apache-tomcat/conf/web.xml
