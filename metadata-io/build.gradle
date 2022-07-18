@@ -58,6 +58,15 @@ dependencies {
     implementation("com.alibaba:fastjson:1.2.83") {
         because("previous versions are vulnerable to CVE-2022-25845")
     }
+    implementation("org.apache.httpcomponents:httpclient:4.5.13") {
+      because("previous versions are vulnerable to CVE-2020-13956/GHSA-7r82-7xv7-xcpj")
+    }
+    implementation("io.netty:netty-codec-http:4.1.79.Final") {
+      because("previous versions are vulnerable")
+    }
+    implementation("io.netty:netty-codec-http2:4.1.79.Final") {
+      because("previous versions are vulnerable")
+    }
     implementation("org.apache.shiro:shiro-core:1.9.1") {
       because("previous versions are vulnerable to CVE-2022-32532")
     }
@@ -79,7 +88,7 @@ dependencies {
     implementation("org.apache.shiro:shiro-crypto-hash:1.9.1") {
       because("previous versions are vulnerable to CVE-2022-32532")
     }
-    implementation("org.springframework:spring-core:5.3.21") {
+    implementation("org.springframework:spring-core:5.3.22") {
       because("previous versions are vulnerable to CVE-2022-2296/CVE-2016-1000027,just upgrade it not fixing")
     }
     implementation("com.typesafe.netty:netty-reactive-streams:2.0.6") {
