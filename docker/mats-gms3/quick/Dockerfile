@@ -59,7 +59,7 @@ FROM base as dev-install
 FROM ${APP_ENV}-install as final
 
 ENV JMX_OPTS=""
-ENV JAVA_OPTS="-Djavax.net.debug=all \
+ENV JAVA_OPTS="\
     -Djavax.net.ssl.keyStore=$TOMCAT_HOME/ssl/server.keystore.bcfks \
     -Djavax.net.ssl.keyStorePassword=$FIPS_KEYSTORE_PASS \
     -Djavax.net.ssl.trustStore=$TOMCAT_HOME/ssl/server.truststore.bcfks \
