@@ -54,10 +54,10 @@ COPY --from=prod-build /war.war /datahub/datahub-gms/bin/war.war
 COPY --from=prod-build /datahub-src/metadata-models/src/main/resources/entity-registry.yml /datahub/datahub-gms/resources/entity-registry.yml
 COPY --from=prod-build /datahub-src/docker/monitoring/client-prometheus-config.yaml /datahub/datahub-gms/scripts/prometheus-config.yaml
 
-COPY --from=prod-build /datahub-src/docker/mats-gms3/start.sh /datahub/datahub-gms/scripts/start.sh
-COPY --from=prod-build /datahub-src/docker/mats-gms3/server.xml $TOMCAT_HOME/conf/server.xml
-COPY --from=prod-build /datahub-src/docker/mats-gms3/tomcat-users.xml $TOMCAT_HOME/conf/tomcat-users.xml
-COPY --from=prod-build /datahub-src/docker/mats-gms3/catalina.sh $TOMCAT_HOME/bin/catalina.sh
+COPY --from=prod-build /datahub-src/docker/mats-gms-il5/start.sh /datahub/datahub-gms/scripts/start.sh
+COPY --from=prod-build /datahub-src/docker/mats-gms-il5/server.xml $TOMCAT_HOME/conf/server.xml
+COPY --from=prod-build /datahub-src/docker/mats-gms-il5/tomcat-users.xml $TOMCAT_HOME/conf/tomcat-users.xml
+COPY --from=prod-build /datahub-src/docker/mats-gms-il5/catalina.sh $TOMCAT_HOME/bin/catalina.sh
 
 RUN rm -f $TOMCAT_HOME/conf/web.xml
 

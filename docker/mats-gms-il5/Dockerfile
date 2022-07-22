@@ -41,10 +41,10 @@ COPY ./metadata-service/war/build/libs/war.war /datahub/datahub-gms/bin/war.war
 COPY ./metadata-models/src/main/resources/entity-registry.yml /datahub/datahub-gms/resources/entity-registry.yml
 COPY ./docker/monitoring/client-prometheus-config.yaml /datahub/datahub-gms/scripts/prometheus-config.yaml
 
-COPY ./docker/mats-gms3/start.sh /datahub/datahub-gms/scripts/start.sh
-COPY ./docker/mats-gms3/server.xml $TOMCAT_HOME/conf/server.xml
-COPY ./docker/mats-gms3/tomcat-users.xml $TOMCAT_HOME/conf/tomcat-users.xml
-COPY ./docker/mats-gms3/catalina.sh $TOMCAT_HOME/bin/catalina.sh
+COPY ./docker/mats-gms-il5/start.sh /datahub/datahub-gms/scripts/start.sh
+COPY ./docker/mats-gms-il5/server.xml $TOMCAT_HOME/conf/server.xml
+COPY ./docker/mats-gms-il5/tomcat-users.xml $TOMCAT_HOME/conf/tomcat-users.xml
+COPY ./docker/mats-gms-il5/catalina.sh $TOMCAT_HOME/bin/catalina.sh
 
 RUN rm -f $TOMCAT_HOME/conf/web.xml
 
