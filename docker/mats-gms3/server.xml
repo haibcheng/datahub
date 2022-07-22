@@ -99,12 +99,7 @@
                    SSLEnabled="true"
                    keystorePass="testfips"
                    keystoreFile="/opt/apache-tomcat/ssl/server.keystore.bcfks"
-                   clientAuth="false" sslProtocol="TLSv1.2"
-                   >
-            <!--SSLHostConfig hostName="osaas.webex.com" protocols="TLSv1.2">defaultSSLHostConfigName="osaas.webex.com"
-                <Certificate certificateKeystoreFile="${TOMCAT_HOME}/ssl/server.keystore.bcfks" type="RSA" />
-            </SSLHostConfig-->
-        </Connector>
+                   clientAuth="false" sslProtocol="TLSv1.2" />
 
         <!-- Define a SSL/TLS HTTP/1.1 Connector on port 8443 with HTTP/2
              This connector uses the APR/native implementation which always uses
