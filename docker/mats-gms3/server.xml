@@ -98,7 +98,7 @@
                    secure="true"
                    SSLEnabled="true"
                    keystorePass="testfips"
-                   keystoreFile="${TOMCAT_HOME}/ssl/server.keystore.bcfks"
+                   keystoreFile="/opt/apache-tomcat/ssl/server.keystore.bcfks"
                    clientAuth="false" sslProtocol="TLSv1.2"
                    >
             <!--SSLHostConfig hostName="osaas.webex.com" protocols="TLSv1.2">defaultSSLHostConfigName="osaas.webex.com"
