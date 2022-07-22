@@ -18,7 +18,7 @@ ENV CI=true
 ENV GRADLE_OPTS="-Xms256m -Xmx512m"
 
 ADD ./docker/mats-log/mats-monitoring-logback /root/.m2/repository/com/cisco/webex/mats/mats-monitoring-logback
-COPY ../../mats-frontend-il5 /datahub-src
+COPY . /datahub-src
 
 RUN cd /datahub-src \
     && rm -rf datahub-frontend/build \
