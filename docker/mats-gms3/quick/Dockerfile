@@ -46,7 +46,7 @@ COPY ./docker/mats-gms3/catalina.sh $TOMCAT_HOME/bin/catalina.sh
 RUN rm -f $TOMCAT_HOME/conf/web.xml
 
 #RUN chown -R $USER:$USER /home/$USER
-RUN chown -R $USER:$USER /datahub
+RUN chown -R wbxtomcat:wbxgroup /datahub
 #RUN chown -R $USER:$USER $TOMCAT_HOME
 
 #RUN chmod -R +x /home/$USER
