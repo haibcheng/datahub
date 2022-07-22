@@ -98,8 +98,8 @@
                    secure="true"
                    SSLEnabled="true"
                    keystorePass="testfips"
-                   defaultSSLHostConfigName="datahub.webex.com">
-            <SSLHostConfig>
+                   defaultSSLHostConfigName="osaas.webex.com">
+            <SSLHostConfig hostName="osaas.webex.com" protocols="TLSv1.2">
                 <Certificate certificateKeystoreFile="/opt/apache-tomcat/ssl/server.keystore.bcfks" type="RSA" />
             </SSLHostConfig>
         </Connector>
