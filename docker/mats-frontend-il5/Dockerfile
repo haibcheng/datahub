@@ -52,7 +52,6 @@ ENV JAVA_OPTS=" \
    -Dplay.server.https.keyStore.path=$SSL_HOME/server.keystore.bcfks \
    -Dplay.server.https.keyStore.password=$FIPS_KEYSTORE_PASS \
    -Dplay.server.https.keyStore.type=BCFKS \
-   -Dplay.server.https.keyStore.algorithm=RSA \
    -Dplay.server.akka.max-header-value-length=40960 \
    -Dconfig.file=datahub-frontend/conf/application.conf \
    -Djava.security.auth.login.config=datahub-frontend/conf/jaas.conf \
