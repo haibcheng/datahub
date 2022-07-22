@@ -5,8 +5,17 @@ ARG OSAAS_VERSION=1.9.202207
 
 FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
 
-ENV USER=rhel
-RUN yum install -y WBXjava-1.8.0-openjdk-hardening curl wget WBXtomcat-8.5.75
+ENV FIPS_KEYSTORE_PASS=testfips
+ENV FIPS_TRUSTSTORE_PASS=testfips
+ENV TOMCAT_HOME=/opt/apache-tomcat
+
+RUN yum install -y java-1.8.0 WBXFIPSJar curl wget WBXtomcat-8.5.75
+
+COPY ./docker/mats-security/java.security /usr/lib/jvm/jre/lib/security/java.security
+COPY ./docker/mats-security/certs $TOMCAT_HOME/ssl
+
+#RUN chmod 644 /usr/lib/jvm/jre/lib/security/java.security \
+#    && chmod -R 644 $TOMCAT_HOME/ssl
 
 ENV DR_VERSION v0.6.1
 
@@ -30,19 +39,19 @@ COPY ./metadata-models/src/main/resources/entity-registry.yml /datahub/datahub-g
 COPY ./docker/monitoring/client-prometheus-config.yaml /datahub/datahub-gms/scripts/prometheus-config.yaml
 
 COPY ./docker/mats-gms3/start.sh /datahub/datahub-gms/scripts/start.sh
-COPY ./docker/mats-gms3/server.xml /opt/apache-tomcat/conf/server.xml
-COPY ./docker/mats-gms3/tomcat-users.xml /opt/apache-tomcat/conf/tomcat-users.xml
-COPY ./docker/mats-gms3/catalina.sh /opt/apache-tomcat/bin/catalina.sh
+COPY ./docker/mats-gms3/server.xml $TOMCAT_HOME/conf/server.xml
+COPY ./docker/mats-gms3/tomcat-users.xml $TOMCAT_HOME/conf/tomcat-users.xml
+COPY ./docker/mats-gms3/catalina.sh $TOMCAT_HOME/bin/catalina.sh
 
-RUN rm -f /opt/apache-tomcat/conf/web.xml
+RUN rm -f $TOMCAT_HOME/conf/web.xml
 
-RUN chown -R $USER:$USER /home/$USER
+#RUN chown -R $USER:$USER /home/$USER
 RUN chown -R $USER:$USER /datahub
-RUN chown -R $USER:$USER /opt/apache-tomcat
+#RUN chown -R $USER:$USER $TOMCAT_HOME
 
-RUN chmod -R +x /home/$USER
+#RUN chmod -R +x /home/$USER
 RUN chmod +x /datahub/datahub-gms/scripts/start.sh
-RUN chmod +x /opt/apache-tomcat/bin/catalina.sh
+RUN chmod +x $TOMCAT_HOME/bin/catalina.sh
 
 FROM base as dev-install
 # Dummy stage for development. Assumes code is built on your machine and mounted to this image.
@@ -57,4 +66,5 @@ EXPOSE 8080
 
 HEALTHCHECK --start-period=2m --retries=4 CMD curl --fail http://localhost:8080/health || exit 1
 
+ENTRYPOINT ["gosu","wbxtomcat:wbxgroup","/usr/local/bin/dumb-init","/main.sh"]
 CMD /datahub/datahub-gms/scripts/start.sh
