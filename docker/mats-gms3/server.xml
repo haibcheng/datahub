@@ -98,10 +98,12 @@
                    secure="true"
                    SSLEnabled="true"
                    keystorePass="testfips"
-                   defaultSSLHostConfigName="osaas.webex.com">
-            <SSLHostConfig hostName="osaas.webex.com" protocols="TLSv1.2">
-                <Certificate certificateKeystoreFile="/opt/apache-tomcat/ssl/server.keystore.bcfks" type="RSA" />
-            </SSLHostConfig>
+                   keystoreFile="${TOMCAT_HOME}/ssl/server.keystore.bcfks"
+                   clientAuth="false" sslProtocol="TLSv1.2"
+                   >
+            <!--SSLHostConfig hostName="osaas.webex.com" protocols="TLSv1.2">defaultSSLHostConfigName="osaas.webex.com"
+                <Certificate certificateKeystoreFile="${TOMCAT_HOME}/ssl/server.keystore.bcfks" type="RSA" />
+            </SSLHostConfig-->
         </Connector>
 
         <!-- Define a SSL/TLS HTTP/1.1 Connector on port 8443 with HTTP/2
@@ -120,9 +122,9 @@
                    defaultSSLHostConfigName="datahub.webex.com">
             <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
             <SSLHostConfig hostName="datahub.webex.com" protocols="TLSv1.2">
-                <Certificate certificateKeyFile="/opt/apache-tomcat/ssl/server.keystore.bcfks"
-                             certificateFile="/opt/apache-tomcat/ssl/server.truststore.bcfks"
-                             certificateChainFile="/opt/apache-tomcat/ssl/server.truststore.bcfks"
+                <Certificate certificateKeyFile=""
+                             certificateFile=""
+                             certificateChainFile="s"
                              type="RSA" />
             </SSLHostConfig>
         </Connector-->
