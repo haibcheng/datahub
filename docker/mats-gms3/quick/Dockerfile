@@ -47,7 +47,7 @@ RUN rm -f $TOMCAT_HOME/conf/web.xml
 
 #RUN chown -R $USER:$USER /home/$USER
 RUN chown -R wbxtomcat:wbxgroup /datahub
-#RUN chown -R $USER:$USER $TOMCAT_HOME
+RUN chown -R wbxtomcat:wbxgroup $TOMCAT_HOME
 
 #RUN chmod -R +x /home/$USER
 RUN chmod +x /datahub/datahub-gms/scripts/start.sh
@@ -60,7 +60,16 @@ FROM base as dev-install
 FROM ${APP_ENV}-install as final
 
 ENV JMX_OPTS=""
-ENV JAVA_OPTS=""
+ENV JAVA_OPTS="-Djavax.net.debug=all \
+    -Djavax.net.ssl.keyStore=$TOMCAT_HOME/ssl/server.keystore.bcfks \
+    -Djavax.net.ssl.keyStorePassword=$FIPS_KEYSTORE_PASS \
+    -Djavax.net.ssl.trustStore=$TOMCAT_HOME/ssl/server.truststore.bcfks \
+    -Djavax.net.ssl.trustStorePassword=$FIPS_TRUSTSTORE_PASS \
+    -Djavax.net.ssl.keyStoreType=BCFKS \
+    -Djavax.net.ssl.trustStoreType=BCFKS \
+    -Djavax.net.ssl.keyStoreProvider=BCFIPS \
+    -Djavax.net.ssl.trustStoreProvider=BCFIPS \
+    -Djdk.tls.server.protocols=TLSv1.2"
 
 EXPOSE 8080
 
