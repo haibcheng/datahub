@@ -11,8 +11,8 @@ ENV FIPS_KEYSTORE_PASS=testfips
 ENV FIPS_TRUSTSTORE_PASS=testfips
 ENV SSL_HOME=/home/$USER/ssl
 
-COPY ./docker/mats-security/java.security /usr/lib/jvm/jre/lib/security/java.security
-COPY ./docker/mats-security/certs $SSL_HOME
+COPY ./docker/mats-security/il5/java.security /usr/lib/jvm/jre/lib/security/java.security
+COPY ./docker/mats-security/il5/certs $SSL_HOME
 
 RUN chmod 644 /usr/lib/jvm/jre/lib/security/java.security \
     && chmod -R 755 $SSL_HOME

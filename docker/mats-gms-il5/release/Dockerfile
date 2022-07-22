@@ -14,8 +14,8 @@ ENV DATAHUB_GMS_PORT=8443
 
 RUN yum install -y java-1.8.0 WBXFIPSJar curl wget WBXtomcat-8.5.75
 
-COPY ./docker/mats-security/java.security /usr/lib/jvm/jre/lib/security/java.security
-COPY ./docker/mats-security/certs $TOMCAT_HOME/ssl
+COPY ./docker/mats-security/il5/java.security /usr/lib/jvm/jre/lib/security/java.security
+COPY ./docker/mats-security/il5/certs $TOMCAT_HOME/ssl
 
 RUN chmod 644 /usr/lib/jvm/jre/lib/security/java.security \
     && chmod -R 755 $TOMCAT_HOME/ssl
