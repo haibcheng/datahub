@@ -48,7 +48,7 @@ RUN rm -f $TOMCAT_HOME/conf/web.xml
 RUN chown -R wbxtomcat:wbxgroup /datahub
 RUN chown -R wbxtomcat:wbxgroup $TOMCAT_HOME
 
-#RUN chmod -R +x /home/$USER
+RUN chmod -R +x /home/$USER
 RUN chmod +x /datahub/datahub-gms/scripts/start.sh
 RUN chmod +x $TOMCAT_HOME/bin/catalina.sh
 
@@ -59,7 +59,7 @@ FROM base as dev-install
 FROM ${APP_ENV}-install as final
 
 ENV JMX_OPTS=""
-ENV JAVA_OPTS="\
+ENV JAVA_OPTS="-Xms2g -Xmx4g \
     -Djavax.net.ssl.keyStore=$TOMCAT_HOME/ssl/server.keystore.bcfks \
     -Djavax.net.ssl.keyStorePassword=$FIPS_KEYSTORE_PASS \
     -Djavax.net.ssl.trustStore=$TOMCAT_HOME/ssl/server.truststore.bcfks \
