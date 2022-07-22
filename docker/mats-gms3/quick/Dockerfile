@@ -70,9 +70,9 @@ ENV JAVA_OPTS="-Djavax.net.debug=all \
     -Djavax.net.ssl.trustStoreProvider=BCFIPS \
     -Djdk.tls.server.protocols=TLSv1.2"
 
-EXPOSE 8080
+EXPOSE 8443
 
-HEALTHCHECK --start-period=2m --retries=4 CMD curl --fail http://localhost:8080/health || exit 1
+HEALTHCHECK --start-period=2m --retries=4 CMD curl --fail https://localhost:8443/health || exit 1
 
 ENTRYPOINT ["gosu","wbxtomcat:wbxgroup","/usr/local/bin/dumb-init","/main.sh"]
 CMD /datahub/datahub-gms/scripts/start.sh
