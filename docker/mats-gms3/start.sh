@@ -51,7 +51,7 @@ COMMON="
     $WAIT_FOR_KAFKA \
     $WAIT_FOR_NEO4J \
     -timeout 240s \
-    /opt/apache-tomcat/bin/catalina.sh run"
+    $TOMCAT_HOME/bin/catalina.sh run"
 
 if [[ $SKIP_ELASTICSEARCH_CHECK != true ]]; then
   dockerize \

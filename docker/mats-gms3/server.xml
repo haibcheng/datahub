@@ -68,6 +68,7 @@
              APR (HTTP/AJP) Connector: /docs/apr.html
              Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
         -->
+
         <Connector port="8080" protocol="HTTP/1.1"
                    connectionTimeout="20000" redirectPort="8443"
                    relaxedQueryChars='\[]|{}^`&quot;&lt;&gt;'
@@ -105,27 +106,31 @@
              Either JSSE or OpenSSL style configuration may be used. OpenSSL style
              configuration is used below.
         -->
-        <!--
-        <Connector port="8443" protocol="org.apache.coyote.http11.Http11AprProtocol"
-                   maxThreads="150" SSLEnabled="true" >
+
+        <!--Connector port="8443" protocol="org.apache.coyote.http11.Http11AprProtocol"
+                   maxThreads="150" compression="on"
+                   scheme="https"
+                   secure="true"
+                   SSLEnabled="true"
+                   keystorePass="testfips"
+                   defaultSSLHostConfigName="datahub.webex.com">
             <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
-            <SSLHostConfig>
-                <Certificate certificateKeyFile="conf/localhost-rsa-key.pem"
-                             certificateFile="conf/localhost-rsa-cert.pem"
-                             certificateChainFile="conf/localhost-rsa-chain.pem"
+            <SSLHostConfig hostName="datahub.webex.com" protocols="TLSv1.2">
+                <Certificate certificateKeyFile="/opt/apache-tomcat/ssl/server.keystore.bcfks"
+                             certificateFile="/opt/apache-tomcat/ssl/server.truststore.bcfks"
+                             certificateChainFile="/opt/apache-tomcat/ssl/server.truststore.bcfks"
                              type="RSA" />
             </SSLHostConfig>
-        </Connector>
-        -->
+        </Connector-->
 
         <!-- Enable 8444 for this instance as management,monitoring port -->
-        <Connector port="8444" maxHttpHeaderSize="8192"
+        <!--Connector port="8444" maxHttpHeaderSize="8192"
                    maxThreads="150" connectionTimeout="20000"
                    enableLookups="false" disableUploadTimeout="true"
                    acceptCount="100" scheme="https" secure="false"
                    allowTrace="false" xpoweredBy="false" server=" "
                    SSLEnabled="false"
-                   sslProtocol="TLS" />
+                   sslProtocol="TLS" /-->
 
         <!-- Define an AJP 1.3 Connector on port 8009 -->
         <!--
