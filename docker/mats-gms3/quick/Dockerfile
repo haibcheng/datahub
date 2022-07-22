@@ -14,8 +14,8 @@ RUN yum install -y java-1.8.0 WBXFIPSJar curl wget WBXtomcat-8.5.75
 COPY ./docker/mats-security/java.security /usr/lib/jvm/jre/lib/security/java.security
 COPY ./docker/mats-security/certs $TOMCAT_HOME/ssl
 
-#RUN chmod 644 /usr/lib/jvm/jre/lib/security/java.security \
-#    && chmod -R 644 $TOMCAT_HOME/ssl
+RUN chmod 644 /usr/lib/jvm/jre/lib/security/java.security \
+    && chmod -R 755 $TOMCAT_HOME/ssl
 
 ENV DR_VERSION v0.6.1
 
@@ -45,7 +45,6 @@ COPY ./docker/mats-gms3/catalina.sh $TOMCAT_HOME/bin/catalina.sh
 
 RUN rm -f $TOMCAT_HOME/conf/web.xml
 
-#RUN chown -R $USER:$USER /home/$USER
 RUN chown -R wbxtomcat:wbxgroup /datahub
 RUN chown -R wbxtomcat:wbxgroup $TOMCAT_HOME
 
