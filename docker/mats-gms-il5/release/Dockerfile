@@ -15,10 +15,7 @@ ENV DATAHUB_GMS_PORT=8443
 RUN yum install -y java-1.8.0 WBXFIPSJar curl wget WBXtomcat-8.5.75
 
 COPY ./docker/mats-security/il5/java.security /usr/lib/jvm/jre/lib/security/java.security
-COPY ./docker/mats-security/il5/certs $TOMCAT_HOME/ssl
-
-RUN chmod 644 /usr/lib/jvm/jre/lib/security/java.security \
-    && chmod -R 755 $TOMCAT_HOME/ssl
+RUN chmod 644 /usr/lib/jvm/jre/lib/security/java.security
 
 ENV DR_VERSION v0.6.1
 
@@ -76,9 +73,9 @@ FROM ${APP_ENV}-install as final
 
 ENV JMX_OPTS=""
 ENV JAVA_OPTS="-Xms2g -Xmx4g \
-    -Djavax.net.ssl.keyStore=$TOMCAT_HOME/ssl/server.keystore.bcfks \
+    -Djavax.net.ssl.keyStore=/etc/datahub/certs/server.keystore.bcfks \
     -Djavax.net.ssl.keyStorePassword=$FIPS_KEYSTORE_PASS \
-    -Djavax.net.ssl.trustStore=$TOMCAT_HOME/ssl/server.truststore.bcfks \
+    -Djavax.net.ssl.trustStore=/etc/datahub/certs/server.truststore.bcfks \
     -Djavax.net.ssl.trustStorePassword=$FIPS_TRUSTSTORE_PASS \
     -Djavax.net.ssl.keyStoreType=BCFKS \
     -Djavax.net.ssl.trustStoreType=BCFKS \

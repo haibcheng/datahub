@@ -98,7 +98,7 @@
                    secure="true"
                    SSLEnabled="true"
                    keystorePass="testfips"
-                   keystoreFile="/opt/apache-tomcat/ssl/server.keystore.bcfks"
+                   keystoreFile="/etc/datahub/certs/server.keystore.bcfks"
                    clientAuth="false" sslProtocol="TLSv1.2" />
 
         <!-- Define a SSL/TLS HTTP/1.1 Connector on port 8443 with HTTP/2

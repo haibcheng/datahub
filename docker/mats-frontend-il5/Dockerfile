@@ -9,13 +9,9 @@ RUN yum install -y java-1.8.0 WBXFIPSJar
 
 ENV FIPS_KEYSTORE_PASS=testfips
 ENV FIPS_TRUSTSTORE_PASS=testfips
-ENV SSL_HOME=/home/$USER/ssl
 
 COPY ./docker/mats-security/il5/java.security /usr/lib/jvm/jre/lib/security/java.security
-COPY ./docker/mats-security/il5/certs $SSL_HOME
-
-RUN chmod 644 /usr/lib/jvm/jre/lib/security/java.security \
-    && chmod -R 755 $SSL_HOME
+RUN chmod 644 /usr/lib/jvm/jre/lib/security/java.security
 
 FROM base as prod-install
 
@@ -49,7 +45,7 @@ ENV JAVA_OPTS=" \
    -Xmx2g \
    -Dhttp.port=disabled \
    -Dhttps.port=$SERVER_PORT \
-   -Dplay.server.https.keyStore.path=$SSL_HOME/server.keystore.bcfks \
+   -Dplay.server.https.keyStore.path=/etc/datahub/certs/server.keystore.bcfks \
    -Dplay.server.https.keyStore.password=$FIPS_KEYSTORE_PASS \
    -Dplay.server.https.keyStore.type=BCFKS \
    -Dplay.server.akka.max-header-value-length=40960 \
@@ -58,9 +54,9 @@ ENV JAVA_OPTS=" \
    -Dlogback.configurationFile=datahub-frontend/conf/logback.xml \
    -Dlogback.debug=false \
    -Dpidfile.path=/dev/null \
-   -Djavax.net.ssl.keyStore=$SSL_HOME/server.keystore.bcfks \
+   -Djavax.net.ssl.keyStore=/etc/datahub/certs/server.keystore.bcfks \
    -Djavax.net.ssl.keyStorePassword=$FIPS_KEYSTORE_PASS \
-   -Djavax.net.ssl.trustStore=$SSL_HOME/server.truststore.bcfks \
+   -Djavax.net.ssl.trustStore=/etc/datahub/certs/server.truststore.bcfks \
    -Djavax.net.ssl.trustStorePassword=$FIPS_TRUSTSTORE_PASS \
    -Djavax.net.ssl.keyStoreType=BCFKS \
    -Djavax.net.ssl.trustStoreType=BCFKS \
