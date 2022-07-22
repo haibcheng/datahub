@@ -90,4 +90,5 @@ EXPOSE 8443
 
 HEALTHCHECK --start-period=2m --retries=4 CMD curl --fail https://$DATAHUB_GMS_HOST:$DATAHUB_GMS_PORT/health || exit 1
 
+ENTRYPOINT ["gosu","wbxtomcat:wbxgroup","/usr/local/bin/dumb-init","/main.sh"]
 CMD /datahub/datahub-gms/scripts/start.sh
