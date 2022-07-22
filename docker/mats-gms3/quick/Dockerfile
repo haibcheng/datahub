@@ -9,6 +9,9 @@ ENV FIPS_KEYSTORE_PASS=testfips
 ENV FIPS_TRUSTSTORE_PASS=testfips
 ENV TOMCAT_HOME=/opt/apache-tomcat
 
+ENV DATAHUB_GMS_HOST=localhost
+ENV DATAHUB_GMS_PORT=8443
+
 RUN yum install -y java-1.8.0 WBXFIPSJar curl wget WBXtomcat-8.5.75
 
 COPY ./docker/mats-security/java.security /usr/lib/jvm/jre/lib/security/java.security
@@ -72,7 +75,7 @@ ENV JAVA_OPTS="-Xms2g -Xmx4g \
 
 EXPOSE 8443
 
-HEALTHCHECK --start-period=2m --retries=4 CMD curl --fail https://localhost:8443/health || exit 1
+HEALTHCHECK --start-period=2m --retries=4 CMD curl --fail https://$DATAHUB_GMS_HOST:$DATAHUB_GMS_PORT/health || exit 1
 
 ENTRYPOINT ["gosu","wbxtomcat:wbxgroup","/usr/local/bin/dumb-init","/main.sh"]
 CMD /datahub/datahub-gms/scripts/start.sh
