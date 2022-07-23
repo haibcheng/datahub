@@ -97,7 +97,7 @@
                    scheme="https"
                    secure="true"
                    SSLEnabled="true"
-                   keystorePass="testfips"
+                   keystorePass="${SSL_KEYSTORE_PASS}"
                    keystoreFile="/etc/datahub/certs/server.keystore.bcfks"
                    clientAuth="false" sslProtocol="TLSv1.2" />
 
