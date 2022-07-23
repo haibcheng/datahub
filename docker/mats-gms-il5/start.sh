@@ -9,7 +9,8 @@ JAVA_OPTS="$JAVA_OPTS -Djavax.net.ssl.keyStore=/etc/datahub/certs/server.keystor
     -Djavax.net.ssl.trustStoreType=BCFKS \
     -Djavax.net.ssl.keyStoreProvider=BCFIPS \
     -Djavax.net.ssl.trustStoreProvider=BCFIPS \
-    -Djdk.tls.server.protocols=TLSv1.2"
+    -Djdk.tls.server.protocols=TLSv1.2 \
+    -Dssl.keystore.password=$SSL_KEYSTORE_PASS"
 
 # Add default URI (http) scheme if needed
 if ! echo $NEO4J_HOST | grep -q "://" ; then
