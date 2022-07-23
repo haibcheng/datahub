@@ -22,4 +22,4 @@ JAVA_OPTS="$JAVA_OPTS -Dhttp.port=disabled \
     -Djavax.net.ssl.trustStoreProvider=BCFIPS \
     -Djdk.tls.server.protocols=TLSv1.2"
 
-source playBinary
+source /datahub-frontend/bin/playBinary
