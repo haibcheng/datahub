@@ -67,16 +67,7 @@ FROM base as dev-install
 FROM ${APP_ENV}-install as final
 
 ENV JMX_OPTS=""
-ENV JAVA_OPTS="-Xms2g -Xmx4g \
-    -Djavax.net.ssl.keyStore=/etc/datahub/certs/server.keystore.bcfks \
-    -Djavax.net.ssl.keyStorePassword=${SSL_KEYSTORE_PASS} \
-    -Djavax.net.ssl.trustStore=/etc/datahub/certs/server.truststore.bcfks \
-    -Djavax.net.ssl.trustStorePassword=${SSL_TRUSTSTORE_PASS} \
-    -Djavax.net.ssl.keyStoreType=BCFKS \
-    -Djavax.net.ssl.trustStoreType=BCFKS \
-    -Djavax.net.ssl.keyStoreProvider=BCFIPS \
-    -Djavax.net.ssl.trustStoreProvider=BCFIPS \
-    -Djdk.tls.server.protocols=TLSv1.2"
+ENV JAVA_OPTS=""
 
 EXPOSE 8443
 

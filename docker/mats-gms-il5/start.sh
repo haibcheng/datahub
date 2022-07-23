@@ -1,5 +1,16 @@
 #!/bin/bash
 set -x
+
+JAVA_OPTS="$JAVA_OPTS -Djavax.net.ssl.keyStore=/etc/datahub/certs/server.keystore.bcfks \
+    -Djavax.net.ssl.keyStorePassword=$SSL_KEYSTORE_PASS \
+    -Djavax.net.ssl.trustStore=/etc/datahub/certs/server.truststore.bcfks \
+    -Djavax.net.ssl.trustStorePassword=$SSL_TRUSTSTORE_PASS \
+    -Djavax.net.ssl.keyStoreType=BCFKS \
+    -Djavax.net.ssl.trustStoreType=BCFKS \
+    -Djavax.net.ssl.keyStoreProvider=BCFIPS \
+    -Djavax.net.ssl.trustStoreProvider=BCFIPS \
+    -Djdk.tls.server.protocols=TLSv1.2"
+
 # Add default URI (http) scheme if needed
 if ! echo $NEO4J_HOST | grep -q "://" ; then
     NEO4J_HOST="http://$NEO4J_HOST"
