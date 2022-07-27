@@ -29,7 +29,8 @@ COPY --from=prod-build /docker-build/usr /usr/
 
 RUN mkdir -p /usr/logs /etc/kafka /var/lib/zookeeper/data /var/lib/zookeeper/log /etc/zookeeper/secrets \
     && chown -R 1000:1000 /usr/logs /etc/kafka /var/lib/zookeeper /etc/zookeeper /etc/confluent/docker \
-    && chmod -R ug+w /etc/kafka /var/lib/zookeeper /etc/zookeeper /etc/confluent/docker
+    && chmod -R ug+w /etc/kafka /var/lib/zookeeper /etc/zookeeper /etc/confluent/docker \
+    && chmod -R 755 /usr/bin && chmod -R 755 /usr/share/java
 
 FROM prod-install as final
 

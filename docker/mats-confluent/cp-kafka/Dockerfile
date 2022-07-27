@@ -30,7 +30,8 @@ COPY --from=prod-build /docker-build/usr /usr/
 
 RUN mkdir -p /usr/logs /var/lib/kafka/data /etc/kafka/secrets \
     && chown -R 1000:1000 /usr/logs /etc/kafka /var/lib/kafka /etc/confluent/docker \
-    && chmod -R ug+w /etc/kafka /var/lib/kafka/data /etc/kafka/secrets /etc/confluent/docker
+    && chmod -R ug+w /etc/kafka /var/lib/kafka/data /etc/kafka/secrets /etc/confluent/docker \
+    && chmod -R 755 /usr/bin && chmod -R 755 /usr/share/java
 
 FROM prod-install as final
 

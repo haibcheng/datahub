@@ -35,7 +35,8 @@ COPY --from=prod-build /docker-build/usr /usr/
 RUN echo "===> Setting up ${COMPONENT} dirs" \
     && mkdir -p /etc/${COMPONENT}/secrets /usr/logs \
     && chown 1000:1000 -R /etc/${COMPONENT} /usr/logs /etc/confluent/docker \
-    && chmod -R ug+w /etc/${COMPONENT} /etc/${COMPONENT}/secrets /etc/confluent/docker
+    && chmod -R ug+w /etc/${COMPONENT} /etc/${COMPONENT}/secrets /etc/confluent/docker \
+    && chmod -R 755 /usr/bin && chmod -R 755 /usr/share/java
 
 FROM prod-install as final
 
