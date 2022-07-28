@@ -29,14 +29,14 @@ FROM base as prod-install
 COPY --from=prod-build /docker-build/etc /etc/
 COPY --from=prod-build /docker-build/usr /usr/
 
-RUN mkdir -p /usr/logs /var/lib/kafka/data /etc/kafka/secrets \
-    && chown -R 1000:1000 /usr/logs /etc/kafka /var/lib/kafka /etc/confluent/docker \
-    && chmod -R ug+w /etc/kafka /var/lib/kafka/data /etc/kafka/secrets /etc/confluent/docker \
+RUN mkdir -p /usr/logs /var/kafka/data /etc/kafka/secrets \
+    && chown -R 1000:1000 /usr/logs /etc/kafka /var/kafka /etc/confluent/docker \
+    && chmod -R ug+w /etc/kafka /var/kafka/data /etc/kafka/secrets /etc/confluent/docker \
     && chmod -R 755 /usr/bin && chmod -R 755 /usr/share/java
 
 FROM prod-install as final
 
-VOLUME ["/var/lib/kafka/data", "/etc/kafka/secrets"]
+VOLUME ["/var/kafka/data", "/etc/kafka/secrets"]
 
 EXPOSE 9093
 
