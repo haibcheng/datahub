@@ -38,7 +38,7 @@ FROM prod-install as final
 
 VOLUME ["/var/lib/kafka/data", "/etc/kafka/secrets"]
 
-EXPOSE 9092
+EXPOSE 9093
 
 ENV JAVA_OPTS=""
 
