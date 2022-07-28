@@ -11,7 +11,7 @@ export KAFKA_SSL_KEYSTORE_CREDENTIALS=keystore.credentials
 export KAFKA_SSL_TRUSTSTORE_FILENAME=server.truststore.bcfks
 export KAFKA_SSL_TRUSTSTORE_CREDENTIALS=truststore.credentials
 
-export KAFKA_LOG_DIRS=/var/kafka/data
+export KAFKA_DATA_DIRS=/var/kafka/data
 
 JAVA_OPTS="$JAVA_OPTS \
     -Djavax.net.ssl.keyStore=/etc/kafka/secrets/server.keystore.bcfks \
