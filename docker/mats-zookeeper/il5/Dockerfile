@@ -12,9 +12,8 @@ COPY ./docker/mats-zookeeper/il5/zk_run.sh /opt/apache-zookeeper-3.6.3/bin/zk_ru
 RUN mkdir -p /var/zookeeper/data /var/zookeeper/datalog /var/zookeeper/logs \
     && chmod 644 /usr/lib/jvm/jre/lib/security/java.security \
     && chmod 644 /opt/apache-zookeeper-3.6.3/conf/zoo.cfg \
-    && chmod -R 755 /opt/apache-zookeeper-3.6.3/bin \
-    && chown -R 1000:1000 /var/zookeeper \
-    && chmod -R 755 /var/zookeeper
+    && chmod -R 755 /opt/apache-zookeeper-3.6.3 \
+    && chown -R 1000:1000 /var/zookeeper
 
 FROM base as final
 
