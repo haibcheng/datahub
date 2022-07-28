@@ -9,9 +9,12 @@ COPY ./docker/mats-zookeeper/il5/java.security /usr/lib/jvm/jre/lib/security/jav
 COPY ./docker/mats-zookeeper/il5/zoo.cfg /opt/apache-zookeeper-3.6.3/conf/zoo.cfg
 COPY ./docker/mats-zookeeper/il5/zk_run.sh /opt/apache-zookeeper-3.6.3/bin/zk_run.sh
 
-RUN chmod 644 /usr/lib/jvm/jre/lib/security/java.security \
+RUN mkdir -p /var/zookeeper/data /var/zookeeper/log \
+    && chmod 644 /usr/lib/jvm/jre/lib/security/java.security \
     && chmod 644 /opt/apache-zookeeper-3.6.3/conf/zoo.cfg \
-    && chmod 755 /opt/apache-zookeeper-3.6.3/bin/zk_run.sh
+    && chmod -R 755 /opt/apache-zookeeper-3.6.3/bin \
+    && chown -R 1000:1000 /var/zookeeper \
+    && chmod -R 755 /var/zookeeper
 
 FROM base as final
 
