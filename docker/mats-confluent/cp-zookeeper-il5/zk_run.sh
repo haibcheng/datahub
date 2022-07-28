@@ -25,4 +25,4 @@ JAVA_OPTS="$JAVA_OPTS \
     -Dzookeeper.ssl.quorum.trustStore.type=BCFIPS \
     -Dzookeeper.ssl.quorum.hostnameVerification=false"
 
-. run
+. /etc/confluent/docker/run
