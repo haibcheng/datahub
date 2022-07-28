@@ -11,8 +11,6 @@ export KAFKA_SSL_KEYSTORE_CREDENTIALS=keystore.credentials
 export KAFKA_SSL_TRUSTSTORE_FILENAME=server.truststore.bcfks
 export KAFKA_SSL_TRUSTSTORE_CREDENTIALS=truststore.credentials
 
-export KAFKA_DATA_DIRS=/var/kafka/data
-
 SSL_KEYSTORE_LOCATION=/etc/kafka/secrets/server.keystore.bcfks
 SSL_KEYSTORE_PASS=$(cat "/etc/kafka/secrets/keystore.credentials")
 SSL_TRUSTSTORE_LOCATION=/etc/kafka/secrets/server.truststore.bcfks
