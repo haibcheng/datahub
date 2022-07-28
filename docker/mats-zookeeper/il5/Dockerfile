@@ -11,7 +11,7 @@ COPY ./docker/mats-zookeeper/il5/zk_run.sh /opt/apache-zookeeper-3.6.3/bin/zk_ru
 
 RUN chmod 644 /usr/lib/jvm/jre/lib/security/java.security \
     && chmod 644 /opt/apache-zookeeper-3.6.3/conf/zoo.cfg \
-    && chmod 644 /opt/apache-zookeeper-3.6.3/bin/zk_run.sh
+    && chmod 755 /opt/apache-zookeeper-3.6.3/bin/zk_run.sh
 
 FROM base as final
 
