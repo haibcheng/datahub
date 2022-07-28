@@ -22,6 +22,14 @@ JAVA_OPTS="$JAVA_OPTS \
     -Djavax.net.ssl.trustStoreType=BCFKS \
     -Djavax.net.ssl.keyStoreProvider=BCFIPS \
     -Djavax.net.ssl.trustStoreProvider=BCFIPS \
-    -Djdk.tls.server.protocols=TLSv1.2"
+    -Djdk.tls.server.protocols=TLSv1.2 \
+    -Dzookeeper.clientCnxnSocket=org.apache.zookeeper.ClientCnxnSocketNetty \
+    -Dzookeeper.client.secure=true \
+    -Dzookeeper.ssl.keyStore.location=/etc/kafka/secrets/server.keystore.bcfks \
+    -Dzookeeper.ssl.keyStore.password=$(cat "/etc/kafka/secrets/$KAFKA_SSL_KEYSTORE_CREDENTIALS") \
+    -Dzookeeper.ssl.trustStore.location=/etc/kafka/secrets/server.truststore.bcfks \
+    -Dzookeeper.ssl.trustStore.password=$(cat "/etc/kafka/secrets/$KAFKA_SSL_TRUSTSTORE_CREDENTIALS") \
+    -Dzookeeper.ssl.trustStore.type=BCFKS \
+    -Dzookeeper.ssl.keyStore.type=BCFKS"
 
 exec /etc/confluent/docker/run
