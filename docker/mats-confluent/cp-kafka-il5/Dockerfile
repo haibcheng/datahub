@@ -11,7 +11,7 @@ RUN python3.9 -m pip install --prefer-binary --prefix=/usr/local --upgrade "${PY
 
 RUN yum remove -y git || true
 
-COPY ./docker/mats-security/il5/java.security /usr/lib/jvm/jre/lib/security/java.security
+COPY ./docker/mats-zookeeper/il5/java.security /usr/lib/jvm/jre/lib/security/java.security
 RUN chmod 644 /usr/lib/jvm/jre/lib/security/java.security
 
 FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} AS prod-build
