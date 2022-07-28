@@ -15,7 +15,7 @@ RUN chmod 644 /usr/lib/jvm/jre/lib/security/java.security \
 
 FROM base as final
 
-VOLUME ["/var/lib/zookeeper/data", "/var/lib/zookeeper/log", "/etc/zookeeper/secrets"]
+VOLUME ["/var/zookeeper/data", "/var/zookeeper/log", "/etc/zookeeper/secrets"]
 
 EXPOSE 2281 2888 3888
 
