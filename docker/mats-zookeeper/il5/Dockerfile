@@ -7,6 +7,7 @@ RUN yum install -y java-1.8.0 WBXFIPSJar WBXzookeeper
 
 COPY ./docker/mats-zookeeper/il5/java.security /usr/lib/jvm/jre/lib/security/java.security
 COPY ./docker/mats-zookeeper/il5/zoo.cfg /opt/apache-zookeeper-3.6.3/conf/zoo.cfg
+COPY ./docker/mats-zookeeper/il5/log4j.properties /opt/apache-zookeeper-3.6.3/conf/log4j.properties
 COPY ./docker/mats-zookeeper/il5/zk_run.sh /opt/apache-zookeeper-3.6.3/bin/zk_run.sh
 
 RUN mkdir -p /var/zookeeper/data /var/zookeeper/datalog /var/zookeeper/logs \
