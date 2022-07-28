@@ -14,27 +14,18 @@ RUN yum remove -y git || true
 COPY ./docker/mats-zookeeper/il5/java.security /usr/lib/jvm/jre/lib/security/java.security
 RUN chmod 644 /usr/lib/jvm/jre/lib/security/java.security
 
-FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} AS prod-build
-
-COPY ./docker/mats-confluent/confluent-7.2.0/bin/kafka-run-class /docker-build/usr/bin/
-COPY ./docker/mats-confluent/confluent-7.2.0/bin/kafka-server-start /docker-build/usr/bin/
-COPY ./docker/mats-confluent/confluent-7.2.0/bin/kafka-server-stop /docker-build/usr/bin/
-COPY ./docker/mats-confluent/confluent-7.2.0/share/java/kafka /docker-build/usr/share/java/kafka
-COPY ./docker/mats-confluent/confluent-7.2.0/share/java/cp-base-new /docker-build/usr/share/java/cp-base-new
-COPY ./docker/mats-confluent/cp-kafka/docker /docker-build/etc/confluent/docker/
-COPY ./docker/mats-confluent/cp-kafka-il5/ka_run.sh /docker-build/etc/confluent/docker/
-
-FROM base as prod-install
-
-COPY --from=prod-build /docker-build/etc /etc/
-COPY --from=prod-build /docker-build/usr /usr/
+COPY ./docker/mats-confluent/confluent-7.2.0/bin/kafka-run-class /usr/bin/
+COPY ./docker/mats-confluent/confluent-7.2.0/bin/kafka-server-start /usr/bin/
+COPY ./docker/mats-confluent/confluent-7.2.0/bin/kafka-server-stop /usr/bin/
+COPY ./docker/mats-confluent/confluent-7.2.0/share/java/kafka /usr/share/java/kafka
+COPY ./docker/mats-confluent/confluent-7.2.0/share/java/cp-base-new /usr/share/java/cp-base-new
+COPY ./docker/mats-confluent/cp-kafka/docker /etc/confluent/docker/
+COPY ./docker/mats-confluent/cp-kafka-il5/ka_run.sh /etc/confluent/docker/
 
 RUN mkdir -p /usr/logs /var/lib/kafka/data /etc/kafka/secrets \
     && chown -R 1000:1000 /usr/logs /var/lib/kafka /etc/kafka /etc/confluent/docker \
     && chmod -R ug+w /etc/kafka /etc/confluent/docker \
     && chmod -R 755 /usr/bin && chmod -R 755 /usr/share/java
-
-FROM prod-install as final
 
 VOLUME ["/var/lib/kafka/data", "/etc/kafka/secrets"]
 

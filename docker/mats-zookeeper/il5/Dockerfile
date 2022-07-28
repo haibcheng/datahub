@@ -16,8 +16,6 @@ RUN mkdir -p /var/zookeeper/data /var/zookeeper/datalog \
     && chmod -R 755 /opt/apache-zookeeper-3.6.3 \
     && chown -R 1000:1000 /var/zookeeper
 
-FROM base as final
-
 VOLUME ["/var/zookeeper/data", "/var/zookeeper/datalog", "/etc/zookeeper/secrets"]
 
 EXPOSE 2281 2888 3888
