@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 
 JAVA_OPTS="$JAVA_OPTS \
     -Djavax.net.ssl.keyStore=/etc/datahub/certs/server.keystore.bcfks \
@@ -25,5 +24,3 @@ JAVA_OPTS="$JAVA_OPTS \
     -Dzookeeper.ssl.quorum.trustStore.password=$SSL_TRUSTSTORE_PASS \
     -Dzookeeper.ssl.quorum.trustStore.type=BCFIPS \
     -Dzookeeper.ssl.quorum.hostnameVerification=false"
-
-. /etc/confluent/docker/run
