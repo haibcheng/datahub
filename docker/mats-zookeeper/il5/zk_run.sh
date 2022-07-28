@@ -25,4 +25,8 @@ export SERVER_JVMFLAGS="\
     -Dzookeeper.ssl.trustStore.password=$SSL_TRUSTSTORE_PASS \
     -Dzookeeper.ssl.trustStore.type=BCFKS"
 
-exec /opt/apache-zookeeper-3.6.3/bin/zkServer.sh start
+export ZOO_DATA_DIR=/var/zookeeper/data
+export ZOO_DATA_LOG_DIR=/var/zookeeper/datalog
+export ZOO_LOG_DIR=/var/zookeeper/logs
+
+exec /opt/apache-zookeeper-3.6.3/bin/zkServer.sh start-foreground
