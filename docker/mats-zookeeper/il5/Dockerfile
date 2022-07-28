@@ -10,7 +10,7 @@ COPY ./docker/mats-zookeeper/il5/zoo.cfg /opt/apache-zookeeper-3.6.3/conf/zoo.cf
 COPY ./docker/mats-zookeeper/il5/log4j.properties /opt/apache-zookeeper-3.6.3/conf/log4j.properties
 COPY ./docker/mats-zookeeper/il5/zk_run.sh /opt/apache-zookeeper-3.6.3/bin/zk_run.sh
 
-RUN mkdir -p /var/zookeeper/data /var/zookeeper/datalog /var/zookeeper/logs \
+RUN mkdir -p /var/zookeeper/data /var/zookeeper/datalog \
     && chmod 644 /usr/lib/jvm/jre/lib/security/java.security \
     && chmod 644 /opt/apache-zookeeper-3.6.3/conf/zoo.cfg \
     && chmod -R 755 /opt/apache-zookeeper-3.6.3 \
@@ -18,7 +18,7 @@ RUN mkdir -p /var/zookeeper/data /var/zookeeper/datalog /var/zookeeper/logs \
 
 FROM base as final
 
-VOLUME ["/var/zookeeper/data", "/var/zookeeper/datalog", "/var/zookeeper/logs", "/etc/zookeeper/secrets"]
+VOLUME ["/var/zookeeper/data", "/var/zookeeper/datalog", "/etc/zookeeper/secrets"]
 
 EXPOSE 2281 2888 3888
 
