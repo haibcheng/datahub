@@ -21,7 +21,7 @@ COPY ./docker/mats-confluent/confluent-7.2.0/bin/zookeeper-server-start /docker-
 COPY ./docker/mats-confluent/confluent-7.2.0/bin/zookeeper-server-stop /docker-build/usr/bin/
 COPY ./docker/mats-confluent/confluent-7.2.0/share/java/kafka /docker-build/usr/share/java/kafka
 COPY ./docker/mats-confluent/cp-zookeeper/docker /docker-build/etc/confluent/docker/
-COPY ./docker/mats-confluent/cp-zookeeper-il5/zk_start.sh /docker-build/usr/bin/
+COPY ./docker/mats-confluent/cp-zookeeper-il5/zk_env.sh /docker-build/usr/bin/
 
 FROM base as prod-install
 
