@@ -37,7 +37,7 @@ FROM prod-install as final
 
 VOLUME ["/var/lib/zookeeper/data", "/var/lib/zookeeper/log", "/etc/zookeeper/secrets"]
 
-EXPOSE 2181 2888 3888
+EXPOSE 2281 2888 3888
 
 ENV JAVA_OPTS=""
 
