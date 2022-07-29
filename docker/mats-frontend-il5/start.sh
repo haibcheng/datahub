@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 
 SSL_KEYSTORE_LOCATION=/etc/datahub/certs/server.keystore.bcfks
 SSL_KEYSTORE_PASS=$(cat "/etc/datahub/certs/keystore.credentials")
