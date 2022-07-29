@@ -12,10 +12,10 @@ export KAFKA_SSL_KEYSTORE_CREDENTIALS=keystore.credentials
 export KAFKA_SSL_TRUSTSTORE_FILENAME=server.truststore.bcfks
 export KAFKA_SSL_TRUSTSTORE_CREDENTIALS=truststore.credentials
 
-SSL_KEYSTORE_LOCATION=/etc/kafka/secrets/server.keystore.bcfks
-SSL_KEYSTORE_PASS=$(cat "/etc/kafka/secrets/keystore.credentials")
-SSL_TRUSTSTORE_LOCATION=/etc/kafka/secrets/server.truststore.bcfks
-SSL_TRUSTSTORE_PASS=$(cat "/etc/kafka/secrets/truststore.credentials")
+SSL_KEYSTORE_LOCATION="/etc/kafka/secrets/$KAFKA_SSL_KEYSTORE_FILENAME"
+SSL_KEYSTORE_PASS=$(cat "/etc/kafka/secrets/$KAFKA_SSL_KEYSTORE_CREDENTIALS")
+SSL_TRUSTSTORE_LOCATION="/etc/kafka/secrets/$KAFKA_SSL_TRUSTSTORE_FILENAME"
+SSL_TRUSTSTORE_PASS=$(cat "/etc/kafka/secrets/$KAFKA_SSL_TRUSTSTORE_CREDENTIALS")
 
 JAVA_OPTS="$JAVA_OPTS \
     -Djavax.net.ssl.keyStore=$SSL_KEYSTORE_LOCATION \

@@ -22,7 +22,8 @@ COPY ./docker/mats-confluent/confluent-7.2.0/share/java/cp-base-new /usr/share/j
 COPY ./docker/mats-confluent/cp-kafka/docker /etc/confluent/docker/
 COPY ./docker/mats-confluent/cp-kafka-il5/ka_run.sh /etc/confluent/docker/
 
-RUN mkdir -p /usr/logs /var/lib/kafka/data /etc/kafka/secrets \
+RUN echo "===> Setting up ${COMPONENT} dirs" \
+    && mkdir -p /usr/logs /var/lib/kafka/data /etc/kafka/secrets \
     && chown -R 1000:1000 /usr/logs /var/lib/kafka /etc/kafka /etc/confluent/docker \
     && chmod -R ug+w /etc/kafka /etc/confluent/docker \
     && chmod -R 755 /usr/bin && chmod -R 755 /usr/share/java
