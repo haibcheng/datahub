@@ -48,12 +48,11 @@ WORKDIR /
 
 ARG SERVER_PORT=9443
 ENV SERVER_PORT=$SERVER_PORT
-ENV SERVER_HOST=localhost
 
 RUN echo $SERVER_PORT
 EXPOSE $SERVER_PORT
 
-HEALTHCHECK --start-period=2m --retries=4 CMD curl -k --fail https://$SERVER_HOST:$SERVER_PORT/admin || exit 1
+HEALTHCHECK --start-period=2m --retries=4 CMD curl -k --fail https://localhost:$SERVER_PORT/admin || exit 1
 
 ENV JAVA_OPTS=""
 
