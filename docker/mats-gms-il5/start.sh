@@ -8,6 +8,9 @@ SSL_TRUSTSTORE_PASS=$(cat "/etc/datahub/certs/truststore.credentials")
 POSTGRES_PASS=$(cat "/etc/datahub/certs/postgres.credentials")
 ELASTICSEARCH_PASS=$(cat "/etc/datahub/certs/elasticsearch.credentials")
 
+MACHINE_ACCOUNT_PASS=$(cat "/etc/datahub/certs/machine.account.credentials")
+CI_CLIENT_PASS=$(cat "/etc/datahub/certs/ci.client.credentials")
+
 JAVA_OPTS="$JAVA_OPTS -Djavax.net.ssl.keyStore=$SSL_KEYSTORE_LOCATION \
     -Djavax.net.ssl.keyStorePassword=$SSL_KEYSTORE_PASS \
     -Djavax.net.ssl.keyStoreType=BCFKS \
@@ -37,6 +40,8 @@ export SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_SSL_TRUSTSTORE_TYPE=BCFKS
 export EBEAN_DATASOURCE_PASSWORD="$POSTGRES_PASS"
 export ELASTICSEARCH_PASSWORD="$ELASTICSEARCH_PASS"
 export ES_PASSWORD="$ELASTICSEARCH_PASSWORD"
+export MATS_CI_MACHINE_ACCOUNT_PASS="$MACHINE_ACCOUNT_PASS"
+export MATS_CI_CLIENT_PASS="$CI_CLIENT_PASS"
 
 # Add default URI (http) scheme if needed
 if ! echo $NEO4J_HOST | grep -q "://" ; then

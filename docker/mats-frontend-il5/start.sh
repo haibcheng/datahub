@@ -6,7 +6,7 @@ SSL_TRUSTSTORE_LOCATION=/etc/datahub/certs/server.truststore.bcfks
 SSL_TRUSTSTORE_PASS=$(cat "/etc/datahub/certs/truststore.credentials")
 ELASTICSEARCH_PASS=$(cat "/etc/datahub/certs/elasticsearch.credentials")
 DATAHUB_SECRET_C=$(cat "/etc/datahub/certs/datahub.secret")
-AUTH_OIDC_CLIENT_SECRET_C=$(cat "/etc/datahub/certs/oidcclient.secret")
+AUTH_OIDC_CLIENT_SECRET_C=$(cat "/etc/datahub/certs/oidc.client.secret")
 
 JAVA_OPTS="$JAVA_OPTS -Dhttp.port=disabled \
     -Dhttps.port=$SERVER_PORT \
