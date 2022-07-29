@@ -1,13 +1,18 @@
 #!/bin/bash
 set -x
 
-JAVA_OPTS="$JAVA_OPTS -Djavax.net.ssl.keyStore=/etc/datahub/certs/server.keystore.bcfks \
+SSL_KEYSTORE_LOCATION=/etc/datahub/certs/server.keystore.bcfks
+SSL_KEYSTORE_PASS=$(cat "/etc/datahub/certs/keystore.credentials")
+SSL_TRUSTSTORE_LOCATION=/etc/datahub/certs/server.truststore.bcfks
+SSL_TRUSTSTORE_PASS=$(cat "/etc/datahub/certs/truststore.credentials")
+
+JAVA_OPTS="$JAVA_OPTS -Djavax.net.ssl.keyStore=$SSL_KEYSTORE_LOCATION \
     -Djavax.net.ssl.keyStorePassword=$SSL_KEYSTORE_PASS \
-    -Djavax.net.ssl.trustStore=/etc/datahub/certs/server.truststore.bcfks \
-    -Djavax.net.ssl.trustStorePassword=$SSL_TRUSTSTORE_PASS \
     -Djavax.net.ssl.keyStoreType=BCFKS \
-    -Djavax.net.ssl.trustStoreType=BCFKS \
     -Djavax.net.ssl.keyStoreProvider=BCFIPS \
+    -Djavax.net.ssl.trustStore=$SSL_TRUSTSTORE_LOCATION \
+    -Djavax.net.ssl.trustStorePassword=$SSL_TRUSTSTORE_PASS \
+    -Djavax.net.ssl.trustStoreType=BCFKS \
     -Djavax.net.ssl.trustStoreProvider=BCFIPS \
     -Djdk.tls.server.protocols=TLSv1.2 \
     -Dssl.keystore.password=$SSL_KEYSTORE_PASS"
