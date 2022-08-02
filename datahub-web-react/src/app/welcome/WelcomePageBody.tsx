@@ -1694,8 +1694,7 @@ export const WelcomePageBody = () => {
                         <p>
                             &quot;Data ecosystems are diverse — too diverse. DataHub&apos;s extensible metadata platform
                             enables data discovery, data observability and federated governance that helps you tame this
-                            complexity. DataHub&apos;s extensible metadata platform enables data discovery, data
-                            observability and federated governance that helps you tame this complexity. &quot;
+                            complexity. &quot;
                             <br />
                             <span style={{ opacity: 0.3 }}>-- From Datahub Official website</span>.
                         </p>
