@@ -4,7 +4,7 @@ ARG OSAAS_VERSION=1.9.202207
 FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
 
 ENV COMPONENT=schema-registry
-RUN yum install -y java-1.8.0 WBXFIPSJar python3.9 python39-pip python39-setuptools git
+RUN yum install -y WBXjava-1.8.0-openjdk-hardening WBXFIPSJar python3.9 python39-pip python39-setuptools git
 
 ENV PYTHON_CONFLUENT_DOCKER_UTILS_INSTALL_SPEC=git+https://github.com/confluentinc/confluent-docker-utils@v0.0.52
 RUN python3.9 -m pip install --prefer-binary --prefix=/usr/local --upgrade "${PYTHON_CONFLUENT_DOCKER_UTILS_INSTALL_SPEC}"

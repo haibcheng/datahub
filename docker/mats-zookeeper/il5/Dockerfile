@@ -3,7 +3,7 @@ ARG OSAAS_VERSION=1.9.202207
 
 FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
 
-RUN yum install -y java-1.8.0 WBXFIPSJar WBXzookeeper
+RUN yum install -y WBXjava-1.8.0-openjdk-hardening WBXFIPSJar WBXzookeeper
 
 COPY ./docker/mats-zookeeper/il5/java.security /usr/lib/jvm/jre/lib/security/java.security
 COPY ./docker/mats-zookeeper/il5/zoo.cfg /opt/apache-zookeeper-3.6.3/conf/zoo.cfg

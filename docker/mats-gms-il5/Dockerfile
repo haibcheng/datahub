@@ -6,7 +6,7 @@ ARG OSAAS_VERSION=1.9.202207
 FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
 
 ENV TOMCAT_HOME=/opt/apache-tomcat
-RUN yum install -y java-1.8.0 WBXFIPSJar curl wget WBXtomcat-8.5.75
+RUN yum install -y WBXjava-1.8.0-openjdk-hardening WBXFIPSJar curl wget WBXtomcat-8.5.75
 
 COPY ./docker/mats-security/il5/java.security /usr/lib/jvm/jre/lib/security/java.security
 RUN chmod 644 /usr/lib/jvm/jre/lib/security/java.security
