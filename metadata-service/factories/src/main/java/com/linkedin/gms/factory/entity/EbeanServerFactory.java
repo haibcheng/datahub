@@ -51,7 +51,7 @@ public class EbeanServerFactory {
       PreparedStatement stmtForCheckSSL = conn.prepareStatement("select ssl_is_used()");
       ResultSet rs = stmtForCheckSSL.executeQuery();
       if (rs.next()) {
-        System.out.println("ssl_is_used: " + rs.getString(1));
+        log.info("ssl_is_used: " + rs.getString(1));
       }
     } catch (Exception ex) {
       log.error("Failed to test database connection [" + serverConfig.getDataSourceConfig().getUrl() + "]", ex);
