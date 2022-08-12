@@ -11,7 +11,7 @@ ELASTICSEARCH_PASS=$(cat "/etc/datahub/certs/elasticsearch.credentials")
 MACHINE_ACCOUNT_PASS=$(cat "/etc/datahub/certs/machine.account.credentials")
 CI_CLIENT_PASS=$(cat "/etc/datahub/certs/ci.client.credentials")
 
-JAVA_OPTS="$JAVA_OPTS -Djavax.net.debug=all -Djavax.net.ssl.keyStore=$SSL_KEYSTORE_LOCATION \
+JAVA_OPTS="$JAVA_OPTS -Djavax.net.debug=ssl -Djavax.net.ssl.keyStore=$SSL_KEYSTORE_LOCATION \
     -Djavax.net.ssl.keyStorePassword=$SSL_KEYSTORE_PASS \
     -Djavax.net.ssl.keyStoreType=BCFKS \
     -Djavax.net.ssl.keyStoreProvider=BCFIPS \
