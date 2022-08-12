@@ -17,6 +17,7 @@ public class DBChecker
         Properties props = new Properties();
         props.setProperty("user", user);
         props.setProperty("password", password);
+        props.setProperty("driver", driver);
 
         Connection conn = null;
         try {
