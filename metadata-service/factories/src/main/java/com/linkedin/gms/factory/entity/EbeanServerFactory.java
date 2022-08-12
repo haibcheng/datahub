@@ -54,7 +54,7 @@ public class EbeanServerFactory {
         System.out.println("ssl_is_used: " + rs.getString(1));
       }
     } catch (Exception ex) {
-      log.error("Fail test database connection [" + serverConfig.getDataSourceConfig().getUrl() + "]", ex);
+      log.error("Failed to test database connection [" + serverConfig.getDataSourceConfig().getUrl() + "]", ex);
       try {
         if(conn != null) {
           conn.close();
