@@ -9,10 +9,10 @@ import java.util.Properties;
 public class DBChecker
 {
     public static void main(String[] args) {
-        connection(args[0], args[1], args[2], args[3]);
+        new DBChecker().connection(args[0], args[1], args[2], args[3]);
     }
 
-    public static void connection(String user, String password, String driver, String url) {
+    public void connection(String user, String password, String driver, String url) {
 
         Properties props = new Properties();
         props.setProperty("user", user);
@@ -24,7 +24,7 @@ public class DBChecker
             if (contextLoader != null) {
                 Class.forName(driver, true, contextLoader);
             } else {
-                Class.forName(driver, true, DBChecker.class.getClassLoader());
+                Class.forName(driver, true, this.getClass().getClassLoader());
             }
             conn = DriverManager.getConnection(url, props);
             PreparedStatement ps = conn.prepareStatement("select 1");

@@ -31,7 +31,7 @@ public class EbeanServerFactory {
     }
     // TODO: Consider supporting SCSI
 
-    DBChecker.connection(
+    new DBChecker().connection(
             serverConfig.getDataSourceConfig().getUsername(),
             serverConfig.getDataSourceConfig().getPassword(),
             serverConfig.getDataSourceConfig().getDriver(),
