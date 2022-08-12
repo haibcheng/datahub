@@ -1,23 +1,19 @@
 package com.linkedin.gms.factory.entity;
 
+import com.linkedin.metadata.dao.DBChecker;
 import com.linkedin.metadata.entity.ebean.EbeanAspectV2;
 import io.ebean.EbeanServer;
 import io.ebean.config.ServerConfig;
-import javax.annotation.Nonnull;
-
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
-import java.sql.*;
-import java.util.Properties;
+import javax.annotation.Nonnull;
 
 
 @Configuration
-@Slf4j
 public class EbeanServerFactory {
   public static final String EBEAN_MODEL_PACKAGE = EbeanAspectV2.class.getPackage().getName();
 
@@ -35,38 +31,13 @@ public class EbeanServerFactory {
     }
     // TODO: Consider supporting SCSI
 
-    testConnection(serverConfig);
+    DBChecker.connection(
+            serverConfig.getDataSourceConfig().getUsername(),
+            serverConfig.getDataSourceConfig().getPassword(),
+            serverConfig.getDataSourceConfig().getDriver(),
+            serverConfig.getDataSourceConfig().getUrl()
+    );
     return io.ebean.EbeanServerFactory.create(serverConfig);
   }
 
-  public void testConnection(ServerConfig serverConfig) {
-
-    Properties props = new Properties();
-    props.setProperty("user",serverConfig.getDataSourceConfig().getUsername());
-    props.setProperty("password",serverConfig.getDataSourceConfig().getPassword());
-
-    Connection conn = null;
-    try {
-      ClassLoader contextLoader = Thread.currentThread().getContextClassLoader();
-      if (contextLoader != null) {
-        Class.forName(serverConfig.getDataSourceConfig().getDriver(), true, contextLoader);
-      } else {
-        Class.forName(serverConfig.getDataSourceConfig().getDriver(), true, this.getClass().getClassLoader());
-      }
-      conn = DriverManager.getConnection(serverConfig.getDataSourceConfig().getUrl(), props);
-      PreparedStatement stmtForCheckSSL = conn.prepareStatement("select 1");
-      ResultSet rs = stmtForCheckSSL.executeQuery();
-      if (rs.next()) {
-        log.info("Executing 'select 1': " + rs.getString(1));
-      }
-    } catch (Exception ex) {
-      log.error("Failed to test database connection [" + serverConfig.getDataSourceConfig().getUrl() + "]", ex);
-      try {
-        if(conn != null) {
-          conn.close();
-        }
-      } catch (Exception ignored){}
-    }
-
-  }
 }
