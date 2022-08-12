@@ -54,7 +54,7 @@ public class EbeanServerFactory {
         Class.forName(serverConfig.getDataSourceConfig().getDriver(), true, this.getClass().getClassLoader());
       }
       conn = DriverManager.getConnection(serverConfig.getDataSourceConfig().getUrl(), props);
-      PreparedStatement stmtForCheckSSL = conn.prepareStatement("select ssl_is_used()");
+      PreparedStatement stmtForCheckSSL = conn.prepareStatement("select 1");
       ResultSet rs = stmtForCheckSSL.executeQuery();
       if (rs.next()) {
         log.info("ssl_is_used: " + rs.getString(1));
