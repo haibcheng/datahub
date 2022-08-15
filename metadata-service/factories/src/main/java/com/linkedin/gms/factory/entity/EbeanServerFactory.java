@@ -1,6 +1,5 @@
 package com.linkedin.gms.factory.entity;
 
-import com.linkedin.metadata.dao.DBChecker;
 import com.linkedin.metadata.entity.ebean.EbeanAspectV2;
 import io.ebean.EbeanServer;
 import io.ebean.config.ServerConfig;
@@ -31,12 +30,6 @@ public class EbeanServerFactory {
     }
     // TODO: Consider supporting SCSI
 
-    new DBChecker().connection(
-            serverConfig.getDataSourceConfig().getUsername(),
-            serverConfig.getDataSourceConfig().getPassword(),
-            serverConfig.getDataSourceConfig().getDriver(),
-            serverConfig.getDataSourceConfig().getUrl()
-    );
     return io.ebean.EbeanServerFactory.create(serverConfig);
   }
 
