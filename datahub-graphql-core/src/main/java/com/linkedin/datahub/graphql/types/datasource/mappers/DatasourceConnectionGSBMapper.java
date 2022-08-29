@@ -37,6 +37,8 @@ public class DatasourceConnectionGSBMapper implements ModelMapper<com.linkedin.d
 //            conn.setPassword(source.getPassword());
             conn.setHostPort(source.getHostPort());
             conn.setDatabase(source.getDatabase());
+            conn.setDriver(source.getDriver());
+            conn.setAlias(source.getAlias());
             conn.setJdbcParams(source.getJdbcParams());
             conn.setTablePatternAllow(source.getTablePatternAllow());
             conn.setTablePatternDeny(source.getTablePatternDeny());
@@ -52,6 +54,8 @@ public class DatasourceConnectionGSBMapper implements ModelMapper<com.linkedin.d
 //            conn.setPassword(source.getPassword());
             conn.setHostPort(source.getHostPort());
             conn.setDatabase(source.getDatabase());
+            conn.setDriver(source.getDriver());
+            conn.setAlias(source.getAlias());
             conn.setJdbcParams(source.getJdbcParams());
             conn.setTablePatternAllow(source.getTablePatternAllow());
             conn.setTablePatternDeny(source.getTablePatternDeny());
@@ -67,6 +71,8 @@ public class DatasourceConnectionGSBMapper implements ModelMapper<com.linkedin.d
 //            conn.setPassword(source.getPassword());
             conn.setHostPort(source.getHostPort());
             conn.setDatabase(source.getDatabase());
+            conn.setDriver(source.getDriver());
+            conn.setAlias(source.getAlias());
             conn.setJdbcParams(source.getJdbcParams());
             conn.setTablePatternAllow(source.getTablePatternAllow());
             conn.setTablePatternDeny(source.getTablePatternDeny());
@@ -82,6 +88,8 @@ public class DatasourceConnectionGSBMapper implements ModelMapper<com.linkedin.d
 //            conn.setPassword(source.getPassword());
             conn.setHostPort(source.getHostPort());
             conn.setDatabase(source.getDatabase());
+            conn.setDriver(source.getDriver());
+            conn.setAlias(source.getAlias());
             conn.setJdbcParams(source.getJdbcParams());
             conn.setTablePatternAllow(source.getTablePatternAllow());
             conn.setTablePatternDeny(source.getTablePatternDeny());
@@ -96,6 +104,8 @@ public class DatasourceConnectionGSBMapper implements ModelMapper<com.linkedin.d
             conn.setUsername(source.getUsername());
 //            conn.setPassword(source.getPassword());
             conn.setHostPort(source.getHostPort());
+            conn.setDriver(source.getDriver());
+            conn.setAlias(source.getAlias());
             conn.setServiceName(source.getServiceName());
             conn.setTnsName(source.getTnsName());
             conn.setTablePatternAllow(source.getTablePatternAllow());
@@ -111,6 +121,8 @@ public class DatasourceConnectionGSBMapper implements ModelMapper<com.linkedin.d
             conn.setUsername(source.getUsername());
 //            conn.setPassword(source.getPassword());
             conn.setHostPort(source.getHostPort());
+            conn.setDriver(source.getDriver());
+            conn.setAlias(source.getAlias());
             conn.setTablePatternAllow(source.getTablePatternAllow());
             conn.setTablePatternDeny(source.getTablePatternDeny());
             conn.setTablePatternIgnoreCase(source.isTablePatternIgnoreCase());
@@ -124,6 +136,8 @@ public class DatasourceConnectionGSBMapper implements ModelMapper<com.linkedin.d
             conn.setUsername(source.getUsername());
 //            conn.setPassword(source.getPassword());
             conn.setHostPort(source.getHostPort());
+            conn.setDriver(source.getDriver());
+            conn.setAlias(source.getAlias());
             conn.setCatalog(source.getCatalog());
             conn.setSchema(source.getSchema());
             conn.setTablePatternAllow(source.getTablePatternAllow());
@@ -141,6 +155,8 @@ public class DatasourceConnectionGSBMapper implements ModelMapper<com.linkedin.d
             conn.setHostPort(source.getHostPort());
             conn.setCatalog(source.getCatalog());
             conn.setSchema(source.getSchema());
+            conn.setDriver(source.getDriver());
+            conn.setAlias(source.getAlias());
             conn.setTablePatternAllow(source.getTablePatternAllow());
             conn.setTablePatternDeny(source.getTablePatternDeny());
             conn.setTablePatternIgnoreCase(source.isTablePatternIgnoreCase());
@@ -153,6 +169,8 @@ public class DatasourceConnectionGSBMapper implements ModelMapper<com.linkedin.d
             com.linkedin.datasource.sources.SnowflakeSource source = input.getConnection().getSnowflakeSource();
             conn.setUsername(source.getUsername());
             conn.setHostPort(source.getHostPort());
+            conn.setDriver(source.getDriver());
+            conn.setAlias(source.getAlias());
             conn.setConnectionParams(source.getConnectionParams());
             conn.setTablePatternAllow(source.getTablePatternAllow());
             conn.setTablePatternDeny(source.getTablePatternDeny());

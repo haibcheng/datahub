@@ -24,6 +24,10 @@ record TrinoSource {
 
   schema: string
 
+  driver: optional string = "io.trino.jdbc.TrinoDriver"
+
+  alias: optional string
+
   jdbcParams: optional string
 
   /**

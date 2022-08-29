@@ -25,6 +25,10 @@ record OracleSource {
   */
   serviceName: optional string
 
+  driver: optional string = "oracle.jdbc.driver.OracleDriver"
+
+  alias: optional string
+
   tnsName: optional string
 
   /**

@@ -11,6 +11,10 @@ record SnowflakeSource {
 
   hostPort: string
 
+  driver: optional string = "com.snowflake.client.jdbc.SnowflakeDriver"
+
+  alias: optional string
+
   connectionParams: optional string
 
   /**

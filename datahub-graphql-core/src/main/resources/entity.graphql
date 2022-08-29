@@ -7564,6 +7564,8 @@ type SnowflakeSource {
     username: String
     password: String
     hostPort: String
+    driver: String
+    alias: String
     connectionParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -7578,6 +7580,8 @@ type TiDBSource {
     password: String
     hostPort: String
     database: String
+    driver: String
+    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -7592,6 +7596,8 @@ type OracleSource {
     password: String
     hostPort: String
     serviceName: String
+    driver: String
+    alias: String
     tnsName: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -7606,6 +7612,8 @@ type PostgresSource {
     password: String
     hostPort: String
     database: String
+    driver: String
+    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -7620,6 +7628,8 @@ type MysqlSource {
     password: String
     hostPort: String
     database: String
+    driver: String
+    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -7634,6 +7644,8 @@ type HiveSource {
     password: String
     hostPort: String
     database: String
+    driver: String
+    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -7649,6 +7661,8 @@ type PrestoSource {
     hostPort: String
     catalog: String
     schema: String
+    driver: String
+    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -7662,6 +7676,8 @@ type PinotSource {
     username: String
     password: String
     hostPort: String
+    driver: String
+    alias: String
     tablePatternAllow: String
     tablePatternDeny: String
     tablePatternIgnoreCase: Boolean
@@ -7676,6 +7692,8 @@ type TrinoSource {
     hostPort: String
     catalog: String
     schema: String
+    driver: String
+    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -7716,6 +7734,8 @@ input SnowflakeSourceInput {
     username: String!
     password: String!
     hostPort: String!
+    driver: String
+    alias: String
     connectionParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -7730,6 +7750,8 @@ input OracleSourceInput {
     password: String!
     hostPort: String
     serviceName: String
+    driver: String
+    alias: String
     tnsName: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -7744,6 +7766,8 @@ input PostgresSourceInput {
     password: String!
     hostPort: String!
     database: String
+    driver: String
+    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -7758,6 +7782,8 @@ input MysqlSourceInput {
     password: String!
     hostPort: String!
     database: String
+    driver: String
+    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -7772,6 +7798,8 @@ input TiDBSourceInput {
     password: String!
     hostPort: String!
     database: String
+    driver: String
+    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -7786,6 +7814,8 @@ input HiveSourceInput {
     password: String!
     hostPort: String!
     database: String
+    driver: String
+    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -7801,6 +7831,8 @@ input PrestoSourceInput {
     hostPort: String!
     catalog: String
     schema: String
+    driver: String
+    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -7814,6 +7846,8 @@ input PinotSourceInput {
     username: String!
     password: String!
     hostPort: String!
+    driver: String
+    alias: String
     tablePatternAllow: String
     tablePatternDeny: String
     tablePatternIgnoreCase: Boolean
@@ -7828,6 +7862,8 @@ input TrinoSourceInput {
     hostPort: String!
     catalog: String
     schema: String
+    driver: String
+    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String

@@ -25,6 +25,10 @@ record TiDBSource {
   */
   database: string
 
+  driver: optional string = "com.mysql.cj.jdbc.Driver"
+
+  alias: optional string
+
   jdbcParams: optional string
 
   /**
