@@ -53,6 +53,9 @@ fragment nonSiblingDatasetFields on Dataset {
             }
         }
     }
+    sources: relationships(input: { types: ["Sources"], direction: OUTGOING, start: 0, count: 1 }) {
+        ...fullRelationshipResults
+    }
     deprecation {
         actor
         deprecated

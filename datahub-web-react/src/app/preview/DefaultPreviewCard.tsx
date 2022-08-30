@@ -185,6 +185,8 @@ interface Props {
     // how the listed node is connected to the source node
     degree?: number;
     parentContainers?: ParentContainersResult | null;
+    delEle?: React.ReactNode;
+    editEle?: React.ReactNode;
 }
 
 export default function DefaultPreviewCard({
@@ -219,6 +221,8 @@ export default function DefaultPreviewCard({
     parentContainers,
     platforms,
     logoUrls,
+    delEle,
+    editEle,
 }: Props) {
     // sometimes these lists will be rendered inside an entity container (for example, in the case of impact analysis)
     // in those cases, we may want to enrich the preview w/ context about the container entity
@@ -336,6 +340,12 @@ export default function DefaultPreviewCard({
                     </UserListContainer>
                 )}
             </RightColumn>
+            {(delEle || editEle) && (
+                <div>
+                    {delEle}
+                    {editEle}
+                </div>
+            )}
         </PreviewContainer>
     );
 }
