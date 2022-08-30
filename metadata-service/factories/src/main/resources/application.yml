@@ -89,9 +89,9 @@ configEntityRegistry:
 platformAnalytics:
   enabled: ${DATAHUB_ANALYTICS_ENABLED:true}
 
-visualConfig:
-  assets:
-    logoUrl: ${REACT_APP_LOGO_URL:/assets/platforms/datahublogo.png}
+# visualConfig:
+#  assets:
+#    logoUrl: ${REACT_APP_LOGO_URL:/assets/platforms/datahublogo.png}
 
 # Storage Layer
 
