@@ -1,22 +1,22 @@
 package com.linkedin.mxe;
 
 public class Topics {
-  public static final String METADATA_AUDIT_EVENT = "MetadataAuditEvent_v4";
-  public static final String METADATA_CHANGE_EVENT = "MetadataChangeEvent_v4";
-  public static final String FAILED_METADATA_CHANGE_EVENT = "FailedMetadataChangeEvent_v4";
+  public static final String METADATA_AUDIT_EVENT = "DataHubMetadataAuditEvent_v4";
+  public static final String METADATA_CHANGE_EVENT = "DataHubMetadataChangeEvent_v4";
+  public static final String FAILED_METADATA_CHANGE_EVENT = "DataHubFailedMetadataChangeEvent_v4";
   public static final String DATAHUB_USAGE_EVENT = "DataHubUsageEvent_v1";
-  public static final String METADATA_GRAPH_EVENT = "MetadataGraphEvent_v4";
-  public static final String METADATA_SEARCH_EVENT = "MetadataSearchEvent_v4";
+  public static final String METADATA_GRAPH_EVENT = "DataHubMetadataGraphEvent_v4";
+  public static final String METADATA_SEARCH_EVENT = "DataHubMetadataSearchEvent_v4";
 
-  public static final String METADATA_CHANGE_LOG_VERSIONED = "MetadataChangeLog_Versioned_v1";
-  public static final String METADATA_CHANGE_LOG_TIMESERIES = "MetadataChangeLog_Timeseries_v1";
-  public static final String METADATA_CHANGE_PROPOSAL = "MetadataChangeProposal_v1";
-  public static final String FAILED_METADATA_CHANGE_PROPOSAL = "FailedMetadataChangeProposal_v1";
-  public static final String PLATFORM_EVENT = "PlatformEvent_v1";
+  public static final String METADATA_CHANGE_LOG_VERSIONED = "DataHubMetadataChangeLog_Versioned_v1";
+  public static final String METADATA_CHANGE_LOG_TIMESERIES = "DataHubMetadataChangeLog_Timeseries_v1";
+  public static final String METADATA_CHANGE_PROPOSAL = "DataHubMetadataChangeProposal_v1";
+  public static final String FAILED_METADATA_CHANGE_PROPOSAL = "DataHubFailedMetadataChangeProposal_v1";
+  public static final String PLATFORM_EVENT = "DataHubPlatformEvent_v1";
 
-  public static final String DEV_METADATA_AUDIT_EVENT = "MetadataAuditEvent_v4_dev";
-  public static final String DEV_METADATA_CHANGE_EVENT = "MetadataChangeEvent_v4_dev";
-  public static final String DEV_FAILED_METADATA_CHANGE_EVENT = "FailedMetadataChangeEvent_v4_dev";
+  public static final String DEV_METADATA_AUDIT_EVENT = "DataHubMetadataAuditEvent_v4_dev";
+  public static final String DEV_METADATA_CHANGE_EVENT = "DataHubMetadataChangeEvent_v4_dev";
+  public static final String DEV_FAILED_METADATA_CHANGE_EVENT = "DataHubFailedMetadataChangeEvent_v4_dev";
 
   /**
    *  aspect-specific MAE topics.

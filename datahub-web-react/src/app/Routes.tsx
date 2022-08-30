@@ -9,6 +9,7 @@ import { PageRoutes } from '../conf/Global';
 import { isLoggedInVar } from './auth/checkAuthStatus';
 import { useTrackPageView } from './analytics';
 import { ProtectedRoutes } from './ProtectedRoutes';
+import { WelcomePage } from './welcome/WelcomePage';
 
 const ProtectedRoute = ({
     isLoggedIn,
@@ -33,12 +34,14 @@ export const Routes = (): JSX.Element => {
 
     return (
         <Switch>
+            <Route path="/" component={() => <Redirect to={PageRoutes.WELCOME} />} exact />
+            <Route path={PageRoutes.WELCOME} component={() => <WelcomePage />} />
             <Route path={PageRoutes.LOG_IN} component={LogIn} />
             <Route path={PageRoutes.SIGN_UP} component={SignUp} />
             <Route path={PageRoutes.RESET_CREDENTIALS} component={ResetCredentials} />
             <ProtectedRoute isLoggedIn={isLoggedIn} render={() => <ProtectedRoutes />} />
             {/* Starting the react app locally opens /assets by default. For a smoother dev experience, we'll redirect to the homepage */}
-            <Route path={PageRoutes.ASSETS} component={() => <Redirect to="/" />} exact />
+            <Route path={PageRoutes.ASSETS} component={() => <Redirect to={PageRoutes.HOME} />} exact />
             <Route path="/*" component={NoPageFound} />
         </Switch>
     );

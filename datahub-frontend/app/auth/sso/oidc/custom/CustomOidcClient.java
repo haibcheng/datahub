@@ -6,7 +6,6 @@ import org.pac4j.oidc.config.OidcConfiguration;
 import org.pac4j.oidc.credentials.extractor.OidcExtractor;
 import org.pac4j.oidc.logout.OidcLogoutActionBuilder;
 import org.pac4j.oidc.profile.OidcProfile;
-import org.pac4j.oidc.profile.creator.OidcProfileCreator;
 import org.pac4j.oidc.redirect.OidcRedirectActionBuilder;
 
 public class CustomOidcClient extends OidcClient<OidcProfile, OidcConfiguration> {

@@ -12,6 +12,7 @@ export JAVA_OPTS="
 	-Xms512m
 	-Xmx1024m
 	-Dhttp.port=$PORT
+	-Dplay.server.akka.max-header-value-length=40960
 	-Dconfig.file=$CONF_DIR/application.conf
 	-Djava.security.auth.login.config=$CURRENT_DIR/jaas.conf
 	-Dlogback.configurationFile=$CURRENT_DIR/logback.xml

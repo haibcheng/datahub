@@ -4,6 +4,7 @@ import { Layout } from 'antd';
 import { HomePage } from './home/HomePage';
 import AppConfigProvider from '../AppConfigProvider';
 import { SearchRoutes } from './SearchRoutes';
+import { PageRoutes } from '../conf/Global';
 
 /**
  * Container for all views behind an authentication wall.
@@ -14,7 +15,7 @@ export const ProtectedRoutes = (): JSX.Element => {
             <Layout style={{ height: '100%', width: '100%' }}>
                 <Layout>
                     <Switch>
-                        <Route exact path="/" render={() => <HomePage />} />
+                        <Route exact path={PageRoutes.HOME} render={() => <HomePage />} />
                         <Route path="/*" render={() => <SearchRoutes />} />
                     </Switch>
                 </Layout>

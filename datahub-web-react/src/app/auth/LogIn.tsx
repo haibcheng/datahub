@@ -10,6 +10,7 @@ import { Message } from '../shared/Message';
 import { isLoggedInVar } from './checkAuthStatus';
 import analytics, { EventType } from '../analytics';
 import { useAppConfig } from '../useAppConfig';
+import { PageRoutes } from '../../conf/Global';
 
 type FormValues = {
     username: string;
@@ -80,7 +81,9 @@ export const LogIn: React.VFC<LogInProps> = () => {
     if (isLoggedIn) {
         const params = QueryString.parse(location.search);
         const maybeRedirectUri = params.redirect_uri;
-        return <Redirect to={(maybeRedirectUri && decodeURIComponent(maybeRedirectUri as string)) || '/'} />;
+        return (
+            <Redirect to={(maybeRedirectUri && decodeURIComponent(maybeRedirectUri as string)) || PageRoutes.HOME} />
+        );
     }
 
     return (

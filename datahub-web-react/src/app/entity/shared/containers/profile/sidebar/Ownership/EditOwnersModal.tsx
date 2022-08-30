@@ -13,6 +13,7 @@ import {
 import { useGetSearchResultsLazyQuery } from '../../../../../../../graphql/search.generated';
 import { useGetRecommendations } from '../../../../../../shared/recommendation';
 import { OwnerLabel } from '../../../../../../shared/OwnerLabel';
+import { getUserAvatar } from '../../../../../../../utils/formatter/dataProcess';
 
 const SelectInput = styled(Select)`
     > .ant-select-selector {
@@ -106,9 +107,7 @@ export const EditOwnersModal = ({
     // Renders a search result in the select dropdown.
     const renderSearchResult = (entity: Entity) => {
         const avatarUrl =
-            entity.type === EntityType.CorpUser
-                ? (entity as CorpUser).editableProperties?.pictureLink || undefined
-                : undefined;
+            entity.type === EntityType.CorpUser ? getUserAvatar((entity as CorpUser).username) || undefined : undefined;
         const displayName = entityRegistry.getDisplayName(entity.type, entity);
         return (
             <Select.Option value={entity.urn} key={entity.urn}>

@@ -9,6 +9,7 @@ import { useEntityRegistry } from '../../useEntityRegistry';
 import { ANTD_GRAY, REDESIGN_COLORS } from '../../entity/shared/constants';
 import ViewResetTokenModal from './ViewResetTokenModal';
 import useDeleteEntity from '../../entity/shared/EntityDropdown/useDeleteEntity';
+import { getUserAvatar } from '../../../utils/formatter/dataProcess';
 
 type Props = {
     user: CorpUser;
@@ -51,6 +52,7 @@ export default function UserListItem({ user, canManageUserCredentials, onDelete 
     const displayName = entityRegistry.getDisplayName(EntityType.CorpUser, user);
     const isNativeUser: boolean = user.isNativeUser as boolean;
     const shouldShowPasswordReset: boolean = canManageUserCredentials && isNativeUser;
+    const photoUrl = getUserAvatar(user?.username);
 
     const { onDeleteEntity } = useDeleteEntity(user.urn, EntityType.CorpUser, user, onDelete);
 
@@ -81,11 +83,7 @@ export default function UserListItem({ user, canManageUserCredentials, onDelete 
             <UserItemContainer>
                 <Link to={entityRegistry.getEntityUrl(EntityType.CorpUser, user.urn)}>
                     <UserHeaderContainer>
-                        <CustomAvatar
-                            size={32}
-                            name={displayName}
-                            photoUrl={user.editableProperties?.pictureLink || undefined}
-                        />
+                        <CustomAvatar size={32} name={displayName} photoUrl={photoUrl || undefined} />
                         <div style={{ marginLeft: 16, marginRight: 20 }}>
                             <div>
                                 <Typography.Text>{displayName}</Typography.Text>
