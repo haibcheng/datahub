@@ -12,9 +12,9 @@ import com.linkedin.datahub.graphql.generated.NumericDataPoint;
 import com.linkedin.datahub.graphql.generated.Row;
 import com.linkedin.datahub.graphql.resolvers.EntityTypeMapper;
 import com.linkedin.metadata.utils.elasticsearch.IndexConvention;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
@@ -27,6 +27,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
@@ -39,6 +40,8 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.aggregations.metrics.Cardinality;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 
 
 @Slf4j
@@ -190,6 +193,45 @@ public class AnalyticsService {
     List<Cell> cells = ImmutableList.of(groupByValueToCell.apply(groupByValue),
         Cell.builder().setValue(String.valueOf(count)).build());
     return new Row(values, cells);
+  }
+
+  public List<Row> getLastNTableChart(String indexName, List<String> fields, Optional<DateRange> dateRange,
+      Map<String, List<String>> filters, int maxRows) {
+    SearchRequest searchRequest = new SearchRequest(indexName);
+    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+    BoolQueryBuilder filteredQuery = QueryBuilders.boolQuery();
+    filters.forEach((key, values) -> filteredQuery.must(QueryBuilders.termsQuery(key, values)));
+    dateRange.ifPresent(range -> filteredQuery.must(dateRangeQuery(range)));
+    searchSourceBuilder.fetchSource(fields.toArray(new String[fields.size()]), new String[]{});
+    searchSourceBuilder.query(filteredQuery);
+    searchSourceBuilder.sort(new FieldSortBuilder("timestamp").order(SortOrder.DESC));
+    searchSourceBuilder.size(maxRows);
+    searchRequest.source(searchSourceBuilder);
+    try {
+      final SearchResponse searchResponse = _elasticClient.search(searchRequest, RequestOptions.DEFAULT);
+      SearchHit[] searchHits = searchResponse.getHits().getHits();
+      return Arrays.stream(searchHits).map(hit -> {
+        Map<String, Object> sourceMap = hit.getSourceAsMap();
+        List<String> rowValues = new ArrayList<>();
+        List<Cell> rowCells = new ArrayList<>();
+        for (String field : fields) {
+          if ("timestamp".equals(field)) {
+            Date time = new Date(Long.parseLong(String.valueOf(sourceMap.get(field))));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+            sdf.setTimeZone(TimeZone.getDefault());
+            rowValues.add(sdf.format(time));
+            rowCells.add(Cell.builder().setValue(sdf.format(time)).build());
+          } else {
+            rowValues.add(String.valueOf(sourceMap.get(field)));
+            rowCells.add(Cell.builder().setValue(String.valueOf(sourceMap.get(field))).build());
+          }
+        }
+        return new Row(rowValues, rowCells);
+      }).collect(Collectors.toList());
+    } catch (Exception e) {
+      log.error(String.format("Search query failed: %s", e.getMessage()));
+      throw new RuntimeException("Search query failed:", e);
+    }
   }
 
   public List<Row> getTopNTableChart(String indexName, Optional<DateRange> dateRange, String groupBy,
