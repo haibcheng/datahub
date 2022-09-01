@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.cisco.webex.mats</groupId>
+    <artifactId>mats-monitoring-logback</artifactId>
+    <version>0.0.1</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <kafka.version>1.1.1</kafka.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.32</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.2.9</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-access</artifactId>
+            <version>1.2.9</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.48</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.11.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>co.elastic.clients</groupId>
+            <artifactId>elasticsearch-java</artifactId>
+            <version>8.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.12.3</version>
+        </dependency>
+    </dependencies>
+
+
+
+    <distributionManagement>
+        <repository>
+            <id>bms-artifactory-rel</id>
+            <name>bms-artifactory-releases</name>
+            <url>http://engci-maven.cisco.com/artifactory/cscmse-release</url>
+        </repository>
+        <snapshotRepository>
+            <id>bms-artifactory</id>
+            <name>bms-artifactory-snapshots</name>
+            <url> http://engci-maven.cisco.com/artifactory/cscmse-snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>cmse-mrepo-releases</id>
+            <name>CMSE Release Repository</name>
+            <url>http://mrepo-cmse.qa.webex.com/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>webex-cca-release</id>
+            <url>https://engci-maven.cisco.com/artifactory/webex-cca-group</url>
+        </repository>
+        <repository>
+            <id>webex-pda-group</id>
+            <url>https://engci-maven.cisco.com/artifactory/pda-group</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>bms-artifactory-rel</id>
+            <name>bms-artifactory-releases</name>
+            <url>http://engci-maven.cisco.com/artifactory/cscmse-release</url>
+        </repository>
+    </repositories>
+</project>
