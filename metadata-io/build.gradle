@@ -64,6 +64,48 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api:2.17.0") {
         because("previous versions are vulnerable to CVE-2021-45105")
     }
+    implementation("com.alibaba:fastjson:1.2.83") {
+      because("previous versions are vulnerable to CVE-2022-25845")
+    }
+    implementation("org.apache.shiro:shiro-core:1.9.1") {
+      because("previous versions are vulnerable to CVE-2022-32532")
+    }
+    implementation("org.apache.shiro:shiro-cache:1.9.1") {
+      because("previous versions are vulnerable to CVE-2022-32532")
+    }
+    implementation("org.apache.shiro:shiro-config-core:1.9.1") {
+      because("previous versions are vulnerable to CVE-2022-32532")
+    }
+    implementation("org.apache.shiro:shiro-config-ogdl:1.9.1") {
+      because("previous versions are vulnerable to CVE-2022-32532")
+    }
+    implementation("org.apache.shiro:shiro-crypto-cipher:1.9.1") {
+      because("previous versions are vulnerable to CVE-2022-32532")
+    }
+    implementation("org.apache.shiro:shiro-crypto-core:1.9.1") {
+      because("previous versions are vulnerable to CVE-2022-32532")
+    }
+    implementation("org.apache.shiro:shiro-crypto-hash:1.9.1") {
+      because("previous versions are vulnerable to CVE-2022-32532")
+    }
+    implementation("net.minidev:json-smart:2.3.1") {
+      because("previous versions are vulnerable to GHSA-v528-7hrm-frqp")
+    }
+    implementation("org.apache.hadoop:hadoop-annotations:3.3.4") {
+      because("fix vulnerable issues")
+    }
+    implementation("org.apache.hadoop:hadoop-auth:3.3.4") {
+      because("fix vulnerable issues")
+    }
+    implementation("org.apache.hadoop:hadoop-common:3.3.4") {
+      because("fix vulnerable issues")
+    }
+    implementation("org.apache.solr:solr-solrj:8.11.2") {
+      because("fix vulnerable issues")
+    }
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.13.3") {
+      because("fix vulnerable issues")
+    }
   }
 }
 
