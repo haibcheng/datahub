@@ -1078,8 +1078,10 @@ private Map<Urn, List<EnvelopedAspect>> getCorrespondingAspects(Set<EntityAspect
 
     RecordTemplate keyAspect = latestAspects.get(keyAspectName);
     if (keyAspect == null) {
-      keyAspect = buildKeyAspect(urn);
-      aspects.add(Pair.of(keyAspectName, keyAspect));
+      if(isAspectMissing(entityType, keyAspectName, includedAspects)) {
+        keyAspect = buildKeyAspect(urn);
+        aspects.add(Pair.of(keyAspectName, keyAspect));
+      }
     }
 
     if (shouldCheckBrowsePath && latestAspects.get(BROWSE_PATHS) == null) {
