@@ -7,4 +7,4 @@ JAVA_OPTS="$JAVA_OPTS -Dhttp.port=$SERVER_PORT \
     -Dlogback.configurationFile=datahub-frontend/conf/logback.xml \
     -Dpidfile.path=/dev/null"
 
-source /datahub-frontend/bin/playBinary
+source /datahub-frontend/bin/datahub-frontend
