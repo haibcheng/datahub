@@ -30,7 +30,8 @@ RUN cd /datahub-src \
 FROM base as prod-install
 
 COPY --from=prod-build /datahub-frontend /datahub-frontend/
-COPY --from=prod-build /datahub-src/docker/mats-frontend/start.sh /datahub-frontend/bin/start.sh
+COPY ./docker/mats-frontend/start.sh /datahub-frontend/bin/start.sh
+
 RUN chown -R 1000:1000 /datahub-frontend && chmod 755 /datahub-frontend
 
 FROM base as dev-install
