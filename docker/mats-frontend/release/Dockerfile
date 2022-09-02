@@ -30,6 +30,7 @@ RUN cd /datahub-src \
 FROM base as prod-install
 
 COPY --from=prod-build /datahub-frontend /datahub-frontend/
+COPY --from=prod-build /datahub-src/docker/mats-frontend/start.sh /datahub-frontend/bin/start.sh
 RUN chown -R 1000:1000 /datahub-frontend && chmod 755 /datahub-frontend
 
 FROM base as dev-install
@@ -47,15 +48,6 @@ EXPOSE $SERVER_PORT
 
 HEALTHCHECK --start-period=2m --retries=4 CMD curl --fail http://localhost:$SERVER_PORT/admin || exit 1
 
-ENV JAVA_OPTS=" \
-   -Xms512m \
-   -Xmx1024m \
-   -Dhttp.port=$SERVER_PORT \
-   -Dplay.server.akka.max-header-value-length=40960 \
-   -Dconfig.file=datahub-frontend/conf/application.conf \
-   -Djava.security.auth.login.config=datahub-frontend/conf/jaas.conf \
-   -Dlogback.configurationFile=datahub-frontend/conf/logback.xml \
-   -Dlogback.debug=false \
-   -Dpidfile.path=/dev/null"
+ENV JAVA_OPTS=""
 
-CMD ["datahub-frontend/bin/playBinary"]
+CMD ["datahub-frontend/bin/start.sh"]

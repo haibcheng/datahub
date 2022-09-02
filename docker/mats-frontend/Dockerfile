@@ -11,11 +11,10 @@ FROM base as prod-install
 
 RUN yum install -y unzip
 COPY ./datahub-frontend/build/distributions/datahub-frontend.zip /datahub-frontend.zip
-RUN cd / \
-    && unzip datahub-frontend.zip \
-    && rm -f datahub-frontend.zip \
-    && chown -R 1000:1000 /datahub-frontend \
-    && chmod -R 755 /datahub-frontend
+RUN cd / && unzip datahub-frontend.zip && rm -f datahub-frontend.zip
+
+COPY ./docker/mats-frontend/start.sh /datahub-frontend/bin/start.sh
+RUN chown -R 1000:1000 /datahub-frontend && chmod -R 755 /datahub-frontend
 
 RUN yum remove -y unzip || true
 
@@ -34,15 +33,6 @@ EXPOSE $SERVER_PORT
 
 HEALTHCHECK --start-period=2m --retries=4 CMD curl --fail http://localhost:$SERVER_PORT/admin || exit 1
 
-ENV JAVA_OPTS=" \
-   -Xms512m \
-   -Xmx1024m \
-   -Dhttp.port=$SERVER_PORT \
-   -Dplay.server.akka.max-header-value-length=40960 \
-   -Dconfig.file=datahub-frontend/conf/application.conf \
-   -Djava.security.auth.login.config=datahub-frontend/conf/jaas.conf \
-   -Dlogback.configurationFile=datahub-frontend/conf/logback.xml \
-   -Dlogback.debug=false \
-   -Dpidfile.path=/dev/null"
+ENV JAVA_OPTS=""
 
-CMD ["datahub-frontend/bin/playBinary"]
+CMD ["datahub-frontend/bin/start.sh"]
