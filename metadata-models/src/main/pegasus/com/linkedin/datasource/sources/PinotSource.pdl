@@ -22,8 +22,6 @@ record PinotSource {
 
   driver: optional string = "org.apache.pinot.client.PinotDriver"
 
-  alias: optional string
-
   /**
   * List of regex patterns for tables to include in ingestion.
   */

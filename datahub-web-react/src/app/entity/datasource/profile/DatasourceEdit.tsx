@@ -46,6 +46,7 @@ export default function DatasourceEdit({ datasource: { urn } }: Props) {
     const originData: IFormData = {
         sourceType: selectedType?.value || '',
         name: dataSource?.name || '',
+        alias: '',
         syncCDAPI: dataSource?.syncCDAPI || false,
         create: false,
         group: dataSource?.group?.urn || '',

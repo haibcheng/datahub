@@ -9007,6 +9007,10 @@ type Datasource implements EntityWithRelationships & Entity {
     """
     name: String!
     """
+    Datasource alias
+    """
+    alias: String!
+    """
     Fabric type where datasource belongs to or where it was generated
     """
     origin: FabricType!
@@ -9114,7 +9118,6 @@ type SnowflakeSource {
     password: String
     hostPort: String
     driver: String
-    alias: String
     connectionParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9130,7 +9133,6 @@ type TiDBSource {
     hostPort: String
     database: String
     driver: String
-    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9146,7 +9148,6 @@ type OracleSource {
     hostPort: String
     serviceName: String
     driver: String
-    alias: String
     tnsName: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9162,7 +9163,6 @@ type PostgresSource {
     hostPort: String
     database: String
     driver: String
-    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9178,7 +9178,6 @@ type MysqlSource {
     hostPort: String
     database: String
     driver: String
-    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9194,7 +9193,6 @@ type HiveSource {
     hostPort: String
     database: String
     driver: String
-    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9211,7 +9209,6 @@ type PrestoSource {
     catalog: String
     schema: String
     driver: String
-    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9226,7 +9223,6 @@ type PinotSource {
     password: String
     hostPort: String
     driver: String
-    alias: String
     tablePatternAllow: String
     tablePatternDeny: String
     tablePatternIgnoreCase: Boolean
@@ -9242,7 +9238,6 @@ type TrinoSource {
     catalog: String
     schema: String
     driver: String
-    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9284,7 +9279,6 @@ input SnowflakeSourceInput {
     password: String!
     hostPort: String!
     driver: String
-    alias: String
     connectionParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9300,7 +9294,6 @@ input OracleSourceInput {
     hostPort: String
     serviceName: String
     driver: String
-    alias: String
     tnsName: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9316,7 +9309,6 @@ input PostgresSourceInput {
     hostPort: String!
     database: String
     driver: String
-    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9332,7 +9324,6 @@ input MysqlSourceInput {
     hostPort: String!
     database: String
     driver: String
-    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9348,7 +9339,6 @@ input TiDBSourceInput {
     hostPort: String!
     database: String
     driver: String
-    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9364,7 +9354,6 @@ input HiveSourceInput {
     hostPort: String!
     database: String
     driver: String
-    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9381,7 +9370,6 @@ input PrestoSourceInput {
     catalog: String
     schema: String
     driver: String
-    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9396,7 +9384,6 @@ input PinotSourceInput {
     password: String!
     hostPort: String!
     driver: String
-    alias: String
     tablePatternAllow: String
     tablePatternDeny: String
     tablePatternIgnoreCase: Boolean
@@ -9412,7 +9399,6 @@ input TrinoSourceInput {
     catalog: String
     schema: String
     driver: String
-    alias: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9469,6 +9455,7 @@ type DatasourceDatasetsRelationships {
 
 input DatasourceCreateInput {
     name: String!
+    alias: String!
     group: String
     region: String
     syncCDAPI: Boolean!

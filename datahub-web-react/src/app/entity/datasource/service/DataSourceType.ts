@@ -35,6 +35,7 @@ export interface IFormConnectionData {
 export interface IFormData {
     sourceType: string;
     name: string;
+    alias: string;
     syncCDAPI: boolean;
     create: boolean;
     group: string;

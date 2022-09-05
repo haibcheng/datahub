@@ -11,6 +11,12 @@ record DatasourceInfo {
     "fieldType": "TEXT_PARTIAL",
     "enableAutocomplete": true
   }
+  alias: string
+
+  @Searchable = {
+    "fieldType": "TEXT_PARTIAL",
+    "enableAutocomplete": true
+  }
   region: string
 
   @Searchable = {

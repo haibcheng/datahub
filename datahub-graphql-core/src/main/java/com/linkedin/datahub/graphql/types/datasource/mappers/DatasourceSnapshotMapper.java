@@ -75,6 +75,7 @@ public class DatasourceSnapshotMapper implements ModelMapper<DatasourceSnapshot,
                 group.setType(EntityType.CORP_GROUP);
                 result.setGroup(group);
                 result.setRegion(datasourceInfo.getRegion());
+                result.setAlias(datasourceInfo.getAlias());
             } else if (aspect instanceof DatasourceDeprecation) {
                 result.setDeprecation(DatasourceDeprecationMapper.map((DatasourceDeprecation) aspect));
             } else if (aspect instanceof InstitutionalMemory) {

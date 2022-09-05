@@ -490,6 +490,7 @@ export default function AddDataSourceModal({
         const dataSources: IDatasourceSourceInput[] = getDataSourceInputData();
         let input: DatasourceCreateInput = {
             name: formData.name,
+            alias: formData.alias,
             syncCDAPI: formData.syncCDAPI,
             create: formData.create,
             primaryConn: dataSources[0],
