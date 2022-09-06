@@ -1,4 +1,7 @@
 #!/bin/bash
+
+[ ! -f /etc/datahub/env/gms.env ] || export $(grep -v '^#' /etc/datahub/env/gms.env | xargs)
+
 set -x
 # Add default URI (http) scheme if needed
 if ! echo $NEO4J_HOST | grep -q "://" ; then
