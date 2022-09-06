@@ -172,6 +172,7 @@ fragment lineageNodeProperties on EntityWithRelationships {
     }
     ... on Datasource {
         name
+        alias
         origin
         description
         platform {

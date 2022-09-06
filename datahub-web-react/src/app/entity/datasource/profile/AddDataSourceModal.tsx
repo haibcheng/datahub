@@ -53,6 +53,7 @@ export default function AddDataSourceModal({
     const initData: IFormData = originData ?? {
         sourceType: sourceTypeList[0].value,
         name: '',
+        alias: '',
         syncCDAPI: false,
         create: true,
         group: groupList[0]?.urn,
@@ -712,6 +713,19 @@ export default function AddDataSourceModal({
                     />
                 </Form.Item>
                 <Form.Item
+                    name="alias"
+                    label="Alias"
+                    rules={[{ required: false, message: 'Please input dataSource alias!' }]}
+                >
+                    <Input
+                        disabled={!formData.create}
+                        placeholder="Please input dataSource alias"
+                        autoComplete="off"
+                        defaultValue={formData.alias}
+                        onChange={(e) => updateDataSourceBasicInfo(e.target.value, FormField.alias)}
+                    />
+                </Form.Item>
+                {/* <Form.Item
                     name="syncCDAPI"
                     label="Sync"
                     rules={[{ required: false, message: 'sync the Datasource to Custom Dashboard.' }]}
@@ -723,7 +737,7 @@ export default function AddDataSourceModal({
                     >
                         Sync to Custom Dashboard
                     </Checkbox>
-                </Form.Item>
+                </Form.Item> */}
             </Card>
         );
     };

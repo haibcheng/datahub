@@ -840,6 +840,7 @@ fragment entityDomain on DomainAssociation {
 fragment nonRecursiveDatasourceFields on Datasource {
     urn
     name
+    alias
     type
     platform {
         name

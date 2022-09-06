@@ -9007,10 +9007,7 @@ type Datasource implements EntityWithRelationships & Entity {
     """
     name: String!
     """
-    Datasource alias
-    """
-    alias: String!
-    """
+    
     Fabric type where datasource belongs to or where it was generated
     """
     origin: FabricType!
@@ -9061,9 +9058,13 @@ type Datasource implements EntityWithRelationships & Entity {
 
     syncCDAPI: Boolean
 
+    alias: String
+
     oracleTNSType: String
 
     region: String
+
+    
 
     group: CorpGroup
 
@@ -9455,7 +9456,7 @@ type DatasourceDatasetsRelationships {
 
 input DatasourceCreateInput {
     name: String!
-    alias: String!
+    alias: String
     group: String
     region: String
     syncCDAPI: Boolean!

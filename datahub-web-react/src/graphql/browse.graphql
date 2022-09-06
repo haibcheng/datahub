@@ -40,6 +40,7 @@ query getBrowseResults($input: BrowseInput!) {
             }
             ... on Datasource {
                 name
+                alias
                 origin
                 description
                 platform {

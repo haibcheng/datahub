@@ -50,6 +50,7 @@ export enum FormField {
     database = 'database',
     tnsName = 'tnsName',
     jdbcParams = 'jdbcParams',
+    alias = 'alias',
     syncCDAPI = 'syncCDAPI',
     dataCenter = 'dataCenter',
     connectionParams = 'connectionParams',
