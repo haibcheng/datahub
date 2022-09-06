@@ -163,6 +163,11 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             datasourceInfo.setGroup(corpGroupUrn);
         }
 
+        if (inputMap.containsKey("alias")) {
+            String alias = (String) inputMap.get("alias");
+            datasourceInfo.setAlias(alias);
+        }
+
         final DatasourceConnectionPrimary primaryConn = new DatasourceConnectionPrimary();
 
         Map<String, Object> primaryConnMap = (Map<String, Object>) inputMap.get("primaryConn");
