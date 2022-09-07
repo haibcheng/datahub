@@ -37,10 +37,12 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
         DataPlatformUrn primaryPlatformUrn = null;
         if (primaryConnMap.containsKey(DatasourceConstants.POSTGRES_SOURCE_NAME)) {
             PostgresSource postgres = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.POSTGRES_SOURCE_NAME), PostgresSource.class);
+            postgres.setDriver(postgres.getDriver());
             primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(postgres));
             primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.POSTGRES_SOURCE_NAME);
         } else if (primaryConnMap.containsKey(DatasourceConstants.ORACLE_SOURCE_NAME)) {
             OracleSource oracle = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.ORACLE_SOURCE_NAME), OracleSource.class);
+            oracle.setDriver(oracle.getDriver());
             primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(oracle));
             primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.ORACLE_SOURCE_NAME);
         } else if (primaryConnMap.containsKey(DatasourceConstants.ICEBERG_SOURCE_NAME)) {
@@ -53,30 +55,37 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.KAFKA_SOURCE_NAME);
         } else if (primaryConnMap.containsKey(DatasourceConstants.MYSQL_SOURCE_NAME)) {
             MysqlSource mysql = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.MYSQL_SOURCE_NAME), MysqlSource.class);
+            mysql.setDriver(mysql.getDriver());
             primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(mysql));
             primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.MYSQL_SOURCE_NAME);
         } else if (primaryConnMap.containsKey(DatasourceConstants.HIVE_SOURCE_NAME)) {
             HiveSource hive = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.HIVE_SOURCE_NAME), HiveSource.class);
+            hive.setDriver(hive.getDriver());
             primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(hive));
             primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.HIVE_SOURCE_NAME);
         } else if (primaryConnMap.containsKey(DatasourceConstants.PINOT_SOURCE_NAME)) {
             PinotSource piot = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.PINOT_SOURCE_NAME), PinotSource.class);
+            piot.setDriver(piot.getDriver());
             primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(piot));
             primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.PINOT_SOURCE_NAME);
         } else if (primaryConnMap.containsKey(DatasourceConstants.PRESTO_SOURCE_NAME)) {
             PrestoSource presto = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.PRESTO_SOURCE_NAME), PrestoSource.class);
+            presto.setDriver(presto.getDriver());
             primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(presto));
             primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.PRESTO_SOURCE_NAME);
         } else if (primaryConnMap.containsKey(DatasourceConstants.TIDB_SOURCE_NAME)) {
             TiDBSource tidb = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.TIDB_SOURCE_NAME), TiDBSource.class);
+            tidb.setDriver(tidb.getDriver());
             primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(tidb));
             primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.TIDB_SOURCE_NAME);
         } else if (primaryConnMap.containsKey(DatasourceConstants.TRINO_SOURCE_NAME)) {
             TrinoSource trino = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.TRINO_SOURCE_NAME), TrinoSource.class);
+            trino.setDriver(trino.getDriver());
             primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(trino));
             primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.TRINO_SOURCE_NAME);
         } else if (primaryConnMap.containsKey(DatasourceConstants.SNOWFLAKE_SOURCE_NAME)) {
             SnowflakeSource snowflake = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.SNOWFLAKE_SOURCE_NAME), SnowflakeSource.class);
+            snowflake.setDriver(snowflake.getDriver());
             primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(snowflake));
             primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.SNOWFLAKE_SOURCE_NAME);
         } else {

@@ -25,7 +25,7 @@ record HiveSource {
   */
   database: string
 
-  driver: optional string = "org.apache.hive.jdbc.HiveDriver"
+  driver: string = "org.apache.hive.jdbc.HiveDriver"
 
   jdbcParams: optional string
 

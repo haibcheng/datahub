@@ -24,7 +24,7 @@ record PrestoSource {
 
   schema: string
 
-  driver: optional string = "com.facebook.presto.jdbc.PrestoDriver"
+  driver: string = "com.facebook.presto.jdbc.PrestoDriver"
 
   jdbcParams: optional string
 

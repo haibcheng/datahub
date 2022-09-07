@@ -20,7 +20,7 @@ record PinotSource {
   */
   hostPort: string
 
-  driver: optional string = "org.apache.pinot.client.PinotDriver"
+  driver: string = "org.apache.pinot.client.PinotDriver"
 
   /**
   * List of regex patterns for tables to include in ingestion.

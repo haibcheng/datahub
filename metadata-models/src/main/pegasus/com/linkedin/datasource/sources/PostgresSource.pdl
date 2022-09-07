@@ -25,7 +25,7 @@ record PostgresSource {
   */
   database: string
 
-  driver: optional string = "org.postgresql.Driver"
+  driver: string = "org.postgresql.Driver"
 
   jdbcParams: optional string
 

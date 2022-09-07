@@ -1,5 +1,6 @@
 package com.linkedin.datahub.graphql.resolvers.datasource;
 
+import com.linkedin.datasource.sources.*;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 
@@ -22,9 +23,11 @@ public class TestDatasourceResolver implements DataFetcher<CompletableFuture<Boo
         if (connMap.containsKey(DatasourceConstants.POSTGRES_SOURCE_NAME)) {
             type = DatasourceConstants.POSTGRES_SOURCE_NAME;
             dbMap = (Map<String, Object>) connMap.get(DatasourceConstants.POSTGRES_SOURCE_NAME);
+            dbMap.put("driver", new PostgresSource().getDriver());
         } else if (connMap.containsKey(DatasourceConstants.ORACLE_SOURCE_NAME)) {
             type = DatasourceConstants.ORACLE_SOURCE_NAME;
             dbMap = (Map<String, Object>) connMap.get(DatasourceConstants.ORACLE_SOURCE_NAME);
+            dbMap.put("driver", new OracleSource().getDriver());
         } else if (connMap.containsKey(DatasourceConstants.ICEBERG_SOURCE_NAME)) {
             type = DatasourceConstants.ICEBERG_SOURCE_NAME;
             dbMap = (Map<String, Object>) connMap.get(DatasourceConstants.ICEBERG_SOURCE_NAME);
@@ -34,21 +37,27 @@ public class TestDatasourceResolver implements DataFetcher<CompletableFuture<Boo
         } else if (connMap.containsKey(DatasourceConstants.MYSQL_SOURCE_NAME)) {
             type = DatasourceConstants.MYSQL_SOURCE_NAME;
             dbMap = (Map<String, Object>) connMap.get(DatasourceConstants.MYSQL_SOURCE_NAME);
+            dbMap.put("driver", new MysqlSource().getDriver());
         } else if (connMap.containsKey(DatasourceConstants.HIVE_SOURCE_NAME)) {
             type = DatasourceConstants.HIVE_SOURCE_NAME;
             dbMap = (Map<String, Object>) connMap.get(DatasourceConstants.HIVE_SOURCE_NAME);
+            dbMap.put("driver", new HiveSource().getDriver());
         } else if (connMap.containsKey(DatasourceConstants.PINOT_SOURCE_NAME)) {
             type = DatasourceConstants.PINOT_SOURCE_NAME;
             dbMap = (Map<String, Object>) connMap.get(DatasourceConstants.PINOT_SOURCE_NAME);
+            dbMap.put("driver", new PinotSource().getDriver());
         } else if (connMap.containsKey(DatasourceConstants.PRESTO_SOURCE_NAME)) {
             type = DatasourceConstants.PRESTO_SOURCE_NAME;
             dbMap = (Map<String, Object>) connMap.get(DatasourceConstants.PRESTO_SOURCE_NAME);
+            dbMap.put("driver", new PrestoSource().getDriver());
         } else if (connMap.containsKey(DatasourceConstants.TIDB_SOURCE_NAME)) {
             type = DatasourceConstants.TIDB_SOURCE_NAME;
             dbMap = (Map<String, Object>) connMap.get(DatasourceConstants.TIDB_SOURCE_NAME);
+            dbMap.put("driver", new MysqlSource().getDriver());
         } else if (connMap.containsKey(DatasourceConstants.TRINO_SOURCE_NAME)) {
             type = DatasourceConstants.TRINO_SOURCE_NAME;
             dbMap = (Map<String, Object>) connMap.get(DatasourceConstants.TRINO_SOURCE_NAME);
+            dbMap.put("driver", new TrinoSource().getDriver());
         } else {
             throw new IllegalArgumentException("Unknown source type: " + Arrays.toString(connMap.keySet().toArray()));
         }
