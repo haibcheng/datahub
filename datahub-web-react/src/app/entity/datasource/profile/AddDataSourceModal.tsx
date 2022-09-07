@@ -1,5 +1,5 @@
 import { DeleteOutlined } from '@ant-design/icons';
-import { Checkbox, Button, Card, Form, Input, Modal, Space, Select, Alert } from 'antd';
+import { Button, Card, Form, Input, Modal, Space, Select, Alert } from 'antd';
 import React, { useState } from 'react';
 import { FormField, IDatasourceSourceInput, IFormConnectionData, IFormData } from '../service/DataSourceType';
 import { showMessageByNotification, showRequestResult } from '../service/NotificationUtil';
@@ -725,19 +725,6 @@ export default function AddDataSourceModal({
                         onChange={(e) => updateDataSourceBasicInfo(e.target.value, FormField.alias)}
                     />
                 </Form.Item>
-                {/* <Form.Item
-                    name="syncCDAPI"
-                    label="Sync"
-                    rules={[{ required: false, message: 'sync the Datasource to Custom Dashboard.' }]}
-                >
-                    <Checkbox
-                        disabled={!enableSync || !formData.create}
-                        defaultChecked={formData.syncCDAPI}
-                        onChange={(e) => updateDataSourceBasicInfo(e.target.checked, FormField.syncCDAPI)}
-                    >
-                        Sync to Custom Dashboard
-                    </Checkbox>
-                </Form.Item> */}
             </Card>
         );
     };
