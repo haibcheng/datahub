@@ -185,6 +185,11 @@ spring:
   kafka:
     security:
       protocol: ${KAFKA_PROPERTIES_SECURITY_PROTOCOL:PLAINTEXT}
+    producer:
+      properties:
+        max:
+          request:
+            size: ${KAFKA_MAX_REQUEST_SIZE:10485760}
 
 springdoc:
   cache:
