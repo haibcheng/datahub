@@ -10,6 +10,7 @@ import { ANTD_GRAY, REDESIGN_COLORS } from '../../entity/shared/constants';
 import ViewResetTokenModal from './ViewResetTokenModal';
 import useDeleteEntity from '../../entity/shared/EntityDropdown/useDeleteEntity';
 import SelectRole from './SelectRole';
+import { getUserAvatar } from '../../../utils/formatter/dataProcess';
 
 type Props = {
     user: CorpUser;
@@ -82,17 +83,14 @@ export default function UserListItem({ user, canManageUserCredentials, selectRol
     const userStatus = user.status; // Support case where the user status is undefined.
     const userStatusToolTip = userStatus && getUserStatusToolTip(userStatus);
     const userStatusColor = userStatus && getUserStatusColor(userStatus);
+    const photoUrl = getUserAvatar(user?.username);
 
     return (
         <List.Item>
             <UserItemContainer>
                 <Link to={entityRegistry.getEntityUrl(EntityType.CorpUser, user.urn)}>
                     <UserHeaderContainer>
-                        <CustomAvatar
-                            size={32}
-                            name={displayName}
-                            photoUrl={user.editableProperties?.pictureLink || undefined}
-                        />
+                        <CustomAvatar size={32} name={displayName} photoUrl={photoUrl || undefined} />
                         <div style={{ marginLeft: 16, marginRight: 20 }}>
                             <div>
                                 <Typography.Text>{displayName}</Typography.Text>

@@ -40,7 +40,7 @@ public class BrowsePathUtils {
             getKeyAspectSpec(dsKey.getPlatform().getEntityType(),
                 entityRegistry));
         String datasetNamePath = getDatasetPath(dsKey.getName(), dataPlatformDelimiter);
-        return ("/" + dsKey.getOrigin() + "/" + dpKey.getPlatformName() + datasetNamePath).toLowerCase();
+        return ("/" + dpKey.getPlatformName() + datasetNamePath).toLowerCase();
       case Constants.CHART_ENTITY_NAME:
         ChartKey chartKey = (ChartKey) EntityKeyUtils.convertUrnToEntityKey(urn, getKeyAspectSpec(urn.getEntityType(), entityRegistry));
         return ("/" + chartKey.getDashboardTool());

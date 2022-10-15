@@ -13,9 +13,11 @@ import { Link } from 'react-router-dom';
 import { Button, Dropdown, Menu } from 'antd';
 import { useAppConfig } from '../../useAppConfig';
 import { useGetAuthenticatedUser } from '../../useGetAuthenticatedUser';
+import { ANTD_GRAY } from '../../entity/shared/constants';
 
 const LinkWrapper = styled.span`
     margin-right: 0px;
+    color: ${ANTD_GRAY[1]};
 `;
 
 const LinksWrapper = styled.div<{ areLinksHidden?: boolean }>`
@@ -38,10 +40,11 @@ const MenuItem = styled(Menu.Item)`
 
 interface Props {
     areLinksHidden?: boolean;
+    isHome?: boolean;
 }
 
 export function HeaderLinks(props: Props) {
-    const { areLinksHidden } = props;
+    const { areLinksHidden, isHome } = props;
     const me = useGetAuthenticatedUser();
     const { config } = useAppConfig();
 
@@ -59,7 +62,7 @@ export function HeaderLinks(props: Props) {
             {showAnalytics && (
                 <LinkWrapper>
                     <Link to="/analytics">
-                        <Button type="text">
+                        <Button type="text" style={{ color: isHome ? '#eee' : '' }}>
                             <BarChartOutlined /> Analytics
                         </Button>
                     </Link>
@@ -68,7 +71,7 @@ export function HeaderLinks(props: Props) {
             {showIngestion && (
                 <LinkWrapper>
                     <Link to="/ingestion">
-                        <Button type="text">
+                        <Button type="text" style={{ color: isHome ? '#eee' : '' }}>
                             <ApiOutlined /> Ingestion
                         </Button>
                     </Link>
@@ -94,7 +97,7 @@ export function HeaderLinks(props: Props) {
                 }
             >
                 <LinkWrapper>
-                    <Button type="text">
+                    <Button type="text" style={{ color: isHome ? '#eee' : '' }}>
                         <SolutionOutlined /> Govern <DownOutlined style={{ fontSize: '6px' }} />
                     </Button>
                 </LinkWrapper>
@@ -102,7 +105,7 @@ export function HeaderLinks(props: Props) {
             {showSettings && (
                 <LinkWrapper style={{ marginRight: 12 }}>
                     <Link to="/settings">
-                        <Button type="text">
+                        <Button type="text" style={{ color: isHome ? '#eee' : '' }}>
                             <SettingOutlined />
                         </Button>
                     </Link>

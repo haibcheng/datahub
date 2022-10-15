@@ -14,6 +14,7 @@ import { useGetAuthenticatedUser } from '../useGetAuthenticatedUser';
 import analytics, { EventType } from '../analytics';
 import useFilters from './utils/useFilters';
 import { PageRoutes } from '../../conf/Global';
+import { getUserAvatar } from '../../utils/formatter/dataProcess';
 
 const styles = {
     children: {
@@ -123,7 +124,7 @@ export const SearchablePage = ({ onSearch, onAutoComplete, children }: Props) =>
                 onSearch={onSearch || search}
                 onQueryChange={onAutoComplete || autoComplete}
                 authenticatedUserUrn={user?.urn || ''}
-                authenticatedUserPictureLink={user?.editableProperties?.pictureLink}
+                authenticatedUserPictureLink={getUserAvatar(user?.username)}
                 entityRegistry={entityRegistry}
             />
             <div style={styles.children}>{children}</div>

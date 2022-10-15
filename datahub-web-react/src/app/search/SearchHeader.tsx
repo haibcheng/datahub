@@ -11,6 +11,7 @@ import { ANTD_GRAY } from '../entity/shared/constants';
 import { HeaderLinks } from '../shared/admin/HeaderLinks';
 import { useAppConfig } from '../useAppConfig';
 import { DEFAULT_APP_CONFIG } from '../../appConfigContext';
+import { PageRoutes } from '../../conf/Global';
 
 const { Header } = Layout;
 
@@ -82,7 +83,7 @@ export const SearchHeader = ({
     return (
         <Header style={styles.header as any}>
             <LogoSearchContainer>
-                <Link to="/">
+                <Link to={PageRoutes.HOME}>
                     <LogoImage
                         src={
                             appConfig.config !== DEFAULT_APP_CONFIG
