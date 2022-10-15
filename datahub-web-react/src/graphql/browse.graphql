@@ -38,6 +38,33 @@ query getBrowseResults($input: BrowseInput!) {
                     ...entityDomain
                 }
             }
+            ... on Datasource {
+                name
+                alias
+                origin
+                description
+                platform {
+                    name
+                    info {
+                        logoUrl
+                    }
+                }
+                ownership {
+                    ...ownershipFields
+                }
+                globalTags {
+                    ...globalTagsFields
+                }
+                syncCDAPI
+                oracleTNSType
+                region
+                primaryConn {
+                    dataCenter
+                }
+                gsbConn {
+                    dataCenter
+                }
+            }
             ... on Dashboard {
                 urn
                 type

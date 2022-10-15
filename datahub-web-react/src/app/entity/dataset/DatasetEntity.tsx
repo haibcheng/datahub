@@ -27,6 +27,7 @@ import { EntityMenuItems } from '../shared/EntityDropdown/EntityDropdown';
 import { SidebarSiblingsSection } from '../shared/containers/profile/sidebar/SidebarSiblingsSection';
 import { DatasetStatsSummarySubHeader } from './profile/stats/stats/DatasetStatsSummarySubHeader';
 import { DatasetSearchSnippet } from './DatasetSearchSnippet';
+import { DatasourcesTab } from '../shared/tabs/Dataset/Source/DatasourcesTab';
 
 const SUBTYPES = {
     VIEW: 'view',
@@ -122,6 +123,14 @@ export class DatasetEntity implements Entity<Dataset> {
                                 (dataset?.dataset?.downstream?.total || 0) > 0
                             );
                         },
+                    },
+                },
+                {
+                    name: 'Sources',
+                    component: DatasourcesTab,
+                    display: {
+                        visible: (_, _1) => true,
+                        enabled: (_, dataset: GetDatasetQuery) => (dataset?.dataset?.sources?.count || 0) > 0,
                     },
                 },
                 {
