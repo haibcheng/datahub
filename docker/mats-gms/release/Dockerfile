@@ -40,6 +40,7 @@ FROM base AS prod-build
 
 RUN yum install -y perl
 
+ADD ./docker/mats-libs/mats-monitoring-logback /root/.m2/repository/com/cisco/webex/mats/mats-monitoring-logback
 COPY . /datahub-src
 
 RUN cd /datahub-src \

@@ -27,6 +27,7 @@ ARG USE_SYSTEM_NODE="true"
 ENV CI=true
 ENV GRADLE_OPTS="-Xms512m -Xmx1g"
 
+ADD ./docker/mats-libs/mats-monitoring-logback /root/.m2/repository/com/cisco/webex/mats/mats-monitoring-logback
 COPY . /datahub-src
 
 RUN cd /datahub-src \
