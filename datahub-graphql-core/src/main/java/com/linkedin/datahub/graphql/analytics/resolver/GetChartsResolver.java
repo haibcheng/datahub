@@ -6,26 +6,16 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.linkedin.datahub.graphql.analytics.service.AnalyticsService;
 import com.linkedin.datahub.graphql.analytics.service.AnalyticsUtil;
-import com.linkedin.datahub.graphql.generated.AnalyticsChart;
-import com.linkedin.datahub.graphql.generated.AnalyticsChartGroup;
-import com.linkedin.datahub.graphql.generated.BarChart;
-import com.linkedin.datahub.graphql.generated.DateInterval;
-import com.linkedin.datahub.graphql.generated.DateRange;
-import com.linkedin.datahub.graphql.generated.EntityType;
-import com.linkedin.datahub.graphql.generated.NamedBar;
-import com.linkedin.datahub.graphql.generated.NamedLine;
-import com.linkedin.datahub.graphql.generated.Row;
-import com.linkedin.datahub.graphql.generated.TableChart;
-import com.linkedin.datahub.graphql.generated.TimeSeriesChart;
+import com.linkedin.datahub.graphql.generated.*;
 import com.linkedin.datahub.graphql.resolvers.ResolverUtils;
 import com.linkedin.entity.client.EntityClient;
 import com.linkedin.metadata.Constants;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
@@ -104,6 +94,7 @@ public final class GetChartsResolver implements DataFetcher<List<AnalyticsChartG
         .setLines(searchesTimeseries)
         .build());
 
+    /**
     // Chart 3: Table Chart
     final String topSearchTitle = "Top Search Queries";
     final List<String> columns = ImmutableList.of("Query", "Count");
@@ -144,6 +135,56 @@ public final class GetChartsResolver implements DataFetcher<List<AnalyticsChartG
     AnalyticsUtil.hydrateDisplayNameForTable(_entityClient, topViewedDatasets, Constants.DATASET_ENTITY_NAME,
         ImmutableSet.of(Constants.DATASET_KEY_ASPECT_NAME), AnalyticsUtil::getDatasetName, authentication);
     charts.add(TableChart.builder().setTitle(topViewedTitle).setColumns(columns5).setRows(topViewedDatasets).build());
+
+    return charts;
+     */
+
+    // Chart 3: Table Chart
+    final String lastSearchTitle = "Last Search Queries";
+    final List<String> lastSearchColumns = ImmutableList.of("Query", "User", "Time");
+
+    List<String> lastSearchFields = new ArrayList<>();
+    lastSearchFields.add("query");
+    lastSearchFields.add("corp_user_username");
+    lastSearchFields.add("timestamp");
+    final List<Row> lastSearchQueries =
+            _analyticsService.getLastNTableChart(_analyticsService.getUsageIndexName(), lastSearchFields,
+                    Optional.of(lastWeekDateRange), ImmutableMap.of("type", ImmutableList.of(searchEventType)), 10);
+    charts.add(TableChart.builder().setTitle(lastSearchTitle).setColumns(lastSearchColumns).setRows(lastSearchQueries).build());
+
+    // Chart 4: Top10 Query Pie Chart
+    final List<Row> topSearchQueries =
+            _analyticsService.getTopNTableChart(_analyticsService.getUsageIndexName(), Optional.of(lastWeekDateRange),
+                    "query.keyword", ImmutableMap.of("type", ImmutableList.of(searchEventType)), Collections.emptyMap(),
+                    Optional.empty(), 10, AnalyticsUtil::buildCellWithSearchLandingPage);
+    List<NamedPie> topSearchPiePies = topSearchQueries.stream().map(r -> new NamedPie(r.getValues().get(0), new PieSegment(r.getValues().get(0),
+            Integer.parseInt(r.getValues().get(1))))).collect(Collectors.toList());
+    charts.add(PieChart.builder().setTitle("Top Search Queries").setPies(topSearchPiePies).build());
+
+    // Chart 5: Top Viewed Dataset Pie Chart
+    final List<Row> topViewedDatasets =
+            _analyticsService.getTopNTableChart(_analyticsService.getUsageIndexName(), Optional.of(lastWeekDateRange),
+                    "entityUrn.keyword", ImmutableMap.of("type", ImmutableList.of("EntityViewEvent"), "entityType.keyword",
+                            ImmutableList.of(EntityType.DATASET.name())), Collections.emptyMap(), Optional.empty(), 10,
+                    AnalyticsUtil::buildCellWithEntityLandingPage);
+    List<NamedPie> topViewPiePies = topViewedDatasets.stream().map(r -> new NamedPie(r.getValues().get(0), new PieSegment(r.getValues().get(0),
+            Integer.parseInt(r.getValues().get(1))))).collect(Collectors.toList());
+    charts.add(PieChart.builder().setTitle("Top Viewed Dataset").setPies(topViewPiePies).build());
+
+    // Chart 6: Last Viewed Dataset Table Chart
+    final String lastViewDatasetTitle = "Last Viewed Dataset";
+    final List<String> lastViewDatasetColumns = ImmutableList.of("Dataset", "User", "Time");
+    List<String> lastViewedDatasets = new ArrayList<>();
+    lastViewedDatasets.add("dataset_name");
+    lastViewedDatasets.add("corp_user_username");
+    lastViewedDatasets.add("timestamp");
+    Map<String, List<String>> filterMap = new HashMap<>();
+    filterMap.put("type", ImmutableList.of("EntityViewEvent"));
+    filterMap.put("entityType.keyword", ImmutableList.of("DATASET"));
+    final List<Row> lastViewedQueries =
+            _analyticsService.getLastNTableChart(_analyticsService.getUsageIndexName(), lastViewedDatasets,
+                    Optional.of(lastWeekDateRange), filterMap, 10);
+    charts.add(TableChart.builder().setTitle(lastViewDatasetTitle).setColumns(lastViewDatasetColumns).setRows(lastViewedQueries).build());
 
     return charts;
   }

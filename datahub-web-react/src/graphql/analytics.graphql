@@ -72,4 +72,14 @@ fragment analyticsChart on AnalyticsChart {
             }
         }
     }
+    ... on PieChart {
+        title
+        pies {
+            name
+            segment {
+                label
+                value
+            }
+        }
+    }
 }
