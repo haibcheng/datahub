@@ -8,10 +8,10 @@ FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
 RUN yum install -y wget
 
 RUN cd /root  \
-    && wget https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz -O openjdk.tar.gz \
+    && wget https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.16.1%2B1/OpenJDK11U-jdk_x64_linux_hotspot_11.0.16.1_1.tar.gz -O openjdk.tar.gz \
     && tar -zxvf openjdk.tar.gz \
     && rm -f openjdk.tar.gz \
-    && mv jdk-11.0.2 /usr/lib/jvm \
+    && mv jdk-11.0.16.1+1 /usr/lib/jvm \
     && chmod -R +x /usr/lib/jvm/bin
 
 ENV PATH="${PATH}:/usr/lib/jvm/bin"
@@ -25,7 +25,7 @@ RUN yum module -y enable nodejs:16 \
 
 ARG USE_SYSTEM_NODE="true"
 ENV CI=true
-ENV GRADLE_OPTS="-Xms256m -Xmx512m"
+ENV GRADLE_OPTS="-Xms512m -Xmx1g"
 
 COPY . /datahub-src
 
