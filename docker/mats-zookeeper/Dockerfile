@@ -19,7 +19,6 @@ FROM base as  final
 COPY --from=download /root/apache-zookeeper-$ZK_VERSION-bin /opt/apache-zookeeper
 COPY ./docker/mats-zookeeper/zoo.cfg /opt/apache-zookeeper/conf/zoo.cfg
 COPY ./docker/mats-zookeeper/zkRun.sh /opt/apache-zookeeper/bin/zkRun.sh
-COPY ./docker/mats-zookeeper/log4j.properties /opt/apache-zookeeper/conf/log4j.properties
 
 RUN echo "===> Setting up zookeeper dirs" \
     && mkdir -p /var/zookeeper/data /var/zookeeper/datalog /var/zookeeper/logs \
