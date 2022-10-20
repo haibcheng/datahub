@@ -17,21 +17,19 @@ RUN cd /root \
 FROM base as  final
 
 COPY --from=download /root/apache-zookeeper-$ZK_VERSION-bin /opt/apache-zookeeper
-COPY ./docker/mats-zookeeper/il5/java.security /usr/lib/jvm/jre/lib/security/java.security
-COPY ./docker/mats-zookeeper/il5/zoo.cfg /opt/apache-zookeeper/conf/zoo.cfg
-COPY ./docker/mats-zookeeper/il5/zkRun.sh /opt/apache-zookeeper/bin/zkRun.sh
+COPY ./docker/mats-zookeeper/zoo.cfg /opt/apache-zookeeper/conf/zoo.cfg
+COPY ./docker/mats-zookeeper/zkRun.sh /opt/apache-zookeeper/bin/zkRun.sh
 COPY ./docker/mats-zookeeper/log4j.properties /opt/apache-zookeeper/conf/log4j.properties
 
 RUN echo "===> Setting up zookeeper dirs" \
     && mkdir -p /var/zookeeper/data /var/zookeeper/datalog /var/zookeeper/logs \
-    && chmod 644 /usr/lib/jvm/jre/lib/security/java.security \
     && chmod 644 /opt/apache-zookeeper/conf/zoo.cfg \
     && chmod -R 755 /opt/apache-zookeeper/bin \
     && chown -R 1000:1000 /var/zookeeper
 
-VOLUME ["/var/zookeeper/data", "/var/zookeeper/datalog", "/var/zookeeper/logs", "/etc/zookeeper/secrets"]
+VOLUME ["/var/zookeeper/data", "/var/zookeeper/datalog", "/var/zookeeper/logs"]
 
-EXPOSE 2281 2888 3888
+EXPOSE 2181 2888 3888
 
 ENV JAVA_OPTS=""
 

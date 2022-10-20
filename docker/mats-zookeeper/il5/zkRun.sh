@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export ZOO_LOG_DIR=/var/zookeeper/logs
+
 SSL_KEYSTORE_LOCATION=/etc/zookeeper/secrets/server.keystore.bcfks
 SSL_KEYSTORE_PASS=$(cat "/etc/zookeeper/secrets/keystore.credentials")
 SSL_TRUSTSTORE_LOCATION=/etc/zookeeper/secrets/server.truststore.bcfks
@@ -25,4 +27,4 @@ export SERVER_JVMFLAGS="\
     -Dzookeeper.ssl.trustStore.password=$SSL_TRUSTSTORE_PASS \
     -Dzookeeper.ssl.trustStore.type=BCFKS"
 
-exec /opt/apache-zookeeper-3.6.3/bin/zkServer.sh start-foreground
+exec /opt/apache-zookeeper/bin/zkServer.sh start-foreground
