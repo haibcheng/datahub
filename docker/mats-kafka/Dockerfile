@@ -19,14 +19,9 @@ FROM base as  final
 COPY --from=download /root/kafka_2.13-$KAFKA_VERSION /opt/kafka
 COPY ./docker/mats-kafka/kafkaRun.sh /opt/kafka/bin/kafkaRun.sh
 COPY ./docker/mats-kafka/server.properties /opt/kafka/config/server.properties
+COPY ./docker/mats-kafka/log4j.properties /opt/kafka/config/log4j.properties
 
-RUN echo "===> Setting up kafka dirs" \
-    && mkdir -p /var/kafka/data /var/kafka/logs \
-    && chown -R 1000:1000 /opt/kafka  \
-    && chmod -R 755 /opt/kafka/bin \
-    && chown -R 1000:1000 /var/kafka
-
-VOLUME ["/var/kafka/data", "/var/kafka/logs"]
+RUN chown -R 1000:1000 /opt/kafka && chmod -R 755 /opt/kafka/bin
 
 EXPOSE 9092
 

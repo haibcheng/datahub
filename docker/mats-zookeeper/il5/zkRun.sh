@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export ZOO_LOG_DIR=/var/zookeeper/logs
-
 SSL_KEYSTORE_LOCATION=/etc/zookeeper/secrets/server.keystore.bcfks
 SSL_KEYSTORE_PASS=$(cat "/etc/zookeeper/secrets/keystore.credentials")
 SSL_TRUSTSTORE_LOCATION=/etc/zookeeper/secrets/server.truststore.bcfks
