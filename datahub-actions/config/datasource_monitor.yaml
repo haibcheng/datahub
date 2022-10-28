@@ -1,0 +1,15 @@
+# datasource_monitor.yaml
+name: "datasource_monitor"
+source:
+  type: "kafka"
+  config:
+    connection:
+      bootstrap: ${KAFKA_BOOTSTRAP_SERVER:-localhost:9092}
+      schema_registry_url: ${SCHEMA_REGISTRY_URL:-http://localhost:8081}
+    topic_routes:
+      mcl: ${METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME:-DataHubMetadataChangeLog_Versioned_v1}
+      pe: ${PLATFORM_EVENT_TOPIC_NAME:-DataHubPlatformEvent_v1}
+action:
+  type: "wap-actions.datasource_monitor:DatasourceMonitorAction"
+  config:
+    to_upper: false
