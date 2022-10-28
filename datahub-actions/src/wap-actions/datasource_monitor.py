@@ -26,12 +26,12 @@ class DatasourceMonitorAction(Action):
         self.config = config
 
     def act(self, event: EventEnvelope) -> None:
-        print("Hello datasource! Received event:")
+        logger.info("Hello datasource! Received event:")
         message = json.dumps(json.loads(event.as_json()), indent=4)
         if self.config.to_upper:
-            print(message.upper())
+            logger.info(message.upper())
         else:
-            print(message)
+            logger.info(message)
 
     def close(self) -> None:
         pass
