@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+touch /tmp/datahub/logs/actions/actions.out
+
 # Deploy System Actions
 if [ "$(ls -A /etc/datahub/actions/system/conf/)" ]; then
     config_files=""

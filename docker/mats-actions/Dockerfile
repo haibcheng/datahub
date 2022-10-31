@@ -31,12 +31,15 @@ RUN chmod +x /datahub-actions/setup.py \
     && cd .. && rm -rf /datahub-actions \
     && chmod a+x /start_datahub_actions.sh
 
-RUN mkdir -p /etc/datahub/actions/conf && mkdir -p /etc/datahub/actions/system/conf
+RUN mkdir -p /etc/datahub/actions/conf  \
+    && mkdir -p /etc/datahub/actions/system/conf  \
+    && mkdir -p /tmp/datahub/logs/actions/system
 
 COPY datahub-actions/config /etc/datahub/actions/conf
 COPY docker/mats-actions/executor.yaml /etc/datahub/actions/system/conf
 
-RUN chown -R rhel /etc/datahub
+RUN chown -R rhel /etc/datahub \
+    && chown -R rhel /tmp/datahub
 
 RUN mkdir -p /home/rhel/.cache \
     && mv /root/.cache/pip /home/rhel/.cache/pip \
