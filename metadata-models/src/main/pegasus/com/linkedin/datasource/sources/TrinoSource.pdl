@@ -26,6 +26,14 @@ record TrinoSource {
 
   driver: string = "io.trino.jdbc.TrinoDriver"
 
+  minSize: optional long
+
+  maxSize: optional long
+
+  idleSize: optional long
+
+  status: optional string
+
   jdbcParams: optional string
 
   /**

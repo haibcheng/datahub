@@ -2103,6 +2103,22 @@
           "type" : "string",
           "default" : "com.mysql.jdbc.Driver"
         }, {
+          "name" : "minSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "maxSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "idleSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "status",
+          "type" : "string",
+          "optional" : true
+        }, {
           "name" : "jdbcParams",
           "type" : "string",
           "optional" : true
@@ -2169,6 +2185,22 @@
           "type" : "string",
           "default" : "oracle.jdbc.driver.OracleDriver"
         }, {
+          "name" : "minSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "maxSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "idleSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "status",
+          "type" : "string",
+          "optional" : true
+        }, {
           "name" : "tnsName",
           "type" : "string",
           "optional" : true
@@ -2233,6 +2265,22 @@
           "type" : "string",
           "default" : "org.postgresql.Driver"
         }, {
+          "name" : "minSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "maxSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "idleSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "status",
+          "type" : "string",
+          "optional" : true
+        }, {
           "name" : "jdbcParams",
           "type" : "string",
           "optional" : true
@@ -2296,6 +2344,22 @@
           "name" : "driver",
           "type" : "string",
           "default" : "com.mysql.jdbc.Driver"
+        }, {
+          "name" : "minSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "maxSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "idleSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "status",
+          "type" : "string",
+          "optional" : true
         }, {
           "name" : "jdbcParams",
           "type" : "string",
@@ -2363,6 +2427,22 @@
           "type" : "string",
           "default" : "io.trino.jdbc.TrinoDriver"
         }, {
+          "name" : "minSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "maxSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "idleSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "status",
+          "type" : "string",
+          "optional" : true
+        }, {
           "name" : "jdbcParams",
           "type" : "string",
           "optional" : true
@@ -2423,6 +2503,22 @@
           "type" : "string",
           "default" : "org.apache.pinot.client.PinotDriver"
         }, {
+          "name" : "minSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "maxSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "idleSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "status",
+          "type" : "string",
+          "optional" : true
+        }, {
           "name" : "tablePatternAllow",
           "type" : "string",
           "doc" : "List of regex patterns for tables to include in ingestion.",
@@ -2482,6 +2578,22 @@
           "name" : "driver",
           "type" : "string",
           "default" : "org.apache.hive.jdbc.HiveDriver"
+        }, {
+          "name" : "minSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "maxSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "idleSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "status",
+          "type" : "string",
+          "optional" : true
         }, {
           "name" : "jdbcParams",
           "type" : "string",
@@ -2549,6 +2661,22 @@
           "type" : "string",
           "default" : "com.facebook.presto.jdbc.PrestoDriver"
         }, {
+          "name" : "minSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "maxSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "idleSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "status",
+          "type" : "string",
+          "optional" : true
+        }, {
           "name" : "jdbcParams",
           "type" : "string",
           "optional" : true
@@ -2605,6 +2733,22 @@
           "name" : "driver",
           "type" : "string",
           "default" : "com.snowflake.client.jdbc.SnowflakeDriver"
+        }, {
+          "name" : "minSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "maxSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "idleSize",
+          "type" : "long",
+          "optional" : true
+        }, {
+          "name" : "status",
+          "type" : "string",
+          "optional" : true
         }, {
           "name" : "connectionParams",
           "type" : "string",
@@ -2744,6 +2888,10 @@
     }, {
       "name" : "group",
       "type" : "com.linkedin.common.CorpGroupUrn"
+    }, {
+      "name" : "testQuerySql",
+      "type" : "string",
+      "optional" : true
     } ],
     "Aspect" : {
       "name" : "datasourceInfo"

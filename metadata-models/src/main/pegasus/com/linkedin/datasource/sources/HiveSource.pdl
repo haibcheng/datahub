@@ -27,6 +27,14 @@ record HiveSource {
 
   driver: string = "org.apache.hive.jdbc.HiveDriver"
 
+  minSize: optional long
+
+  maxSize: optional long
+
+  idleSize: optional long
+
+  status: optional string
+
   jdbcParams: optional string
 
   /**

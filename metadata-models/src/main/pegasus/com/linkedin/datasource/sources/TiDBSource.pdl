@@ -27,6 +27,14 @@ record TiDBSource {
 
   driver: string = "com.mysql.jdbc.Driver"
 
+  minSize: optional long
+
+  maxSize: optional long
+
+  idleSize: optional long
+
+  status: optional string
+
   jdbcParams: optional string
 
   /**

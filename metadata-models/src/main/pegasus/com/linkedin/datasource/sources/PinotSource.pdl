@@ -22,6 +22,14 @@ record PinotSource {
 
   driver: string = "org.apache.pinot.client.PinotDriver"
 
+  minSize: optional long
+
+  maxSize: optional long
+
+  idleSize: optional long
+
+  status: optional string
+
   /**
   * List of regex patterns for tables to include in ingestion.
   */

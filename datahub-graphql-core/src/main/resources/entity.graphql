@@ -9760,6 +9760,8 @@ type Datasource implements EntityWithRelationships & Entity {
 
     region: String
 
+    testQuerySql: String
+
     group: CorpGroup
 
     primaryConn: DatasourceConnection
@@ -9813,6 +9815,10 @@ type SnowflakeSource {
     password: String
     hostPort: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     connectionParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9828,6 +9834,10 @@ type TiDBSource {
     hostPort: String
     database: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9843,6 +9853,10 @@ type OracleSource {
     hostPort: String
     serviceName: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     tnsName: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9858,6 +9872,10 @@ type PostgresSource {
     hostPort: String
     database: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9873,6 +9891,10 @@ type MysqlSource {
     hostPort: String
     database: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9888,6 +9910,10 @@ type HiveSource {
     hostPort: String
     database: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9904,6 +9930,10 @@ type PrestoSource {
     catalog: String
     schema: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9918,6 +9948,10 @@ type PinotSource {
     password: String
     hostPort: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     tablePatternAllow: String
     tablePatternDeny: String
     tablePatternIgnoreCase: Boolean
@@ -9933,6 +9967,10 @@ type TrinoSource {
     catalog: String
     schema: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9974,6 +10012,10 @@ input SnowflakeSourceInput {
     password: String!
     hostPort: String!
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     connectionParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -9989,6 +10031,10 @@ input OracleSourceInput {
     hostPort: String
     serviceName: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     tnsName: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -10004,6 +10050,10 @@ input PostgresSourceInput {
     hostPort: String!
     database: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -10019,6 +10069,10 @@ input MysqlSourceInput {
     hostPort: String!
     database: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -10034,6 +10088,10 @@ input TiDBSourceInput {
     hostPort: String!
     database: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -10049,6 +10107,10 @@ input HiveSourceInput {
     hostPort: String!
     database: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -10065,6 +10127,10 @@ input PrestoSourceInput {
     catalog: String
     schema: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -10079,6 +10145,10 @@ input PinotSourceInput {
     password: String!
     hostPort: String!
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     tablePatternAllow: String
     tablePatternDeny: String
     tablePatternIgnoreCase: Boolean
@@ -10094,6 +10164,10 @@ input TrinoSourceInput {
     catalog: String
     schema: String
     driver: String
+    minSize: Long
+    maxSize: Long
+    idleSize: Long
+    status: String
     jdbcParams: String
     tablePatternAllow: String
     tablePatternDeny: String
@@ -10153,6 +10227,7 @@ input DatasourceCreateInput {
     alias: String
     group: String
     region: String
+    testQuerySql: String
     syncCDAPI: Boolean!
     create: Boolean!
     primaryConn: DatasourceSourceInput!

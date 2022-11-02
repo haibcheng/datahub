@@ -27,6 +27,14 @@ record OracleSource {
 
   driver: string = "oracle.jdbc.driver.OracleDriver"
 
+  minSize: optional long
+
+  maxSize: optional long
+
+  idleSize: optional long
+
+  status: optional string
+
   tnsName: optional string
 
   /**

@@ -13,6 +13,14 @@ record SnowflakeSource {
 
   driver: string = "com.snowflake.client.jdbc.SnowflakeDriver"
 
+  minSize: optional long
+
+  maxSize: optional long
+
+  idleSize: optional long
+
+  status: optional string
+
   connectionParams: optional string
 
   /**

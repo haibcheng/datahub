@@ -26,6 +26,14 @@ record PrestoSource {
 
   driver: string = "com.facebook.presto.jdbc.PrestoDriver"
 
+  minSize: optional long
+
+  maxSize: optional long
+
+  idleSize: optional long
+
+  status: optional string
+
   jdbcParams: optional string
 
   /**

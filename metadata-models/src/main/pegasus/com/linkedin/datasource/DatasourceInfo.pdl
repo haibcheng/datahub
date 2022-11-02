@@ -26,4 +26,6 @@ record DatasourceInfo {
   category: string
 
   group: CorpGroupUrn
+
+  testQuerySql: optional string
 }
