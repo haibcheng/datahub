@@ -13,3 +13,5 @@ def test_access_token():
     )
     token = ci_token_s.access_token_of()
     print(token)
+    token = ci_token_s.access_token_of()
+    print(token)
