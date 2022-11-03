@@ -14,6 +14,12 @@ logger = logging.getLogger(__name__)
 class DatasourceMonitorConfig(BaseModel):
     # Whether to print the message in upper case.
     to_upper: Optional[bool]
+    access_token_url: str
+    username: str
+    password: str
+    bearer_token_url: str
+    machine_account_name: str
+    machine_account_pass: str
 
 
 class DatasourceMonitorAction(Action):

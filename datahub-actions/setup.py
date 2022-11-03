@@ -1,7 +1,7 @@
 import setuptools
 
 package_metadata: dict = {}
-with open("src/wap-actions/__init__.py") as fp:
+with open("src/wap_actions/__init__.py") as fp:
     exec(fp.read(), package_metadata)
 
 setuptools.setup(
