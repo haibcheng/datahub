@@ -11,7 +11,7 @@ from datahub_actions.pipeline.pipeline_context import PipelineContext
 from wap_actions.atomic.atomic_int import AtomicInteger
 from wap_actions.atomic.atomic_set import AtomicSet
 from wap_actions.service.ci_token import CITokenService
-from wap_actions.service.cu_dashboard import CustomDashboardService
+from wap_actions.service.cu_dashboard import CustomerDashboardService
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +43,7 @@ class DatasourceMonitorAction(Action):
             machine_act_name=self.config.machine_account_name,
             machine_act_pass=self.config.machine_account_pass
         )
-        self.cu_dashboard = CustomDashboardService(
+        self.cu_dashboard = CustomerDashboardService(
             token_service=ci_token_s,
             refresh_api=self.config.datasource_refresh_api
         )

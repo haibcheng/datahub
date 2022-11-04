@@ -1,5 +1,5 @@
 from wap_actions.service.ci_token import CITokenService
-from wap_actions.service.cu_dashboard import CustomDashboardService
+from wap_actions.service.cu_dashboard import CustomerDashboardService
 
 
 def test_change_notify():
@@ -12,7 +12,7 @@ def test_change_notify():
         machine_act_name='CTGWAP-DATAHUB',
         machine_act_pass='pass'
     )
-    cu_dashboard = CustomDashboardService(
+    cu_dashboard = CustomerDashboardService(
         token_service=ci_token_s,
         refresh_api='http://10.29.41.71:8021/api/v1/data-sources/refresh'
     )

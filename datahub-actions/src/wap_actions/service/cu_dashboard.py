@@ -2,7 +2,7 @@ import requests
 from wap_actions.service.ci_token import CITokenService
 
 
-class CustomDashboardService:
+class CustomerDashboardService:
 
     def change_notify(self):
         token = self.token_service.access_token_of()
