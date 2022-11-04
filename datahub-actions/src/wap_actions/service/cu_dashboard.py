@@ -9,7 +9,7 @@ class CustomerDashboardService:
         headers = {
             'Authorization': 'Bearer ' + token
         }
-        response = requests.post(self.refresh_api, headers=headers)
+        response = requests.post(self.refresh_api, headers=headers, verify=False)
         if response.status_code not in (200, 204):
             raise Exception(response.text)
 

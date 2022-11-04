@@ -14,6 +14,6 @@ def test_change_notify():
     )
     cu_dashboard = CustomerDashboardService(
         token_service=ci_token_s,
-        refresh_api='http://10.29.41.71:8021/api/v1/data-sources/refresh'
+        refresh_api='https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh'
     )
     cu_dashboard.change_notify()
