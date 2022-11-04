@@ -21,7 +21,7 @@ RUN python3 -m ensurepip --upgrade \
     && python3 -m pip install --upgrade acryl-datahub-actions \
     && pip install 'acryl-datahub-actions[executor]'
 
-COPY datahub-actions/src/wap-actions /datahub-actions/src/wap-actions
+COPY datahub-actions/src/wap_actions /datahub-actions/src/wap_actions
 COPY datahub-actions/setup.py /datahub-actions/setup.py
 COPY docker/mats-actions/start.sh /start_datahub_actions.sh
 

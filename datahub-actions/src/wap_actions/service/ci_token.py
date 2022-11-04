@@ -2,6 +2,9 @@ import requests
 import json
 import base64
 import time
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class CITokenService:
@@ -33,6 +36,7 @@ class CITokenService:
         self._expires_in_seconds = res_json.get("expires_in")
         self._access_token = res_json.get("access_token")
         self._access_token_generated_in_seconds = time.time()
+        logger.info("Got new token -> %s", self._access_token)
         return self._access_token
 
     def _bearer_token_of(self):

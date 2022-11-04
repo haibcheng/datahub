@@ -66,7 +66,7 @@ class DatasourceMonitorAction(Action):
         entity_urn = event_json.get("entityUrn")
         if entity_urn is not None:
             self._urns.add(entity_urn)
-            logger.info("Received datasource -> " + entity_urn)
+            logger.info("Received datasource -> %s", entity_urn)
 
     def close(self) -> None:
         self._close = True
@@ -84,9 +84,11 @@ class DatasourceMonitorAction(Action):
                 continue
             if len(n_set) > 1:
                 n_set.remove("__first_run__")
+            urns = ', '.join(n_set)
             try:
+                logger.info("The change[%s] is being notified...", urns)
                 self.cu_dashboard.change_notify()
-                logger.info("The change for[" + ', '.join(n_set) + "] has been notified.")
+                logger.info("The change[%s] has been notified!", urns)
             except Exception as error:
                 self._urns.add_set(n_set)
-                logger.error('Failed to run change_notify: ' + repr(error))
+                logger.error('Failed to notify the change[%s] -> %s', urns, repr(error))
