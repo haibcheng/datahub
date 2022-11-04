@@ -26,12 +26,13 @@ class CITokenService:
             "assertion": bearer_token
         }
         response = requests.post(self.access_token_url, data=body, headers=headers)
-        if response.status_code == 200:
-            res_json = json.loads(response.text)
-            self._expires_in_seconds = res_json.get("expires_in")
-            self._access_token = res_json.get("access_token")
-            self._access_token_generated_in_seconds = time.time()
+        if response.status_code != 200:
+            raise Exception(response.text)
 
+        res_json = json.loads(response.text)
+        self._expires_in_seconds = res_json.get("expires_in")
+        self._access_token = res_json.get("access_token")
+        self._access_token_generated_in_seconds = time.time()
         return self._access_token
 
     def _bearer_token_of(self):
@@ -43,11 +44,11 @@ class CITokenService:
         response = requests.post(self.bearer_token_url,
                                  data=json.dumps(body),
                                  headers=headers)
-        if response.status_code == 200:
-            res_json = json.loads(response.text)
-            return res_json.get("BearerToken")
+        if response.status_code != 200:
+            raise Exception(response.text)
 
-        return None
+        res_json = json.loads(response.text)
+        return res_json.get("BearerToken")
 
     def __init__(self,
                  access_token_url: str,
