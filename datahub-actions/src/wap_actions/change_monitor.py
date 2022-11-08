@@ -11,12 +11,14 @@ from datahub_actions.pipeline.pipeline_context import PipelineContext
 from wap_actions.core.atomic import AtomicInteger, AtomicSet
 from wap_actions.service.ci_token import CITokenConfig
 from wap_actions.service.notification import UrlNotificationService
+from wap_actions.core.cache import FileCache
 
 logger = logging.getLogger(__name__)
 
 
 class UrlNotificationConfig(BaseModel):
     output_json: Optional[bool]
+    cache_root: str
     entity_types: list
     ci_config: CITokenConfig
     url_callback_api: str
@@ -34,9 +36,9 @@ class UrlNotificationAction(Action):
             ci_config=self.config.ci_config,
             callback_api=self.config.url_callback_api
         )
+        self._cache = FileCache(config.cache_root, ctx.pipeline_name + ".txt")
         self._counter = AtomicInteger()
-        self._urns = AtomicSet()
-        self._urns.add("__first_run__")
+        self._urns = AtomicSet(unique_value=True, cache=self._cache)
         self._close = False
         self._thread = Thread(target=self._notify_change)
         self._thread.start()
@@ -58,6 +60,7 @@ class UrlNotificationAction(Action):
     def close(self) -> None:
         self._close = True
         self._thread.join()
+        self._cache.persist()
         logger.info("The thread[notify_change] has been stopped.")
 
     def _notify_change(self):
@@ -66,16 +69,14 @@ class UrlNotificationAction(Action):
             if self._counter.increment_get() < 30:
                 continue
             self._counter.reset()
-            n_set = self._urns.copy_of()
+            n_set = self._urns.fetch_elements()
             if len(n_set) == 0:
                 continue
-            if len(n_set) > 1:
-                n_set.remove("__first_run__")
-            urns = ', '.join(n_set)
+            urns = ','.join(n_set)
             try:
                 logger.info("The change[%s] is being notified...", urns)
                 self.notification.notify(n_set)
                 logger.info("The change[%s] has been notified!", urns)
             except Exception as error:
-                self._urns.add_set(n_set)
+                self._urns.add_elements(n_set)
                 logger.error('Failed to notify the change[%s] -> %s', urns, repr(error))

@@ -13,6 +13,7 @@ action:
   type: "wap_actions.change_monitor:UrlNotificationAction"
   config:
     output_json: ${OUTPUT_JSON:-true}
+    cache_root: ${CACHE_ROOT_PATH}
     entity_types:
       - datasource
     ci_config:
