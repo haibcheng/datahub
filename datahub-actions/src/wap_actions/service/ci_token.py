@@ -3,8 +3,18 @@ import json
 import base64
 import time
 import logging
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
+
+
+class CITokenConfig(BaseModel):
+    access_token_url: str
+    username: str
+    password: str
+    bearer_token_url: str
+    machine_account_name: str
+    machine_account_pass: str
 
 
 class CITokenService:
@@ -42,8 +52,8 @@ class CITokenService:
     def _bearer_token_of(self):
         headers = {'Content-type': 'application/json'}
         body = {
-            "name": self.machine_act_name,
-            "password": self.machine_act_pass
+            "name": self.machine_account_name,
+            "password": self.machine_account_pass
         }
         response = requests.post(self.bearer_token_url,
                                  data=json.dumps(body),
@@ -55,18 +65,13 @@ class CITokenService:
         return res_json.get("BearerToken")
 
     def __init__(self,
-                 access_token_url: str,
-                 username: str,
-                 password: str,
-                 bearer_token_url: str,
-                 machine_act_name: str,
-                 machine_act_pass: str):
-        self.access_token_url = access_token_url
-        self.username = username
-        self.password = password
-        self.bearer_token_url = bearer_token_url
-        self.machine_act_name = machine_act_name
-        self.machine_act_pass = machine_act_pass
+                 ci_config: CITokenConfig):
+        self.access_token_url = ci_config.access_token_url
+        self.username = ci_config.username
+        self.password = ci_config.password
+        self.bearer_token_url = ci_config.bearer_token_url
+        self.machine_account_name = ci_config.machine_account_name
+        self.machine_account_pass = ci_config.machine_account_pass
         self._expires_in_seconds = 0
         self._access_token = None
         self._access_token_generated_in_seconds = None

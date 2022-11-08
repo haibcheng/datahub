@@ -1,5 +1,5 @@
 import requests
-from wap_actions.service.ci_token import CITokenService
+from wap_actions.service.ci_token import CITokenConfig, CITokenService
 
 
 class CustomerDashboardService:
@@ -14,7 +14,7 @@ class CustomerDashboardService:
             raise Exception(response.text)
 
     def __init__(self,
-                 token_service: CITokenService,
+                 ci_config: CITokenConfig,
                  refresh_api: str):
-        self.token_service = token_service
+        self.token_service = CITokenService(ci_config=ci_config)
         self.refresh_api = refresh_api

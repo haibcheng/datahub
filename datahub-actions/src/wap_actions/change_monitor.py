@@ -8,9 +8,8 @@ from pydantic import BaseModel
 from datahub_actions.action.action import Action
 from datahub_actions.event.event_envelope import EventEnvelope
 from datahub_actions.pipeline.pipeline_context import PipelineContext
-from wap_actions.atomic.atomic_int import AtomicInteger
-from wap_actions.atomic.atomic_set import AtomicSet
-from wap_actions.service.ci_token import CITokenService
+from wap_actions.core.atomic import AtomicInteger, AtomicSet
+from wap_actions.service.ci_token import CITokenConfig
 from wap_actions.service.cu_dashboard import CustomerDashboardService
 
 logger = logging.getLogger(__name__)
@@ -18,12 +17,7 @@ logger = logging.getLogger(__name__)
 
 class DatasourceMonitorConfig(BaseModel):
     output_json: Optional[bool]
-    access_token_url: str
-    username: str
-    password: str
-    bearer_token_url: str
-    machine_account_name: str
-    machine_account_pass: str
+    ci_config: CITokenConfig
     datasource_refresh_api: str
 
 
@@ -35,16 +29,8 @@ class DatasourceMonitorAction(Action):
 
     def __init__(self, config: DatasourceMonitorConfig, ctx: PipelineContext):
         self.config = config
-        ci_token_s = CITokenService(
-            access_token_url=self.config.access_token_url,
-            username=self.config.username,
-            password=self.config.password,
-            bearer_token_url=self.config.bearer_token_url,
-            machine_act_name=self.config.machine_account_name,
-            machine_act_pass=self.config.machine_account_pass
-        )
         self.cu_dashboard = CustomerDashboardService(
-            token_service=ci_token_s,
+            ci_config=self.config.ci_config,
             refresh_api=self.config.datasource_refresh_api
         )
         self._counter = AtomicInteger()
