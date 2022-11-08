@@ -10,28 +10,29 @@ from datahub_actions.event.event_envelope import EventEnvelope
 from datahub_actions.pipeline.pipeline_context import PipelineContext
 from wap_actions.core.atomic import AtomicInteger, AtomicSet
 from wap_actions.service.ci_token import CITokenConfig
-from wap_actions.service.cu_dashboard import CustomerDashboardService
+from wap_actions.service.notification import UrlNotificationService
 
 logger = logging.getLogger(__name__)
 
 
-class DatasourceMonitorConfig(BaseModel):
+class UrlNotificationConfig(BaseModel):
     output_json: Optional[bool]
+    entity_types: list
     ci_config: CITokenConfig
-    datasource_refresh_api: str
+    url_callback_api: str
 
 
-class DatasourceMonitorAction(Action):
+class UrlNotificationAction(Action):
     @classmethod
     def create(cls, config_dict: dict, ctx: PipelineContext) -> "Action":
-        action_config = DatasourceMonitorConfig.parse_obj(config_dict or {})
+        action_config = UrlNotificationConfig.parse_obj(config_dict or {})
         return cls(action_config, ctx)
 
-    def __init__(self, config: DatasourceMonitorConfig, ctx: PipelineContext):
+    def __init__(self, config: UrlNotificationConfig, ctx: PipelineContext):
         self.config = config
-        self.cu_dashboard = CustomerDashboardService(
+        self.notification = UrlNotificationService(
             ci_config=self.config.ci_config,
-            refresh_api=self.config.datasource_refresh_api
+            callback_api=self.config.url_callback_api
         )
         self._counter = AtomicInteger()
         self._urns = AtomicSet()
@@ -44,7 +45,7 @@ class DatasourceMonitorAction(Action):
     def act(self, event: EventEnvelope) -> None:
         event_json = json.loads(event.as_json()).get("event")
         entity_type = event_json.get("entityType")
-        if entity_type is None or entity_type != 'datasource':
+        if entity_type is None or entity_type not in self.config.entity_types:
             return
         if self.config.output_json:
             message = json.dumps(json.loads(event.as_json()), indent=4)
@@ -73,7 +74,7 @@ class DatasourceMonitorAction(Action):
             urns = ', '.join(n_set)
             try:
                 logger.info("The change[%s] is being notified...", urns)
-                self.cu_dashboard.change_notify()
+                self.notification.notify(n_set)
                 logger.info("The change[%s] has been notified!", urns)
             except Exception as error:
                 self._urns.add_set(n_set)

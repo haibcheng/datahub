@@ -1,8 +1,8 @@
 from wap_actions.service.ci_token import CITokenConfig
-from wap_actions.service.cu_dashboard import CustomerDashboardService
+from wap_actions.service.notification import UrlNotificationService
 
 
-def test_change_notify():
+def test_notify():
     ci_config = CITokenConfig(
         access_token_url='https://idbrokerbts.webex.com/idb/oauth2/v1/access_token',
         username='user',
@@ -12,8 +12,8 @@ def test_change_notify():
         machine_account_name='CTGWAP-DATAHUB',
         machine_account_pass='pass'
     )
-    cu_dashboard = CustomerDashboardService(
+    notification_s = UrlNotificationService(
         ci_config=ci_config,
-        refresh_api='https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh'
+        callback_api='https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh'
     )
-    cu_dashboard.change_notify()
+    notification_s.notify()
