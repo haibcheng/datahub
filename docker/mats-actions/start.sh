@@ -16,6 +16,8 @@
 
 touch /tmp/datahub/logs/actions/actions.out
 
+mkdir -p "$CACHE_ROOT_PATH"
+
 # Deploy System Actions
 if [ "$(ls -A /etc/datahub/actions/system/conf/)" ]; then
     config_files=""

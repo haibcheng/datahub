@@ -45,4 +45,6 @@ RUN mkdir -p /home/rhel/.cache \
     && mv /root/.cache/pip /home/rhel/.cache/pip \
     && chown -R rhel /home/rhel/.cache/pip
 
+STOPSIGNAL SIGINT
+
 CMD dockerize -wait http://$DATAHUB_GMS_HOST:$DATAHUB_GMS_PORT/health -timeout 240s /start_datahub_actions.sh

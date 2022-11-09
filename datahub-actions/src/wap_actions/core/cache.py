@@ -33,13 +33,16 @@ class FileCache(Cache):
             self.fi = fn
 
     def load(self):
-        with open(self.fi, mode='r', encoding='utf-8') as f:
-            lines = f.readlines()
-            for line in lines:
-                xline = line.strip()
-                if xline != '':
-                    self.add(xline)
-                    logger.info("Loading %s...", xline)
+        try:
+            with open(self.fi, mode='r', encoding='utf-8') as f:
+                lines = f.readlines()
+                for line in lines:
+                    xline = line.strip()
+                    if xline != '':
+                        self.add(xline)
+                        logger.info("Loading %s...", xline)
+        except IOError:
+            pass
         return super().load()
 
     def persist(self):
