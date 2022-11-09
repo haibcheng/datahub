@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from datahub_actions.action.action import Action
 from datahub_actions.event.event_envelope import EventEnvelope
 from datahub_actions.pipeline.pipeline_context import PipelineContext
-from wap_actions.core.atomic import AtomicInteger, AtomicSet
+from wap_actions.core.atomic import AtomicInteger, AtomicList
 from wap_actions.service.ci_token import CITokenConfig
 from wap_actions.service.notification import UrlNotificationService
 from wap_actions.core.cache import FileCache
@@ -38,7 +38,7 @@ class UrlNotificationAction(Action):
         )
         self._cache = FileCache(config.cache_root, ctx.pipeline_name + ".txt")
         self._counter = AtomicInteger()
-        self._urns = AtomicSet(unique_value=True, cache=self._cache)
+        self._urns = AtomicList(unique_value=True, cache=self._cache)
         self._close = False
         self._thread = Thread(target=self._notify_change)
         self._thread.start()

@@ -18,7 +18,7 @@ class AtomicInteger(object):
             self._value = 0
 
 
-class AtomicSet(object):
+class AtomicList(object):
 
     def __init__(self, unique_value: bool = False, cache: Cache = None):
         self._value = list()
@@ -28,7 +28,7 @@ class AtomicSet(object):
             c_values = self._cache.load()
             if c_values is not None and len(c_values) > 0:
                 for e in c_values:
-                    if e not in self._value:
+                    if e not in self._value or not self._unique_value:
                         self._value.append(e)
         self._lock = Lock()
 
