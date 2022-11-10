@@ -1,5 +1,8 @@
 import requests
+import logging
 from wap_actions.service.ci_token import CITokenConfig, CITokenService
+
+logger = logging.getLogger(__name__)
 
 
 class UrlNotificationService:
@@ -14,7 +17,12 @@ class UrlNotificationService:
             body = {
                 "urns": urns
             }
-        response = requests.post(self.callback_api, headers=headers, data=body, verify=False)
+        response = requests.post(self.callback_api,
+                                 headers=headers,
+                                 data=body,
+                                 verify=False,
+                                 timeout=30)
+        logger.info("Called API -> %s !", self.callback_api)
         if response.status_code not in (200, 204):
             raise Exception(response.text)
 
