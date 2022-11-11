@@ -3,6 +3,7 @@ from wap_actions.service.notification import UrlNotificationService
 
 
 def test_notify():
+
     ci_config = CITokenConfig(
         access_token_url='https://idbrokerbts.webex.com/idb/oauth2/v1/access_token',
         username='user',
@@ -13,7 +14,9 @@ def test_notify():
         machine_account_pass='pass'
     )
     notification_s = UrlNotificationService(
-        ci_config=ci_config,
-        callback_api='https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh'
+        ci_config=ci_config
     )
-    notification_s.notify()
+    try:
+        notification_s.notify(url='https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh1')
+    except Exception as error:
+        print(repr(error))

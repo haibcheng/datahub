@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 class UrlNotificationService:
 
-    def notify(self, urns: [str] = None):
+    def notify(self, url: str, urns: list[str] = None):
         token = self.token_service.access_token_of()
         headers = {
             'Authorization': 'Bearer ' + token
@@ -17,17 +17,11 @@ class UrlNotificationService:
             body = {
                 "urns": urns
             }
-        response = requests.post(self.callback_api,
-                                 headers=headers,
-                                 data=body,
-                                 verify=False,
-                                 timeout=30)
-        logger.info("Called API -> %s !", self.callback_api)
+        response = requests.post(url, headers=headers, data=body, verify=False, timeout=30)
+        logger.info("Called API -> %s!!!", url)
         if response.status_code not in (200, 204):
             raise Exception(response.text)
 
     def __init__(self,
-                 ci_config: CITokenConfig,
-                 callback_api: str):
+                 ci_config: CITokenConfig):
         self.token_service = CITokenService(ci_config=ci_config)
-        self.callback_api = callback_api

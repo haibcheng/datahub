@@ -16,12 +16,17 @@ from wap_actions.core.cache import FileCache
 logger = logging.getLogger(__name__)
 
 
+class CallbackApi(BaseModel):
+    region: str
+    url: str
+
+
 class UrlNotificationConfig(BaseModel):
     output_json: Optional[bool]
     cache_root: str
-    entity_types: list
+    entity_types: list[str]
     ci_config: CITokenConfig
-    url_callback_api: str
+    callbacks: list[CallbackApi]
 
 
 class UrlNotificationAction(Action):
@@ -33,8 +38,7 @@ class UrlNotificationAction(Action):
     def __init__(self, config: UrlNotificationConfig, ctx: PipelineContext):
         self.config = config
         self.notification = UrlNotificationService(
-            ci_config=self.config.ci_config,
-            callback_api=self.config.url_callback_api
+            ci_config=self.config.ci_config
         )
         self._cache = FileCache(config.cache_root, ctx.pipeline_name + ".txt")
         self._counter = AtomicInteger()
@@ -72,11 +76,31 @@ class UrlNotificationAction(Action):
             n_set = self._urns.fetch_elements()
             if len(n_set) == 0:
                 continue
-            urns = ','.join(n_set)
+            self._send_notification(n_set)
+
+    def _send_notification(self, urns: list[str]):
+        urls = dict()
+        for e_urn in urns:
+            e_url = self._resolve_url_from_urn(e_urn)
+            if e_url is None:
+                logger.warning('Cannot find url for urn[%s]', e_urn)
+                continue
+            if e_url not in urls.keys():
+                urls[e_url] = list()
+            urls[e_url].append(e_urn)
+        for e_url in urls.keys():
+            e_urns = urls[e_url]
+            urns_str = ','.join(e_urns)
             try:
-                logger.info("The change[%s] is being notified...", urns)
-                self.notification.notify(n_set)
-                logger.info("The change[%s] has been notified!", urns)
-            except Exception as error:
-                self._urns.add_elements(n_set)
-                logger.error('Failed to notify the change[%s] -> %s', urns, repr(error))
+                logger.info("The change[%s] is being notified...", urns_str)
+                self.notification.notify(url=e_url, urns=e_urns)
+                logger.info("The change[%s] has been notified!", urns_str)
+            except Exception as ex:
+                logger.error('Failed to notify the change[%s] -> %s', urns_str, repr(ex))
+                self._urns.add_elements(e_urns)
+
+    def _resolve_url_from_urn(self, urn: str):
+        for c in self.config.callbacks:
+            if urn.upper().endswith("," + c.region.upper() + ")"):
+                return c.url
+        return None

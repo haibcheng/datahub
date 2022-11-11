@@ -47,4 +47,4 @@ class FileCache(Cache):
 
     def persist(self):
         with open(self.fi, mode='w', encoding='utf-8') as f:
-            f.writelines(self._contents)
+            f.writelines(f"{line}\n" for line in self._contents)
