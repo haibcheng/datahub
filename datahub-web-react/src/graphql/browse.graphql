@@ -41,6 +41,7 @@ query getBrowseResults($input: BrowseInput!) {
             ... on Datasource {
                 name
                 alias
+                testQuerySql
                 origin
                 description
                 platform {

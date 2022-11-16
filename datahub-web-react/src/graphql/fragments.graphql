@@ -884,6 +884,7 @@ fragment nonRecursiveDatasourceFields on Datasource {
     urn
     name
     alias
+    testQuerySql
     type
     platform {
         name

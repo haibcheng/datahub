@@ -16,6 +16,10 @@ export interface IFormConnectionData {
     catalog?: string;
     schema?: string;
     jdbcParams?: string;
+    minSize: number;
+    maxSize: number;
+    idleSize: number;
+    status: string;
     dataCenter?: string;
     databaseAlias?: string;
     tablePatternAllow?: string;
@@ -36,6 +40,7 @@ export interface IFormData {
     sourceType: string;
     name: string;
     alias: string;
+    testQuerySql: string;
     syncCDAPI: boolean;
     create: boolean;
     group: string;
@@ -50,7 +55,12 @@ export enum FormField {
     database = 'database',
     tnsName = 'tnsName',
     jdbcParams = 'jdbcParams',
+    minSize = 'minSize',
+    maxSize = 'maxSize',
+    idleSize = 'idleSize',
+    status = 'status',
     alias = 'alias',
+    testQuerySql = 'testQuerySql',
     syncCDAPI = 'syncCDAPI',
     dataCenter = 'dataCenter',
     connectionParams = 'connectionParams',
@@ -109,43 +119,75 @@ export interface IBasicDataSourceInput {
 }
 export interface IPinotSourceInput extends IBasicDataSourceInput {
     hostPort: string;
+    minSize?: number;
+    maxSize?: number;
+    idleSize?: number;
+    status?: string;
 }
 export interface IPrestoSourceInput extends IBasicDataSourceInput {
     hostPort: string;
     catalog?: string;
     schema?: string;
     jdbcParams?: string;
+    minSize?: number;
+    maxSize?: number;
+    idleSize?: number;
+    status?: string;
 }
 export interface ITrinoSourceInput extends IBasicDataSourceInput {
     hostPort: string;
     catalog?: string;
     schema?: string;
     jdbcParams?: string;
+    minSize?: number;
+    maxSize?: number;
+    idleSize?: number;
+    status?: string;
 }
 export interface IHiveSourceInput extends IBasicDataSourceInput {
     hostPort: string;
     database: string;
     jdbcParams?: string;
+    minSize?: number;
+    maxSize?: number;
+    idleSize?: number;
+    status?: string;
 }
 export interface IMysqlSourceInput extends IBasicDataSourceInput {
     hostPort: string;
     database: string;
     jdbcParams?: string;
+    minSize?: number;
+    maxSize?: number;
+    idleSize?: number;
+    status?: string;
 }
 export interface IPostgresSourceInput extends IBasicDataSourceInput {
     hostPort: string;
     database: string;
     jdbcParams?: string;
+    minSize?: number;
+    maxSize?: number;
+    idleSize?: number;
+    status?: string;
 }
 export interface ITiDBSourceInput extends IBasicDataSourceInput {
     hostPort: string;
     database: string;
     jdbcParams?: string;
+    minSize?: number;
+    maxSize?: number;
+    idleSize?: number;
+    status?: string;
 }
 export interface IOracleSourceInput extends IBasicDataSourceInput {
     hostPort?: string;
     tnsName?: string;
     serviceName?: string;
+    minSize?: number;
+    maxSize?: number;
+    idleSize?: number;
+    status?: string;
 }
 
 export interface IDatasourceSourceInput {

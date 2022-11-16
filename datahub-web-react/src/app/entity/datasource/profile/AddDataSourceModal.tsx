@@ -1,5 +1,5 @@
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Card, Form, Input, Modal, Space, Select, Alert } from 'antd';
+import { Button, Card, Form, Input, Modal, Space, Select, Alert, Switch } from 'antd';
 import React, { useState } from 'react';
 import { FormField, IDatasourceSourceInput, IFormConnectionData, IFormData } from '../service/DataSourceType';
 import { showMessageByNotification, showRequestResult } from '../service/NotificationUtil';
@@ -54,6 +54,8 @@ export default function AddDataSourceModal({
         sourceType: sourceTypeList[0].value,
         name: '',
         alias: '',
+        status: '',
+        testQuerySql: '',
         syncCDAPI: false,
         create: true,
         group: groupList[0]?.urn,
@@ -492,6 +494,7 @@ export default function AddDataSourceModal({
         let input: DatasourceCreateInput = {
             name: formData.name,
             alias: formData.alias,
+            testQuerySql: formData.testQuerySql,
             syncCDAPI: formData.syncCDAPI,
             create: formData.create,
             primaryConn: dataSources[0],
@@ -546,6 +549,10 @@ export default function AddDataSourceModal({
             password: '',
             hostPort: '',
             bootstrap: '',
+            minSize: 0,
+            maxSize: 0,
+            idleSize: 0,
+            status: '',
             schemaPatternAllow: '',
             tablePatternAllow: '',
             topicPatternsAllow: '',
@@ -593,6 +600,15 @@ export default function AddDataSourceModal({
         }
         item[field] = value;
         updateDataSourceFormData(updatedData);
+    };
+
+    const onChange = (checked: boolean, index: number) => {
+        console.log(`switch to ${checked}`);
+        if (checked) {
+            updateDataSourceConnections('1', FormField.status, index);
+        } else {
+            updateDataSourceConnections('0', FormField.status, index);
+        }
     };
 
     const updateDataSourceBasicInfo = (value: any, field: FormField) => {
@@ -723,6 +739,19 @@ export default function AddDataSourceModal({
                         autoComplete="off"
                         defaultValue={formData.alias}
                         onChange={(e) => updateDataSourceBasicInfo(e.target.value, FormField.alias)}
+                    />
+                </Form.Item>
+                <Form.Item
+                    name="testQuerySql"
+                    label="Test Sql"
+                    rules={[{ required: false, message: 'Please input test query sql!' }]}
+                >
+                    <Input
+                        disabled={!formData.create}
+                        placeholder="Please input test query sql"
+                        autoComplete="off"
+                        defaultValue={formData.testQuerySql}
+                        onChange={(e) => updateDataSourceBasicInfo(e.target.value, FormField.testQuerySql)}
                     />
                 </Form.Item>
             </Card>
@@ -1027,6 +1056,63 @@ export default function AddDataSourceModal({
             </>
         );
     };
+
+    const getConnectionPool = (info: IFormConnectionData, index: number) => {
+        return (
+            <>
+                <Form.Item
+                    name={`minSize_${info.id}`}
+                    label="Min Size"
+                    rules={[{ required: false, message: 'Please input connection min size!' }]}
+                >
+                    <Input
+                        placeholder="Please input connection min size"
+                        autoComplete="off"
+                        defaultValue={info.minSize}
+                        onChange={(e) => updateDataSourceConnections(e.target.value, FormField.minSize, index)}
+                    />
+                </Form.Item>
+                <Form.Item
+                    name={`maxSize_${info.id}`}
+                    label="Max Size"
+                    rules={[{ required: false, message: 'Please input connection max size!' }]}
+                >
+                    <Input
+                        placeholder="Please input connection max size"
+                        autoComplete="off"
+                        defaultValue={info.maxSize}
+                        onChange={(e) => updateDataSourceConnections(e.target.value, FormField.maxSize, index)}
+                    />
+                </Form.Item>
+                <Form.Item
+                    name={`idleSize_${info.id}`}
+                    label="Idle Size"
+                    rules={[{ required: false, message: 'Please input connection idle size!' }]}
+                >
+                    <Input
+                        placeholder="Please input connection idle size"
+                        autoComplete="off"
+                        defaultValue={info.idleSize}
+                        onChange={(e) => updateDataSourceConnections(e.target.value, FormField.idleSize, index)}
+                    />
+                </Form.Item>
+                <Form.Item
+                    name={`status_${info.id}`}
+                    label="Status"
+                    rules={[{ required: false, message: 'Please select status!' }]}
+                >
+                    <Switch
+                        checkedChildren="1"
+                        unCheckedChildren="0"
+                        defaultChecked
+                        onChange={(value) => {
+                            onChange(value, index);
+                        }}
+                    />
+                </Form.Item>
+            </>
+        );
+    };
     const getTrinoForm = (info: IFormConnectionData, index: number) => {
         return (
             <>
@@ -1104,14 +1190,20 @@ export default function AddDataSourceModal({
                         {isMysql() && getDatabaseForm(info, index)}
                         {isTrino() && getTrinoForm(info, index)}
                         {isPresto() && getTrinoForm(info, index)}
-
                         {isHive() && getJDDBCParamsForm(info, index)}
                         {isMysql() && getJDDBCParamsForm(info, index)}
                         {isPostgres() && getJDDBCParamsForm(info, index)}
                         {isTiDB() && getJDDBCParamsForm(info, index)}
                         {isTrino() && getJDDBCParamsForm(info, index)}
                         {isPresto() && getJDDBCParamsForm(info, index)}
-
+                        {isHive() && getConnectionPool(info, index)}
+                        {isMysql() && getConnectionPool(info, index)}
+                        {isPostgres() && getConnectionPool(info, index)}
+                        {isTiDB() && getConnectionPool(info, index)}
+                        {isTrino() && getConnectionPool(info, index)}
+                        {isPresto() && getConnectionPool(info, index)}
+                        {isOracle() && getConnectionPool(info, index)}
+                        {isPinot() && getConnectionPool(info, index)}
                         <Form.Item
                             name={`tablePattern_${info.id}`}
                             label="Table Pattern"
