@@ -177,6 +177,11 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             datasourceInfo.setAlias(alias);
         }
 
+        if (inputMap.containsKey("testQuerySql")) {
+            String testQuerySql = (String) inputMap.get("testQuerySql");
+            datasourceInfo.setTestQuerySql(testQuerySql);
+        }
+
         final DatasourceConnectionPrimary primaryConn = new DatasourceConnectionPrimary();
 
         Map<String, Object> primaryConnMap = (Map<String, Object>) inputMap.get("primaryConn");
