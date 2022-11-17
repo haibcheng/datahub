@@ -68,6 +68,10 @@ export default function AddDataSourceModal({
                 password: '',
                 hostPort: '',
                 bootstrap: '',
+                minSize: 0,
+                maxSize: 0,
+                idleSize: 0,
+                status: '',
                 schemaPatternAllow: '',
                 tablePatternAllow: '',
                 topicPatternsAllow: '',
@@ -231,6 +235,10 @@ export default function AddDataSourceModal({
                         password: conn.password,
                         hostPort: conn.hostPort,
                         database: conn.database,
+                        minSize: conn.minSize,
+                        maxSize: conn.maxSize,
+                        idleSize: conn.idleSize,
+                        status: conn.status,
                         tablePatternAllow: conn.tablePatternAllow,
                         schemaPatternAllow: conn.schemaPatternAllow,
                     };
@@ -248,6 +256,10 @@ export default function AddDataSourceModal({
                         username: conn.username,
                         password: conn.password,
                         hostPort: conn.hostPort,
+                        minSize: conn.minSize,
+                        maxSize: conn.maxSize,
+                        idleSize: conn.idleSize,
+                        status: conn.status,
                         tablePatternAllow: conn.tablePatternAllow,
                         schemaPatternAllow: conn.schemaPatternAllow,
                     };
@@ -275,6 +287,10 @@ export default function AddDataSourceModal({
                     dataSource[`${formData.sourceType}`] = {
                         username: conn.username,
                         password: conn.password,
+                        minSize: conn.minSize,
+                        maxSize: conn.maxSize,
+                        idleSize: conn.idleSize,
+                        status: conn.status,
                         tablePatternAllow: conn.tablePatternAllow,
                         schemaPatternAllow: conn.schemaPatternAllow,
                     };
@@ -303,6 +319,10 @@ export default function AddDataSourceModal({
                         username: conn.username,
                         password: conn.password,
                         hostPort: conn.hostPort,
+                        minSize: conn.minSize,
+                        maxSize: conn.maxSize,
+                        idleSize: conn.idleSize,
+                        status: conn.status,
                         tablePatternAllow: conn.tablePatternAllow,
                         schemaPatternAllow: conn.schemaPatternAllow,
                     };
@@ -1104,7 +1124,7 @@ export default function AddDataSourceModal({
                     <Switch
                         checkedChildren="1"
                         unCheckedChildren="0"
-                        defaultChecked
+                        checked={info.status === '1'}
                         onChange={(value) => {
                             onChange(value, index);
                         }}
