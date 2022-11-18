@@ -5,6 +5,7 @@ import com.linkedin.common.urn.Urn;
 import com.linkedin.metadata.timeline.TimelineService;
 import com.linkedin.metadata.timeline.data.ChangeCategory;
 import com.linkedin.metadata.timeline.data.ChangeTransaction;
+import io.datahubproject.openapi.util.DatasourceUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -45,6 +46,7 @@ public class TimelineController {
       @RequestParam(defaultValue = "0") long endTime,
       @RequestParam(defaultValue = "false") boolean raw,
       @RequestParam Set<ChangeCategory> categories) throws URISyntaxException, JsonProcessingException {
+    DatasourceUtil.checkUrns(rawUrn);
     // Make request params when implemented
     String startVersionStamp = null;
     String endVersionStamp = null;
