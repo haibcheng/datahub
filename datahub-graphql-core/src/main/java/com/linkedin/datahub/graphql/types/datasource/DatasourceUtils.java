@@ -8,7 +8,7 @@ public class DatasourceUtils {
 
     private DatasourceUtils() { }
 
-    static DatasourceUrn getDatasourceUrn(String urnStr) {
+    public static DatasourceUrn getDatasourceUrn(String urnStr) {
         try {
             return DatasourceUrn.createFromString(urnStr);
         } catch (URISyntaxException e) {

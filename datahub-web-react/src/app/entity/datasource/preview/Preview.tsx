@@ -1,5 +1,5 @@
 import React from 'react';
-import { EntityType, FabricType, GlobalTags, GlossaryTerms, Owner } from '../../../../types.generated';
+import { EntityType, FabricType, GlobalTags, GlossaryTerms, Owner, Domain } from '../../../../types.generated';
 import DefaultPreviewCard from '../../../preview/DefaultPreviewCard';
 import { useEntityRegistry } from '../../../useEntityRegistry';
 
@@ -21,6 +21,7 @@ export const Preview = ({
     globalTags,
     snippet,
     glossaryTerms,
+    domain,
     delEle,
     editEle,
 }: {
@@ -34,6 +35,7 @@ export const Preview = ({
     globalTags?: GlobalTags | null;
     snippet?: React.ReactNode | null;
     glossaryTerms?: GlossaryTerms | null;
+    domain?: Domain | null;
     delEle?: React.ReactNode | null;
     editEle?: React.ReactNode | null;
 }): JSX.Element => {
@@ -54,6 +56,7 @@ export const Preview = ({
             editEle={editEle}
             delEle={delEle}
             glossaryTerms={glossaryTerms || undefined}
+            domain={domain}
         />
     );
 };
@@ -69,6 +72,7 @@ export const PreviewNoDel = ({
     globalTags,
     snippet,
     glossaryTerms,
+    domain,
 }: {
     urn: string;
     name: string;
@@ -80,6 +84,7 @@ export const PreviewNoDel = ({
     globalTags?: GlobalTags | null;
     snippet?: React.ReactNode | null;
     glossaryTerms?: GlossaryTerms | null;
+    domain?: Domain | null;
 }): JSX.Element => {
     const entityRegistry = useEntityRegistry();
     const capitalPlatformName = capitalizeFirstLetter(platformName);
@@ -96,6 +101,7 @@ export const PreviewNoDel = ({
             owners={owners}
             snippet={snippet}
             glossaryTerms={glossaryTerms || undefined}
+            domain={domain}
         />
     );
 };

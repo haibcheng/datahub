@@ -1272,4 +1272,7 @@ fragment nonRecursiveDatasourceFields on Datasource {
     glossaryTerms {
         ...glossaryTerms
     }
+    domain {
+        ...entityDomain
+    }
 }
