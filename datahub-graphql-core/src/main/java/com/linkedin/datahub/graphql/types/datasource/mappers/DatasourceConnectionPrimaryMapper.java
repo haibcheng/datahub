@@ -207,6 +207,7 @@ public class DatasourceConnectionPrimaryMapper implements ModelMapper<com.linked
             conn.setSchemaPatternAllow(source.getSchemaPatternAllow());
             conn.setSchemaPatternDeny(source.getSchemaPatternDeny());
             conn.setSchemaPatternIgnoreCase(source.isSchemaPatternIgnoreCase());
+            result.setConnection(conn);
         }
 
         return result;

@@ -207,6 +207,7 @@ public class DatasourceConnectionGSBMapper implements ModelMapper<com.linkedin.d
             conn.setSchemaPatternAllow(source.getSchemaPatternAllow());
             conn.setSchemaPatternDeny(source.getSchemaPatternDeny());
             conn.setSchemaPatternIgnoreCase(source.isSchemaPatternIgnoreCase());
+            result.setConnection(conn);
         }
 
         return result;
