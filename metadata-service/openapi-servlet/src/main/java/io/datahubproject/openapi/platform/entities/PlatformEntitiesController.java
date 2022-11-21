@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linkedin.metadata.entity.EntityService;
 import com.linkedin.util.Pair;
 import io.datahubproject.openapi.generated.MetadataChangeProposal;
+import io.datahubproject.openapi.util.DatasourceUtil;
 import io.datahubproject.openapi.util.MappingUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collections;
@@ -44,6 +45,11 @@ public class PlatformEntitiesController {
   @PostMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<String>> postEntities(
       @RequestBody @Nonnull List<MetadataChangeProposal> metadataChangeProposals) {
+
+    DatasourceUtil.checkUrns(metadataChangeProposals
+            .stream().map(MetadataChangeProposal::getEntityUrn)
+            .collect(Collectors.toList()));
+
     log.info("INGEST PROPOSAL proposal: {}", metadataChangeProposals);
 
     Authentication authentication = AuthenticationContext.getAuthentication();

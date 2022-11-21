@@ -1,20 +1,28 @@
 package com.linkedin.datahub.graphql.resolvers.datasource;
 
+import com.google.common.collect.ImmutableList;
 import com.linkedin.common.urn.Urn;
 import com.linkedin.datahub.graphql.QueryContext;
+import com.linkedin.datahub.graphql.authorization.AuthorizationUtils;
+import com.linkedin.datahub.graphql.authorization.ConjunctivePrivilegeGroup;
+import com.linkedin.datahub.graphql.authorization.DisjunctivePrivilegeGroup;
+import com.linkedin.datahub.graphql.exception.AuthorizationException;
 import com.linkedin.datasource.DatasourceConnectionPrimary;
 import com.linkedin.datasource.DatasourceInfo;
 import com.linkedin.entity.Entity;
 import com.linkedin.entity.client.EntityClient;
 import com.linkedin.metadata.aspect.DatasourceAspect;
+import com.linkedin.metadata.authorization.PoliciesConfig;
 import com.linkedin.util.Configuration;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 
+import javax.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 
-public class DeleteDatasourceResolver implements DataFetcher<CompletableFuture<String>> {
-    private final EntityClient datasourcesClient;
+public class DeleteDatasourceResolver implements DataFetcher<CompletableFuture<String>>
+{
+    private final EntityClient datasourceClient;
     static final String KAFKA_SOURCE_NAME = "kafka";
     static final String ORACLE_SOURCE_NAME = "oracle";
     static final String MYSQL_SOURCE_NAME = "mysql";
@@ -26,8 +34,8 @@ public class DeleteDatasourceResolver implements DataFetcher<CompletableFuture<S
     static final String TIDB_SOURCE_NAME = "tiDB";
     static final String TRINO_SOURCE_NAME = "trino";
 
-    public DeleteDatasourceResolver(EntityClient datasourcesClient) {
-        this.datasourcesClient = datasourcesClient;
+    public DeleteDatasourceResolver(EntityClient datasourceClient) {
+        this.datasourceClient = datasourceClient;
     }
 
     @Override
@@ -37,7 +45,7 @@ public class DeleteDatasourceResolver implements DataFetcher<CompletableFuture<S
         final String datasourceUrn = environment.getArgument("urn");
         final Urn urn = Urn.createFromString(datasourceUrn);
 
-        Entity entity = datasourcesClient.get(urn, context.getAuthentication());
+        Entity entity = datasourceClient.get(urn, context.getAuthentication());
         String category = null;
         String region = null;
         String type = null;
@@ -85,17 +93,34 @@ public class DeleteDatasourceResolver implements DataFetcher<CompletableFuture<S
             }
         }
 
-        if ("true".equals(Configuration.getEnvironmentVariable("CUSTOM_DASHBOARD_API_ENABLE")) && sync && supportType) {
-            CustomDashboardAPIClient.deleteDatasource(urn.getEntityKey().get(1), category, type, region, CustomDashboardAPIUtil.getAccessToken());
+        if ("true".equals(Configuration.getEnvironmentVariable("CUSTOM_DASHBOARD_API_ENABLE"))
+                && sync && supportType) {
+            CustomDashboardAPIClient
+                    .deleteDatasource(urn.getEntityKey().get(1), category, type, region,
+                            CustomDashboardAPIUtil.getAccessToken());
         }
 
         return CompletableFuture.supplyAsync(() -> {
+            if (!isAuthorizedToDeleteDatasource(context, urn)) {
+                throw new AuthorizationException(
+                        "Unauthorized to perform this action. Please contact your DataHub administrator.");
+            }
             try {
-                datasourcesClient.deleteEntity(urn, context.getAuthentication());
+                datasourceClient.deleteEntity(urn, context.getAuthentication());
                 return datasourceUrn;
-            } catch (Exception e) {
-                throw new RuntimeException(String.format("Failed to perform delete against datasourrce with urn %s", datasourceUrn), e);
+            } catch (Exception ex) {
+                throw new RuntimeException(
+                        String.format("Failed to perform delete against datasourrce with urn %s", datasourceUrn), ex);
             }
         });
+    }
+
+    public static boolean isAuthorizedToDeleteDatasource(@Nonnull QueryContext context, Urn entityUrn) {
+        final DisjunctivePrivilegeGroup orPrivilegeGroups = new DisjunctivePrivilegeGroup(ImmutableList.of(
+                new ConjunctivePrivilegeGroup(ImmutableList.of(PoliciesConfig.DELETE_DATASOURCE_PRIVILEGE.getType()))
+        ));
+
+        return AuthorizationUtils.isAuthorized(context.getAuthorizer(),
+                context.getActorUrn(), entityUrn.getEntityType(), entityUrn.toString(), orPrivilegeGroups);
     }
 }

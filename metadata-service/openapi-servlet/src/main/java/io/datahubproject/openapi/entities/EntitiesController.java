@@ -14,6 +14,7 @@ import io.datahubproject.openapi.dto.RollbackRunResultDto;
 import io.datahubproject.openapi.dto.UpsertAspectRequest;
 import io.datahubproject.openapi.dto.UrnResponseMap;
 import io.datahubproject.openapi.generated.AspectRowSummary;
+import io.datahubproject.openapi.util.DatasourceUtil;
 import io.datahubproject.openapi.util.MappingUtil;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -66,6 +67,7 @@ public class EntitiesController {
       @RequestParam("urns") @Nonnull String[] urns,
       @Parameter(name = "aspectNames", description = "The list of aspect names to retrieve")
       @RequestParam(name = "aspectNames", required = false) @Nullable String[] aspectNames) {
+    DatasourceUtil.checkUrns(urns);
     Timer.Context context = MetricUtils.timer("getEntities").time();
     final Set<Urn> entityUrns =
         Arrays.stream(urns)
@@ -104,6 +106,11 @@ public class EntitiesController {
   @PostMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<String>> postEntities(
       @RequestBody @Nonnull List<UpsertAspectRequest> aspectRequests) {
+
+    DatasourceUtil.checkUrns(aspectRequests
+            .stream().map(UpsertAspectRequest::getEntityUrn)
+            .collect(Collectors.toList()));
+
     log.info("INGEST PROPOSAL proposal: {}", aspectRequests);
 
     Authentication authentication = AuthenticationContext.getAuthentication();
@@ -127,6 +134,7 @@ public class EntitiesController {
       @RequestParam("urns") @Nonnull String[] urns,
       @Parameter(name = "soft", description = "Determines whether the delete will be soft or hard, defaults to true for soft delete")
       @RequestParam(value = "soft", defaultValue = "true") boolean soft) {
+    DatasourceUtil.checkUrns(urns);
     Timer.Context context = MetricUtils.timer("deleteEntities").time();
     final Set<Urn> entityUrns =
         Arrays.stream(urns)

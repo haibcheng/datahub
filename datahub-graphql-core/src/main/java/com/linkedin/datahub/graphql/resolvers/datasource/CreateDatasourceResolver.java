@@ -1,10 +1,19 @@
 package com.linkedin.datahub.graphql.resolvers.datasource;
 
+import com.google.common.collect.ImmutableList;
+import com.linkedin.common.*;
+import com.linkedin.common.urn.*;
 import com.linkedin.common.urn.CorpGroupUrn;
 import com.linkedin.common.urn.DataPlatformUrn;
 import com.linkedin.common.urn.DatasourceUrn;
+import com.linkedin.common.urn.Urn;
 import com.linkedin.datahub.graphql.QueryContext;
-import com.linkedin.datahub.graphql.resolvers.ResolverUtils;
+import com.linkedin.datahub.graphql.authorization.AuthorizationUtils;
+import com.linkedin.datahub.graphql.authorization.ConjunctivePrivilegeGroup;
+import com.linkedin.datahub.graphql.authorization.DisjunctivePrivilegeGroup;
+import com.linkedin.datahub.graphql.exception.AuthorizationException;
+import com.linkedin.datahub.graphql.generated.DatasourceCreateInput;
+import com.linkedin.datahub.graphql.generated.DatasourceSourceInput;
 import com.linkedin.datasource.DatasourceConnectionGSB;
 import com.linkedin.datasource.DatasourceConnectionPrimary;
 import com.linkedin.datasource.DatasourceCustomDashboardInfo;
@@ -12,6 +21,7 @@ import com.linkedin.datasource.DatasourceInfo;
 import com.linkedin.datasource.sources.*;
 import com.linkedin.entity.client.EntityClient;
 import com.linkedin.events.metadata.ChangeType;
+import com.linkedin.metadata.authorization.PoliciesConfig;
 import com.linkedin.metadata.entity.EntityService;
 import com.linkedin.metadata.utils.GenericRecordUtils;
 import com.linkedin.mxe.MetadataChangeProposal;
@@ -19,196 +29,192 @@ import com.linkedin.util.Configuration;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 
-import java.util.Arrays;
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<String>> {
-    private final EntityClient datasourcesClient;
+import static com.linkedin.datahub.graphql.resolvers.ResolverUtils.bindArgument;
+import static com.linkedin.datahub.graphql.resolvers.datasource.DatasourceConstants.*;
+import static com.linkedin.metadata.Constants.OWNERSHIP_ASPECT_NAME;
+
+public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<String>>
+{
+    private final EntityClient datasourceClient;
     private final EntityService entityService;
 
-
-    public CreateDatasourceResolver(EntityClient datasourcesClient, EntityService entityService) {
-        this.datasourcesClient = datasourcesClient;
+    public CreateDatasourceResolver(EntityClient datasourceClient, EntityService entityService) {
+        this.datasourceClient = datasourceClient;
         this.entityService = entityService;
     }
 
-    private DataPlatformUrn parsePrimaryConn(Map<String, Object> primaryConnMap, DatasourceConnectionPrimary primaryConn) {
-        DataPlatformUrn primaryPlatformUrn = null;
-        if (primaryConnMap.containsKey(DatasourceConstants.POSTGRES_SOURCE_NAME)) {
-            PostgresSource postgres = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.POSTGRES_SOURCE_NAME), PostgresSource.class);
+    private DataPlatformUrn parseConnection(Map<String, Object> connInput,
+                                            DatasourceConnectionPrimary primaryConn,
+                                            DatasourceConnectionGSB gsbConn) {
+        DataPlatformUrn platformUrn;
+        if (connInput.containsKey(POSTGRES_SOURCE_NAME)) {
+            PostgresSource postgres = bindArgument(connInput.get(POSTGRES_SOURCE_NAME), PostgresSource.class);
             postgres.setDriver(postgres.getDriver());
-            primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(postgres));
-            primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.POSTGRES_SOURCE_NAME);
-        } else if (primaryConnMap.containsKey(DatasourceConstants.ORACLE_SOURCE_NAME)) {
-            OracleSource oracle = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.ORACLE_SOURCE_NAME), OracleSource.class);
+            if(gsbConn != null) {
+                gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(postgres));
+            } else {
+                primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(postgres));
+            }
+            platformUrn = new DataPlatformUrn(POSTGRES_SOURCE_NAME);
+        } else if (connInput.containsKey(ORACLE_SOURCE_NAME)) {
+            OracleSource oracle = bindArgument(connInput.get(ORACLE_SOURCE_NAME), OracleSource.class);
             oracle.setDriver(oracle.getDriver());
-            primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(oracle));
-            primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.ORACLE_SOURCE_NAME);
-        } else if (primaryConnMap.containsKey(DatasourceConstants.ICEBERG_SOURCE_NAME)) {
-            IcebergSource iceberg = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.ICEBERG_SOURCE_NAME), IcebergSource.class);
-            primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(iceberg));
-            primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.ICEBERG_SOURCE_NAME);
-        } else if (primaryConnMap.containsKey(DatasourceConstants.KAFKA_SOURCE_NAME)) {
-            KafkaMetadataSource kafka = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.KAFKA_SOURCE_NAME), KafkaMetadataSource.class);
-            primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(kafka));
-            primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.KAFKA_SOURCE_NAME);
-        } else if (primaryConnMap.containsKey(DatasourceConstants.MYSQL_SOURCE_NAME)) {
-            MysqlSource mysql = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.MYSQL_SOURCE_NAME), MysqlSource.class);
+            if(gsbConn != null) {
+                gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(oracle));
+            } else {
+                primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(oracle));
+            }
+            platformUrn = new DataPlatformUrn(ORACLE_SOURCE_NAME);
+        } else if (connInput.containsKey(ICEBERG_SOURCE_NAME)) {
+            IcebergSource iceberg = bindArgument(connInput.get(ICEBERG_SOURCE_NAME), IcebergSource.class);
+            if(gsbConn != null) {
+                gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(iceberg));
+            } else {
+                primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(iceberg));
+            }
+            platformUrn = new DataPlatformUrn(ICEBERG_SOURCE_NAME);
+        } else if (connInput.containsKey(KAFKA_SOURCE_NAME)) {
+            KafkaMetadataSource kafka = bindArgument(connInput.get(KAFKA_SOURCE_NAME), KafkaMetadataSource.class);
+            if(gsbConn != null) {
+                gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(kafka));
+            } else {
+                primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(kafka));
+            }
+            platformUrn = new DataPlatformUrn(KAFKA_SOURCE_NAME);
+        } else if (connInput.containsKey(MYSQL_SOURCE_NAME)) {
+            MysqlSource mysql = bindArgument(connInput.get(MYSQL_SOURCE_NAME), MysqlSource.class);
             mysql.setDriver(mysql.getDriver());
-            primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(mysql));
-            primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.MYSQL_SOURCE_NAME);
-        } else if (primaryConnMap.containsKey(DatasourceConstants.HIVE_SOURCE_NAME)) {
-            HiveSource hive = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.HIVE_SOURCE_NAME), HiveSource.class);
+            if(gsbConn != null) {
+                gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(mysql));
+            } else {
+                primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(mysql));
+            }
+            platformUrn = new DataPlatformUrn(MYSQL_SOURCE_NAME);
+        } else if (connInput.containsKey(HIVE_SOURCE_NAME)) {
+            HiveSource hive = bindArgument(connInput.get(HIVE_SOURCE_NAME), HiveSource.class);
             hive.setDriver(hive.getDriver());
-            primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(hive));
-            primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.HIVE_SOURCE_NAME);
-        } else if (primaryConnMap.containsKey(DatasourceConstants.PINOT_SOURCE_NAME)) {
-            PinotSource piot = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.PINOT_SOURCE_NAME), PinotSource.class);
-            piot.setDriver(piot.getDriver());
-            primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(piot));
-            primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.PINOT_SOURCE_NAME);
-        } else if (primaryConnMap.containsKey(DatasourceConstants.PRESTO_SOURCE_NAME)) {
-            PrestoSource presto = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.PRESTO_SOURCE_NAME), PrestoSource.class);
+            if(gsbConn != null) {
+                gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(hive));
+            } else {
+                primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(hive));
+            }
+            platformUrn = new DataPlatformUrn(HIVE_SOURCE_NAME);
+        } else if (connInput.containsKey(PINOT_SOURCE_NAME)) {
+            PinotSource pinot = bindArgument(connInput.get(PINOT_SOURCE_NAME), PinotSource.class);
+            pinot.setDriver(pinot.getDriver());
+            if(gsbConn != null) {
+                gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(pinot));
+            } else {
+                primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(pinot));
+            }
+            platformUrn = new DataPlatformUrn(PINOT_SOURCE_NAME);
+        } else if (connInput.containsKey(PRESTO_SOURCE_NAME)) {
+            PrestoSource presto = bindArgument(connInput.get(PRESTO_SOURCE_NAME), PrestoSource.class);
             presto.setDriver(presto.getDriver());
-            primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(presto));
-            primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.PRESTO_SOURCE_NAME);
-        } else if (primaryConnMap.containsKey(DatasourceConstants.TIDB_SOURCE_NAME)) {
-            TiDBSource tidb = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.TIDB_SOURCE_NAME), TiDBSource.class);
+            if(gsbConn != null) {
+                gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(presto));
+            } else {
+                primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(presto));
+            }
+            platformUrn = new DataPlatformUrn(PRESTO_SOURCE_NAME);
+        } else if (connInput.containsKey(TIDB_SOURCE_NAME)) {
+            TiDBSource tidb = bindArgument(connInput.get(TIDB_SOURCE_NAME), TiDBSource.class);
             tidb.setDriver(tidb.getDriver());
-            primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(tidb));
-            primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.TIDB_SOURCE_NAME);
-        } else if (primaryConnMap.containsKey(DatasourceConstants.TRINO_SOURCE_NAME)) {
-            TrinoSource trino = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.TRINO_SOURCE_NAME), TrinoSource.class);
+            if(gsbConn != null) {
+                gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(tidb));
+            } else {
+                primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(tidb));
+            }
+            platformUrn = new DataPlatformUrn(TIDB_SOURCE_NAME);
+        } else if (connInput.containsKey(TRINO_SOURCE_NAME)) {
+            TrinoSource trino = bindArgument(connInput.get(TRINO_SOURCE_NAME), TrinoSource.class);
             trino.setDriver(trino.getDriver());
-            primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(trino));
-            primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.TRINO_SOURCE_NAME);
-        } else if (primaryConnMap.containsKey(DatasourceConstants.SNOWFLAKE_SOURCE_NAME)) {
-            SnowflakeSource snowflake = ResolverUtils.bindArgument(primaryConnMap.get(DatasourceConstants.SNOWFLAKE_SOURCE_NAME), SnowflakeSource.class);
+            if(gsbConn != null) {
+                gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(trino));
+            } else {
+                primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(trino));
+            }
+            platformUrn = new DataPlatformUrn(TRINO_SOURCE_NAME);
+        } else if (connInput.containsKey(SNOWFLAKE_SOURCE_NAME)) {
+            SnowflakeSource snowflake = bindArgument(connInput.get(SNOWFLAKE_SOURCE_NAME), SnowflakeSource.class);
             snowflake.setDriver(snowflake.getDriver());
-            primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(snowflake));
-            primaryPlatformUrn = new DataPlatformUrn(DatasourceConstants.SNOWFLAKE_SOURCE_NAME);
+            if(gsbConn != null) {
+                gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(snowflake));
+            } else {
+                primaryConn.setConnection(DatasourceConnectionPrimary.Connection.create(snowflake));
+            }
+            platformUrn = new DataPlatformUrn(SNOWFLAKE_SOURCE_NAME);
         } else {
-            throw new IllegalArgumentException("Unknown source type: " + Arrays.toString(primaryConnMap.keySet().toArray()));
+            throw new IllegalArgumentException("Unknown source type");
         }
-        return primaryPlatformUrn;
+        return platformUrn;
     }
 
-    private DataPlatformUrn parseGSBConn(Map<String, Object> gsbConnMap, DatasourceConnectionGSB gsbConn) {
-        DataPlatformUrn gsbPlatformUrn = null;
-        if (gsbConnMap.containsKey(DatasourceConstants.POSTGRES_SOURCE_NAME)) {
-            PostgresSource postgres = ResolverUtils.bindArgument(gsbConnMap.get(DatasourceConstants.POSTGRES_SOURCE_NAME), PostgresSource.class);
-            gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(postgres));
-            gsbPlatformUrn = new DataPlatformUrn(DatasourceConstants.POSTGRES_SOURCE_NAME);
-        } else if (gsbConnMap.containsKey(DatasourceConstants.ORACLE_SOURCE_NAME)) {
-            OracleSource oracle = ResolverUtils.bindArgument(gsbConnMap.get(DatasourceConstants.ORACLE_SOURCE_NAME), OracleSource.class);
-            gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(oracle));
-            gsbPlatformUrn = new DataPlatformUrn(DatasourceConstants.ORACLE_SOURCE_NAME);
-        } else if (gsbConnMap.containsKey(DatasourceConstants.ICEBERG_SOURCE_NAME)) {
-            IcebergSource iceberg = ResolverUtils.bindArgument(gsbConnMap.get(DatasourceConstants.ICEBERG_SOURCE_NAME), IcebergSource.class);
-            gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(iceberg));
-            gsbPlatformUrn = new DataPlatformUrn(DatasourceConstants.ICEBERG_SOURCE_NAME);
-        } else if (gsbConnMap.containsKey(DatasourceConstants.KAFKA_SOURCE_NAME)) {
-            KafkaMetadataSource kafka = ResolverUtils.bindArgument(gsbConnMap.get(DatasourceConstants.KAFKA_SOURCE_NAME), KafkaMetadataSource.class);
-            gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(kafka));
-            gsbPlatformUrn = new DataPlatformUrn(DatasourceConstants.KAFKA_SOURCE_NAME);
-        } else if (gsbConnMap.containsKey(DatasourceConstants.MYSQL_SOURCE_NAME)) {
-            MysqlSource mysql = ResolverUtils.bindArgument(gsbConnMap.get(DatasourceConstants.MYSQL_SOURCE_NAME), MysqlSource.class);
-            gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(mysql));
-            gsbPlatformUrn = new DataPlatformUrn(DatasourceConstants.MYSQL_SOURCE_NAME);
-        } else if (gsbConnMap.containsKey(DatasourceConstants.HIVE_SOURCE_NAME)) {
-            HiveSource hive = ResolverUtils.bindArgument(gsbConnMap.get(DatasourceConstants.HIVE_SOURCE_NAME), HiveSource.class);
-            gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(hive));
-            gsbPlatformUrn = new DataPlatformUrn(DatasourceConstants.HIVE_SOURCE_NAME);
-        } else if (gsbConnMap.containsKey(DatasourceConstants.PINOT_SOURCE_NAME)) {
-            PinotSource piot = ResolverUtils.bindArgument(gsbConnMap.get(DatasourceConstants.PINOT_SOURCE_NAME), PinotSource.class);
-            gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(piot));
-            gsbPlatformUrn = new DataPlatformUrn(DatasourceConstants.PINOT_SOURCE_NAME);
-        } else if (gsbConnMap.containsKey(DatasourceConstants.PRESTO_SOURCE_NAME)) {
-            PrestoSource presto = ResolverUtils.bindArgument(gsbConnMap.get(DatasourceConstants.PRESTO_SOURCE_NAME), PrestoSource.class);
-            gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(presto));
-            gsbPlatformUrn = new DataPlatformUrn(DatasourceConstants.PRESTO_SOURCE_NAME);
-        } else if (gsbConnMap.containsKey(DatasourceConstants.TIDB_SOURCE_NAME)) {
-            TiDBSource tidb = ResolverUtils.bindArgument(gsbConnMap.get(DatasourceConstants.TIDB_SOURCE_NAME), TiDBSource.class);
-            gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(tidb));
-            gsbPlatformUrn = new DataPlatformUrn(DatasourceConstants.TIDB_SOURCE_NAME);
-        } else if (gsbConnMap.containsKey(DatasourceConstants.TRINO_SOURCE_NAME)) {
-            TrinoSource trino = ResolverUtils.bindArgument(gsbConnMap.get(DatasourceConstants.TRINO_SOURCE_NAME), TrinoSource.class);
-            gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(trino));
-            gsbPlatformUrn = new DataPlatformUrn(DatasourceConstants.TRINO_SOURCE_NAME);
-        } else if (gsbConnMap.containsKey(DatasourceConstants.SNOWFLAKE_SOURCE_NAME)) {
-            SnowflakeSource snowflake = ResolverUtils.bindArgument(gsbConnMap.get(DatasourceConstants.SNOWFLAKE_SOURCE_NAME), SnowflakeSource.class);
-            gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(snowflake));
-            gsbPlatformUrn = new DataPlatformUrn(DatasourceConstants.SNOWFLAKE_SOURCE_NAME);
-        } else {
-            throw new IllegalArgumentException("Unknown source type: " + Arrays.toString(gsbConnMap.keySet().toArray()));
-        }
-        return gsbPlatformUrn;
-    }
-
-    private boolean isCustmDashboardSupportType(Map<String, Object> primaryConnMap) {
-        return primaryConnMap.containsKey(DatasourceConstants.ORACLE_SOURCE_NAME) || primaryConnMap.containsKey(DatasourceConstants.TRINO_SOURCE_NAME)
-                || primaryConnMap.containsKey(DatasourceConstants.TIDB_SOURCE_NAME) || primaryConnMap.containsKey(DatasourceConstants.PRESTO_SOURCE_NAME)
-                || primaryConnMap.containsKey(DatasourceConstants.HIVE_SOURCE_NAME) || primaryConnMap.containsKey(DatasourceConstants.POSTGRES_SOURCE_NAME)
-                || primaryConnMap.containsKey(DatasourceConstants.MYSQL_SOURCE_NAME);
+    private boolean isCustmDashboardSupportType(DatasourceSourceInput input) {
+        return input.getOracle() != null
+                || input.getTrino() != null
+                || input.getTiDB() != null
+                || input.getPresto() != null
+                || input.getHive() != null
+                || input.getPostgres() != null
+                || input.getMysql() != null;
     }
 
     @Override
     public CompletableFuture<String> get(DataFetchingEnvironment environment) throws Exception {
+
         final QueryContext context = environment.getContext();
 
         Map<String, Object> inputMap = environment.getArgument("input");
-        String sourceName = (String) inputMap.get("name");
+        final DatasourceCreateInput input = bindArgument(inputMap, DatasourceCreateInput.class);
+
+        String sourceName = input.getName();
 
         final DatasourceInfo datasourceInfo = new DatasourceInfo();
 
         datasourceInfo.setCategory(Configuration.getEnvironmentVariable("CUSTOM_DASHBOARD_API_CATEGORY"));
-        String sourceRegion = (String) inputMap.get("region");
+        String sourceRegion = input.getRegion();
         datasourceInfo.setRegion(sourceRegion);
 
-        if (inputMap.containsKey("group")) {
-            String groupRawUrn = (String) inputMap.get("group");
-            CorpGroupUrn corpGroupUrn = CorpGroupUrn.createFromString(groupRawUrn);
+        if (input.getGroup() != null) {
+            CorpGroupUrn corpGroupUrn = CorpGroupUrn.createFromString(input.getGroup());
             datasourceInfo.setGroup(corpGroupUrn);
         }
-
-        if (inputMap.containsKey("alias")) {
-            String alias = (String) inputMap.get("alias");
-            datasourceInfo.setAlias(alias);
+        if (input.getAlias() != null) {
+            datasourceInfo.setAlias(input.getAlias());
         }
-
-        if (inputMap.containsKey("testQuerySql")) {
-            String testQuerySql = (String) inputMap.get("testQuerySql");
-            datasourceInfo.setTestQuerySql(testQuerySql);
+        if (input.getTestQuerySql() != null) {
+            datasourceInfo.setTestQuerySql(input.getTestQuerySql());
         }
 
         final DatasourceConnectionPrimary primaryConn = new DatasourceConnectionPrimary();
-
-        Map<String, Object> primaryConnMap = (Map<String, Object>) inputMap.get("primaryConn");
-        if (primaryConnMap.containsKey("dataCenter")) {
-            String dataCenter = (String) primaryConnMap.get("dataCenter");
-            primaryConn.setDataCenter(dataCenter);
+        DatasourceSourceInput priInput = input.getPrimaryConn();
+        if (priInput != null && priInput.getDataCenter() != null) {
+            primaryConn.setDataCenter(priInput.getDataCenter());
         }
 
-        DataPlatformUrn primaryPlatformUrn = parsePrimaryConn(primaryConnMap, primaryConn);
+        DataPlatformUrn primaryPlatformUrn = parseConnection(
+                (Map<String, Object>)inputMap.get("primaryConn"), primaryConn, null);
 
-        DatasourceUrn sourceUrn = new DatasourceUrn(primaryPlatformUrn, sourceName, sourceRegion);
-        boolean create = (boolean) inputMap.get("create");
-        if (create && entityService.exists(sourceUrn)) {
+        final DatasourceUrn sourceUrn = new DatasourceUrn(primaryPlatformUrn, sourceName, sourceRegion);
+        if (input.getCreate() && entityService.exists(sourceUrn)) {
             throw new IllegalArgumentException("Failed to add data source, duplicate data source!");
         }
 
         DatasourceConnectionGSB gsbConn = null;
         DataPlatformUrn gsbPlatformUrn = null;
-        if (inputMap.containsKey("gsbConn")) {
+        if (input.getGsbConn() != null) {
             gsbConn = new DatasourceConnectionGSB();
-            Map<String, Object> gsbConnMap = (Map<String, Object>) inputMap.get("gsbConn");
-            if (gsbConnMap.containsKey("dataCenter")) {
-                String dataCenter = (String) gsbConnMap.get("dataCenter");
-                gsbConn.setDataCenter(dataCenter);
+            DatasourceSourceInput gsbInput = input.getGsbConn();
+            if (gsbInput.getDataCenter() != null) {
+                gsbConn.setDataCenter(gsbInput.getDataCenter());
             }
-
-            gsbPlatformUrn = parseGSBConn(gsbConnMap, gsbConn);
+            gsbPlatformUrn = parseConnection(
+                    (Map<String, Object>)inputMap.get("gsbConn"), null, gsbConn);
         }
 
         if (gsbPlatformUrn != null && !primaryPlatformUrn.equals(gsbPlatformUrn)) {
@@ -240,13 +246,15 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
 
         final boolean hasGSB = gsbConn != null;
 
-        String customDashboardRequestBody = null;
-        String customDashboardResponse = null;
+        String customDashboardRequestBody;
+        String customDashboardResponse;
         final MetadataChangeProposal customDashboardInfoProposal = new MetadataChangeProposal();
-        final boolean syncCDAPI = (boolean) inputMap.get("syncCDAPI") && isCustmDashboardSupportType(primaryConnMap);
-        if ("true".equals(Configuration.getEnvironmentVariable("CUSTOM_DASHBOARD_API_ENABLE")) && syncCDAPI) {
+        final boolean syncCDAPI = input.getSyncCDAPI() && isCustmDashboardSupportType(priInput);
+        if ("true".equals(Configuration.getEnvironmentVariable("CUSTOM_DASHBOARD_API_ENABLE"))
+                && syncCDAPI) {
             customDashboardRequestBody = CustomDashboardAPIUtil.buildCreateRequestBody(inputMap);
-            customDashboardResponse = CustomDashboardAPIClient.createDatasource(customDashboardRequestBody, CustomDashboardAPIUtil.getAccessToken());
+            customDashboardResponse = CustomDashboardAPIClient
+                    .createDatasource(customDashboardRequestBody, CustomDashboardAPIUtil.getAccessToken());
 
             customDashboardInfoProposal.setEntityUrn(sourceUrn);
             customDashboardInfoProposal.setAspectName("datasourceCustomDashboardInfo");
@@ -258,21 +266,60 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             customDashboardInfoProposal.setChangeType(ChangeType.UPSERT);
         }
 
-        return CompletableFuture.supplyAsync(() -> {
-            try {
+        final MetadataChangeProposal ownershipProposal = new MetadataChangeProposal();
+        if(input.getCreate()) {
+            Ownership ownership = new Ownership();
+            Owner owner = new Owner();
+            owner.setOwner(UrnUtils.getUrn(context.getActorUrn()));
+            owner.setType(OwnershipType.BUSINESS_OWNER);
+            owner.setSource(new OwnershipSource().setType(OwnershipSourceType.MANUAL));
+            OwnerArray owners = new OwnerArray();
+            owners.add(owner);
+            ownership.setOwners(owners);
+            ownershipProposal.setEntityUrn(sourceUrn);
+            ownershipProposal.setAspectName(OWNERSHIP_ASPECT_NAME);
+            ownershipProposal.setEntityType("datasource");
+            ownershipProposal.setAspect(GenericRecordUtils.serializeAspect(ownership));
+            ownershipProposal.setChangeType(ChangeType.UPSERT);
+        }
 
-                datasourcesClient.ingestProposal(primaryConnProposal, context.getAuthentication());
+        return CompletableFuture.supplyAsync(() -> {
+            validateDatasource(sourceUrn, context);
+            try {
+                datasourceClient.ingestProposal(primaryConnProposal, context.getAuthentication());
                 if (hasGSB) {
-                    datasourcesClient.ingestProposal(gsbConnProposal, context.getAuthentication());
+                    datasourceClient.ingestProposal(gsbConnProposal, context.getAuthentication());
                 }
                 if (syncCDAPI) {
-                    datasourcesClient.ingestProposal(customDashboardInfoProposal, context.getAuthentication());
+                    datasourceClient.ingestProposal(customDashboardInfoProposal, context.getAuthentication());
                 }
-                return datasourcesClient.ingestProposal(sourceInfoProposal, context.getAuthentication());
-
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to add datasource.", e);
+                if(input.getCreate()) {
+                    datasourceClient.ingestProposal(ownershipProposal, context.getAuthentication());
+                }
+                return datasourceClient.ingestProposal(sourceInfoProposal, context.getAuthentication());
+            } catch (Exception ex) {
+                throw new RuntimeException("Failed to add datasource.", ex);
             }
         });
+    }
+
+    private void validateDatasource(DatasourceUrn maybeDatasourceUrn, QueryContext context) {
+        final Urn resourceUrn = UrnUtils.getUrn(maybeDatasourceUrn.toString());
+        if (!entityService.exists(resourceUrn)) {
+            return;
+        }
+        if (!isAuthorizedToUpdateDatasource(context, resourceUrn)) {
+            throw new AuthorizationException(
+                    "Unauthorized to perform this action. Please contact your DataHub administrator.");
+        }
+    }
+
+    public static boolean isAuthorizedToUpdateDatasource(@Nonnull QueryContext context, Urn entityUrn) {
+        final DisjunctivePrivilegeGroup orPrivilegeGroups = new DisjunctivePrivilegeGroup(ImmutableList.of(
+                new ConjunctivePrivilegeGroup(ImmutableList.of(PoliciesConfig.EDIT_DATASOURCE_PRIVILEGE.getType()))
+        ));
+
+        return AuthorizationUtils.isAuthorized(context.getAuthorizer(),
+                context.getActorUrn(), entityUrn.getEntityType(), entityUrn.toString(), orPrivilegeGroups);
     }
 }

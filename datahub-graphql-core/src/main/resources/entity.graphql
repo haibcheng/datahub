@@ -9799,6 +9799,10 @@ type Datasource implements EntityWithRelationships & Entity {
     Edges extending from this entity grouped by direction in the lineage graph
     """
     lineage(input: LineageInput!): EntityLineageResult
+    """
+    The Domain associated with the Dataset
+    """
+    domain: DomainAssociation
 }
 
 type DatasourceConnection {

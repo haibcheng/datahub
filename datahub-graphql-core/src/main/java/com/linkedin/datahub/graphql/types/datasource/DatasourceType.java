@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.linkedin.common.urn.CorpuserUrn;
 import com.linkedin.common.urn.DatasourceUrn;
 import com.linkedin.common.urn.Urn;
+import com.linkedin.common.urn.UrnUtils;
 import com.linkedin.data.template.StringArray;
 import com.linkedin.datahub.graphql.QueryContext;
 import com.linkedin.datahub.graphql.authorization.AuthorizationUtils;
@@ -16,17 +17,17 @@ import com.linkedin.datahub.graphql.resolvers.ResolverUtils;
 import com.linkedin.datahub.graphql.types.BrowsableEntityType;
 import com.linkedin.datahub.graphql.types.MutableType;
 import com.linkedin.datahub.graphql.types.SearchableEntityType;
-import com.linkedin.datahub.graphql.types.datasource.mappers.DatasourceSnapshotMapper;
+import com.linkedin.datahub.graphql.types.datasource.mappers.DatasourceMapper;
 import com.linkedin.datahub.graphql.types.datasource.mappers.DatasourceUpdateInputSnapshotMapper;
 import com.linkedin.datahub.graphql.types.mappers.AutoCompleteResultsMapper;
 import com.linkedin.datahub.graphql.types.mappers.BrowsePathsMapper;
 import com.linkedin.datahub.graphql.types.mappers.BrowseResultMapper;
 import com.linkedin.datahub.graphql.types.mappers.UrnSearchResultsMapper;
 import com.linkedin.entity.Entity;
+import com.linkedin.entity.EntityResponse;
 import com.linkedin.entity.client.EntityClient;
 import com.linkedin.metadata.authorization.PoliciesConfig;
 import com.linkedin.metadata.browse.BrowseResult;
-import com.linkedin.metadata.extractor.AspectExtractor;
 import com.linkedin.metadata.query.AutoCompleteResult;
 import com.linkedin.metadata.search.SearchResult;
 import com.linkedin.metadata.snapshot.DatasourceSnapshot;
@@ -41,9 +42,28 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.linkedin.datahub.graphql.Constants.BROWSE_PATH_DELIMITER;
+import static com.linkedin.metadata.Constants.*;
 
-public class DatasourceType implements SearchableEntityType<Datasource, String>, BrowsableEntityType<Datasource, String>,
-                                    MutableType<DatasourceUpdateInput, Datasource> {
+public class DatasourceType implements SearchableEntityType<Datasource, String>,
+        BrowsableEntityType<Datasource, String>,
+        MutableType<DatasourceUpdateInput, Datasource> {
+
+    private static final Set<String> ASPECTS_TO_RESOLVE = ImmutableSet.of(
+            DATASOURCE_KEY_ASPECT_NAME,
+            "datasourceProperties",
+            "editableDatasourceProperties",
+            "datasourceDeprecation",
+            INSTITUTIONAL_MEMORY_ASPECT_NAME,
+            OWNERSHIP_ASPECT_NAME,
+            STATUS_ASPECT_NAME,
+            DOMAINS_ASPECT_NAME,
+            DATASOURCE_INFO_ASPECT_NAME,
+            GLOBAL_TAGS_ASPECT_NAME,
+            GLOSSARY_TERMS_ASPECT_NAME,
+            "datasourceConnectionPrimary",
+            "datasourceConnectionGSB",
+            "datasourceCustomDashboardInfo"
+    );
 
     private static final Set<String> FACET_FIELDS = ImmutableSet.of("origin", "platform");
     private static final String ENTITY_NAME = "datasource";
@@ -75,34 +95,34 @@ public class DatasourceType implements SearchableEntityType<Datasource, String>,
     }
 
     @Override
-    public List<DataFetcherResult<Datasource>> batchLoad(final List<String> urns, final QueryContext context) {
-
-        final List<DatasourceUrn> datasourceUrns = urns.stream()
-                .map(DatasourceUtils::getDatasourceUrn)
-                .collect(Collectors.toList());
+    public List<DataFetcherResult<Datasource>> batchLoad(@Nonnull final List<String> urnStrs,
+        @Nonnull final QueryContext context) {
 
         try {
-            final Map<Urn, Entity> datasourceMap = _datasourcesClient.batchGet(datasourceUrns
-                        .stream()
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toSet()),
-                context.getAuthentication());
+            final List<Urn> urns = urnStrs.stream()
+                    .map(UrnUtils::getUrn)
+                    .collect(Collectors.toList());
 
-            final List<Entity> gmsResults = new ArrayList<>();
-            for (DatasourceUrn urn : datasourceUrns) {
-                gmsResults.add(datasourceMap.getOrDefault(urn, null));
+            final Map<Urn, EntityResponse> datasetMap =
+                    _datasourcesClient.batchGetV2(
+                            DATASOURCE_ENTITY_NAME,
+                            new HashSet<>(urns),
+                            ASPECTS_TO_RESOLVE,
+                            context.getAuthentication());
+
+            final List<EntityResponse> gmsResults = new ArrayList<>();
+            for (Urn urn : urns) {
+                gmsResults.add(datasetMap.getOrDefault(urn, null));
             }
             return gmsResults.stream()
-                .map(gmsDatasource ->
-                    gmsDatasource == null ? null : DataFetcherResult.<Datasource>newResult()
-                        .data(DatasourceSnapshotMapper.map(gmsDatasource.getValue().getDatasourceSnapshot()))
-                        .localContext(AspectExtractor.extractAspects(gmsDatasource.getValue().getDatasourceSnapshot()))
-                        .build()
-                )
-                .collect(Collectors.toList());
+                    .map(gmsDataset -> gmsDataset == null ? null : DataFetcherResult.<Datasource>newResult()
+                            .data(DatasourceMapper.map(gmsDataset))
+                            .build())
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             throw new RuntimeException("Failed to batch load Datasources", e);
         }
+
     }
 
     @Override

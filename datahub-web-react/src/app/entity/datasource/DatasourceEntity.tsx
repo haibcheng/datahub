@@ -20,6 +20,7 @@ import { SidebarOwnerSection } from '../shared/containers/profile/sidebar/Owners
 import { SidebarTagsSection } from '../shared/containers/profile/sidebar/SidebarTagsSection';
 import { SidebarRecommendationsSection } from '../shared/containers/profile/sidebar/Recommendations/SidebarRecommendationsSection';
 import { getDataForEntityType } from '../shared/containers/profile/utils';
+import { SidebarDomainSection } from '../shared/containers/profile/sidebar/Domain/SidebarDomainSection';
 import DatasourceDelete from './preview/DatasourceDelete';
 import DatasourceEdit from './profile/DatasourceEdit';
 
@@ -111,6 +112,9 @@ export class DatasourceEntity implements Entity<Datasource> {
                     component: SidebarAboutSection,
                 },
                 {
+                    component: SidebarOwnerSection,
+                },
+                {
                     component: SidebarTagsSection,
                     properties: {
                         hasTags: true,
@@ -118,7 +122,7 @@ export class DatasourceEntity implements Entity<Datasource> {
                     },
                 },
                 {
-                    component: SidebarOwnerSection,
+                    component: SidebarDomainSection,
                 },
                 {
                     component: SidebarRecommendationsSection,
@@ -147,6 +151,7 @@ export class DatasourceEntity implements Entity<Datasource> {
                 owners={data.ownership?.owners}
                 globalTags={data.globalTags}
                 glossaryTerms={data.glossaryTerms}
+                domain={data.domain?.domain}
                 delEle={this.getDelete(data.urn, data.name)}
                 editEle={this.getEdit(data)}
             />
@@ -166,6 +171,7 @@ export class DatasourceEntity implements Entity<Datasource> {
                 owners={data.ownership?.owners}
                 globalTags={data.globalTags}
                 glossaryTerms={data.glossaryTerms}
+                domain={data.domain?.domain}
                 snippet={
                     // Add match highlights only if all the matched fields are in the FIELDS_TO_HIGHLIGHT
                     result.matchedFields.length > 0 &&

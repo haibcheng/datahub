@@ -266,22 +266,16 @@ public class PoliciesConfig {
   );
 
   // Datasource Privileges
-  public static final Privilege EDIT_DATASOURCE_COL_TAGS_PRIVILEGE = Privilege.of(
-          "EDIT_DATASOURCE_COL_TAGS",
-          "Edit Datasource Column Tags",
-          "The ability to edit the column (field) tags associated with a dataset schema."
+  public static final Privilege EDIT_DATASOURCE_PRIVILEGE = Privilege.of(
+          "EDIT_DATASOURCE",
+          "Edit Datasource",
+          "The ability to edit the datasource."
   );
 
-  public static final Privilege EDIT_DATASOURCE_COL_GLOSSARY_TERMS_PRIVILEGE = Privilege.of(
-          "EDIT_DATASOURCE_COL_GLOSSARY_TERMS",
-          "Edit Datasource Column Glossary Terms",
-          "The ability to edit the column (field) glossary terms associated with a dataset schema."
-  );
-
-  public static final Privilege EDIT_DATASOURCE_COL_DESCRIPTION_PRIVILEGE = Privilege.of(
-          "EDIT_DATASOURCE_COL_DESCRIPTION",
-          "Edit Datasource Column Descriptions",
-          "The ability to edit the column (field) descriptions associated with a dataset schema."
+  public static final Privilege DELETE_DATASOURCE_PRIVILEGE = Privilege.of(
+          "DELETE_DATASOURCE",
+          "Delete Datasource",
+          "The ability to delete the datasource."
   );
 
   public static final ResourcePrivileges DATASOURCE_PRIVILEGES = ResourcePrivileges.of(
@@ -291,9 +285,8 @@ public class PoliciesConfig {
           Stream.of(
                   COMMON_ENTITY_PRIVILEGES,
                   ImmutableList.of(
-                          EDIT_DATASOURCE_COL_DESCRIPTION_PRIVILEGE,
-                          EDIT_DATASOURCE_COL_TAGS_PRIVILEGE,
-                          EDIT_DATASOURCE_COL_GLOSSARY_TERMS_PRIVILEGE))
+                          EDIT_DATASOURCE_PRIVILEGE,
+                          DELETE_DATASOURCE_PRIVILEGE))
                   .flatMap(Collection::stream)
                   .collect(Collectors.toList())
   );
