@@ -80,7 +80,8 @@ public class RestHighLevelClientFactory {
       int connectionRequestTimeout) {
     RestClientBuilder builder = RestClient.builder(new HttpHost(host, port, "http"))
         .setHttpClientConfigCallback(httpAsyncClientBuilder -> httpAsyncClientBuilder
-            .setDefaultIOReactorConfig(IOReactorConfig.custom().setIoThreadCount(threadCount).build()));
+            .setDefaultIOReactorConfig(IOReactorConfig
+                    .custom().setSoKeepAlive(true).setIoThreadCount(threadCount).build()));
 
     if (!StringUtils.isEmpty(pathPrefix)) {
       builder.setPathPrefix(pathPrefix);
@@ -99,7 +100,8 @@ public class RestHighLevelClientFactory {
     
     builder.setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
       public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpAsyncClientBuilder) {
-        httpAsyncClientBuilder.setDefaultIOReactorConfig(IOReactorConfig.custom().setIoThreadCount(threadCount).build());
+        httpAsyncClientBuilder.setDefaultIOReactorConfig(IOReactorConfig
+                .custom().setSoKeepAlive(true).setIoThreadCount(threadCount).build());
         
         final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
@@ -122,10 +124,18 @@ public class RestHighLevelClientFactory {
       builder.setPathPrefix(pathPrefix);
     }
 
+    /*
+       refer to:
+          https://github.com/elastic/elasticsearch/issues/65213
+          https://tldp.org/HOWTO/TCP-Keepalive-HOWTO/usingkeepalive.html
+       change net.ipv4.tcp_keepalive_time=300 in /etc/sysctl.conf for reboot
+       sysctl -w net.ipv4.tcp_keepalive_time=300 to take effect
+     */
     builder.setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
       public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpAsyncClientBuilder) {
         httpAsyncClientBuilder.setSSLContext(sslContext).setSSLHostnameVerifier(new NoopHostnameVerifier())
-            .setDefaultIOReactorConfig(IOReactorConfig.custom().setIoThreadCount(threadCount).build());
+            .setDefaultIOReactorConfig(IOReactorConfig
+                    .custom().setSoKeepAlive(true).setIoThreadCount(threadCount).build());
 
         if (username != null && password != null) {
           final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
