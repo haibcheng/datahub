@@ -159,6 +159,7 @@ public class DatasourceConnectionGSBMapper implements ModelMapper<com.linkedin.d
             conn.setMaxSize(source.getMaxSize());
             conn.setIdleSize(source.getIdleSize());
             conn.setStatus(source.getStatus());
+            conn.setJdbcParams(source.getJdbcParams());
             conn.setCatalog(source.getCatalog());
             conn.setSchema(source.getSchema());
             conn.setTablePatternAllow(source.getTablePatternAllow());
@@ -181,6 +182,7 @@ public class DatasourceConnectionGSBMapper implements ModelMapper<com.linkedin.d
             conn.setMaxSize(source.getMaxSize());
             conn.setIdleSize(source.getIdleSize());
             conn.setStatus(source.getStatus());
+            conn.setJdbcParams(source.getJdbcParams());
             conn.setTablePatternAllow(source.getTablePatternAllow());
             conn.setTablePatternDeny(source.getTablePatternDeny());
             conn.setTablePatternIgnoreCase(source.isTablePatternIgnoreCase());

@@ -161,6 +161,7 @@ public class DatasourceConnectionPrimaryMapper implements ModelMapper<com.linked
             conn.setMaxSize(source.getMaxSize());
             conn.setIdleSize(source.getIdleSize());
             conn.setStatus(source.getStatus());
+            conn.setJdbcParams(source.getJdbcParams());
             conn.setTablePatternAllow(source.getTablePatternAllow());
             conn.setTablePatternDeny(source.getTablePatternDeny());
             conn.setTablePatternIgnoreCase(source.isTablePatternIgnoreCase());
@@ -181,6 +182,7 @@ public class DatasourceConnectionPrimaryMapper implements ModelMapper<com.linked
             conn.setMaxSize(source.getMaxSize());
             conn.setIdleSize(source.getIdleSize());
             conn.setStatus(source.getStatus());
+            conn.setJdbcParams(source.getJdbcParams());
             conn.setTablePatternAllow(source.getTablePatternAllow());
             conn.setTablePatternDeny(source.getTablePatternDeny());
             conn.setTablePatternIgnoreCase(source.isTablePatternIgnoreCase());
