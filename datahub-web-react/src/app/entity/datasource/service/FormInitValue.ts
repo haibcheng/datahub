@@ -35,7 +35,7 @@ const sourceTypeList = [
     },
     {
         label: 'TiDB',
-        value: 'tiDB',
+        value: 'tidb',
     },
     {
         label: 'presto',
@@ -91,8 +91,8 @@ const regionList = [
         value: 'EMEA',
     },
     {
-        label: 'GERMANY',
-        value: 'GERMANY',
+        label: 'FedRAMP',
+        value: 'FedRAMP',
     },
 ];
 

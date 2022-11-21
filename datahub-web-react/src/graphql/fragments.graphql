@@ -959,6 +959,7 @@ fragment nonRecursiveDatasourceFields on Datasource {
                 database
                 minSize
                 maxSize
+                jdbcParams
                 idleSize
                 status
                 tablePatternAllow
@@ -1121,6 +1122,7 @@ fragment nonRecursiveDatasourceFields on Datasource {
                 database
                 minSize
                 maxSize
+                jdbcParams
                 idleSize
                 status
                 tablePatternAllow

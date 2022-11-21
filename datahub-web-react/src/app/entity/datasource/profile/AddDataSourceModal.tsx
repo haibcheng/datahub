@@ -911,7 +911,7 @@ export default function AddDataSourceModal({
                 >
                     {/* username as value ,will input issue */}
                     <Input
-                        type="text"
+                        // type="text"
                         placeholder="Please input connection username"
                         autoComplete="off"
                         defaultValue={info.username}
