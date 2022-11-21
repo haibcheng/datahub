@@ -43,6 +43,7 @@ public class DataHubUsageEventTransformer {
     ENTITY_TYPE_MAP.put(EntityType.DATA_FLOW, DATA_FLOW_ENTITY_NAME);
     ENTITY_TYPE_MAP.put(EntityType.DATA_JOB, DATA_JOB_ENTITY_NAME);
     ENTITY_TYPE_MAP.put(EntityType.DATASET, DATASET_ENTITY_NAME);
+    ENTITY_TYPE_MAP.put(EntityType.DATASOURCE, DATASOURCE_ENTITY_NAME);
   }
 
   @Value
