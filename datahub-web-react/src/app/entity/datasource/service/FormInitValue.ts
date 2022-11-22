@@ -35,18 +35,18 @@ const sourceTypeList = [
     },
     {
         label: 'TiDB',
-        value: 'tidb',
+        value: 'tiDB',
     },
     {
-        label: 'presto',
+        label: 'Presto',
         value: 'presto',
     },
     {
-        label: 'trino',
+        label: 'Trino',
         value: 'trino',
     },
     {
-        label: 'hive',
+        label: 'Hive',
         value: 'hive',
     },
     {

@@ -25,7 +25,7 @@ export default function DatasourceEdit({ datasource: { urn } }: Props) {
     const dataSource = res?.data?.datasource;
     const typeName = dataSource?.primaryConn?.connection?.__typename;
     const selectedType = sourceTypeList.find((item) => {
-        return typeName?.toLocaleLowerCase().includes(item.value);
+        return typeName?.toLocaleLowerCase().includes(item.value.toLocaleLowerCase());
     });
     const conn = dataSource?.primaryConn;
     const gsbConn = dataSource?.gsbConn;
