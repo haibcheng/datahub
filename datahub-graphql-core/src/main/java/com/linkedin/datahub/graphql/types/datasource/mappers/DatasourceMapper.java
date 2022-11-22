@@ -79,7 +79,6 @@ public class DatasourceMapper implements ModelMapper<EntityResponse, Datasource>
 
         mappingHelper.mapToResult("datasourceConnectionPrimary", this::mapConnectionPrimary);
         mappingHelper.mapToResult("datasourceConnectionGSB", this::mapConnectionGSB);
-        mappingHelper.mapToResult("datasourceCustomDashboardInfo", this::mapCustomDashboardInfo);
 
         return mappingHelper.getResult();
     }
@@ -94,10 +93,6 @@ public class DatasourceMapper implements ModelMapper<EntityResponse, Datasource>
         datasource.setGsbConn(DatasourceConnectionGSBMapper.map(gsb));
     }
 
-    private void mapCustomDashboardInfo(@Nonnull Datasource datasource, @Nonnull DataMap dataMap) {
-        datasource.setSyncCDAPI(true);
-    }
-
     private void mapDatasourceKey(@Nonnull Datasource datasource, @Nonnull DataMap dataMap) {
         com.linkedin.common.urn.DatasourceUrn urn = DatasourceUtils
                 .getDatasourceUrn(datasource.getUrn());
@@ -107,7 +102,6 @@ public class DatasourceMapper implements ModelMapper<EntityResponse, Datasource>
         DataPlatform partialPlatform = new DataPlatform();
         partialPlatform.setUrn(urn.getPlatformEntity().toString());
         datasource.setPlatform(partialPlatform);
-        datasource.setSyncCDAPI(false);
     }
 
     private void mapDatasourceInfo(@Nonnull Datasource datasource, @Nonnull DataMap dataMap) {

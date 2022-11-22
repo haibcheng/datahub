@@ -19,12 +19,6 @@ record DatasourceInfo {
   }
   region: string
 
-  @Searchable = {
-    "fieldType": "TEXT_PARTIAL",
-    "enableAutocomplete": true
-  }
-  category: string
-
   group: CorpGroupUrn
 
   testQuerySql: optional string

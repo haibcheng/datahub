@@ -919,7 +919,6 @@ fragment nonRecursiveDatasourceFields on Datasource {
     ownership {
         ...ownershipFields
     }
-    syncCDAPI
     oracleTNSType
     region
     primaryConn {

@@ -1,6 +1,5 @@
 export interface IFormConnectionData {
     id?: number;
-
     bootstrap?: string;
     schemaRegistryUrl?: string;
     topicPatternsAllow?: string;
@@ -41,7 +40,6 @@ export interface IFormData {
     name: string;
     alias: string;
     testQuerySql: string;
-    syncCDAPI: boolean;
     create: boolean;
     group: string;
     region: string;
@@ -61,7 +59,6 @@ export enum FormField {
     status = 'status',
     alias = 'alias',
     testQuerySql = 'testQuerySql',
-    syncCDAPI = 'syncCDAPI',
     dataCenter = 'dataCenter',
     connectionParams = 'connectionParams',
     driver = 'driver',
@@ -103,7 +100,6 @@ export interface IKafkaMetadataSourceInput {
 export interface IBasicDataSourceInput {
     username: string;
     password: string;
-
     databaseAlias?: string;
     tablePatternAllow?: string;
     tablePatternDeny?: string;

@@ -2815,20 +2815,6 @@
     }
   }, {
     "type" : "record",
-    "name" : "DatasourceCustomDashboardInfo",
-    "namespace" : "com.linkedin.datasource",
-    "fields" : [ {
-      "name" : "postParam",
-      "type" : "string"
-    }, {
-      "name" : "response",
-      "type" : "string"
-    } ],
-    "Aspect" : {
-      "name" : "datasourceCustomDashboardInfo"
-    }
-  }, {
-    "type" : "record",
     "name" : "DatasourceDeprecation",
     "namespace" : "com.linkedin.datasource",
     "doc" : "Datasource deprecation status",
@@ -2873,13 +2859,6 @@
       }
     }, {
       "name" : "region",
-      "type" : "string",
-      "Searchable" : {
-        "enableAutocomplete" : true,
-        "fieldType" : "TEXT_PARTIAL"
-      }
-    }, {
-      "name" : "category",
       "type" : "string",
       "Searchable" : {
         "enableAutocomplete" : true,
@@ -4204,7 +4183,7 @@
                   "Aspect" : {
                     "name" : "datasourceKey"
                   }
-                }, "com.linkedin.datasource.DatasourceProperties", "com.linkedin.datasource.EditableDatasourceProperties", "com.linkedin.datasource.DatasourceDeprecation", "com.linkedin.common.InstitutionalMemory", "com.linkedin.common.Ownership", "com.linkedin.common.Status", "com.linkedin.datasource.DatasourceInfo", "com.linkedin.datasource.DatasourceConnectionPrimary", "com.linkedin.datasource.DatasourceConnectionGSB", "com.linkedin.datasource.DatasourceCustomDashboardInfo", "com.linkedin.common.GlobalTags", "com.linkedin.common.GlossaryTerms", "com.linkedin.common.BrowsePaths" ]
+                }, "com.linkedin.datasource.DatasourceProperties", "com.linkedin.datasource.EditableDatasourceProperties", "com.linkedin.datasource.DatasourceDeprecation", "com.linkedin.common.InstitutionalMemory", "com.linkedin.common.Ownership", "com.linkedin.common.Status", "com.linkedin.datasource.DatasourceInfo", "com.linkedin.datasource.DatasourceConnectionPrimary", "com.linkedin.datasource.DatasourceConnectionGSB", "com.linkedin.common.GlobalTags", "com.linkedin.common.GlossaryTerms", "com.linkedin.common.BrowsePaths" ]
               }
             },
             "doc" : "The list of metadata aspects associated with the datasource. Depending on the use case, this can either be all, or a selection, of supported aspects."

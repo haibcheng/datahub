@@ -61,8 +61,7 @@ public class DatasourceType implements SearchableEntityType<Datasource, String>,
             GLOBAL_TAGS_ASPECT_NAME,
             GLOSSARY_TERMS_ASPECT_NAME,
             "datasourceConnectionPrimary",
-            "datasourceConnectionGSB",
-            "datasourceCustomDashboardInfo"
+            "datasourceConnectionGSB"
     );
 
     private static final Set<String> FACET_FIELDS = ImmutableSet.of("origin", "platform");

@@ -2,11 +2,11 @@ package com.linkedin.datahub.graphql.resolvers.datasource;
 
 import com.google.common.collect.ImmutableList;
 import com.linkedin.common.*;
-import com.linkedin.common.urn.*;
 import com.linkedin.common.urn.CorpGroupUrn;
 import com.linkedin.common.urn.DataPlatformUrn;
 import com.linkedin.common.urn.DatasourceUrn;
 import com.linkedin.common.urn.Urn;
+import com.linkedin.common.urn.*;
 import com.linkedin.datahub.graphql.QueryContext;
 import com.linkedin.datahub.graphql.authorization.AuthorizationUtils;
 import com.linkedin.datahub.graphql.authorization.ConjunctivePrivilegeGroup;
@@ -16,7 +16,6 @@ import com.linkedin.datahub.graphql.generated.DatasourceCreateInput;
 import com.linkedin.datahub.graphql.generated.DatasourceSourceInput;
 import com.linkedin.datasource.DatasourceConnectionGSB;
 import com.linkedin.datasource.DatasourceConnectionPrimary;
-import com.linkedin.datasource.DatasourceCustomDashboardInfo;
 import com.linkedin.datasource.DatasourceInfo;
 import com.linkedin.datasource.sources.*;
 import com.linkedin.entity.client.EntityClient;
@@ -25,7 +24,6 @@ import com.linkedin.metadata.authorization.PoliciesConfig;
 import com.linkedin.metadata.entity.EntityService;
 import com.linkedin.metadata.utils.GenericRecordUtils;
 import com.linkedin.mxe.MetadataChangeProposal;
-import com.linkedin.util.Configuration;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 
@@ -61,7 +59,11 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             }
             platformUrn = new DataPlatformUrn(POSTGRES_SOURCE_NAME);
         } else if (connInput.containsKey(ORACLE_SOURCE_NAME)) {
-            OracleSource oracle = bindArgument(connInput.get(ORACLE_SOURCE_NAME), OracleSource.class);
+            Map<String, Object> params = (Map<String, Object>)connInput.get(ORACLE_SOURCE_NAME);
+            params.putIfAbsent("hostPort", "");
+            params.putIfAbsent("serviceName", "");
+            params.putIfAbsent("tnsName", "");
+            OracleSource oracle = bindArgument(params, OracleSource.class);
             oracle.setDriver(oracle.getDriver());
             if(gsbConn != null) {
                 gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(oracle));
@@ -154,16 +156,6 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
         return platformUrn;
     }
 
-    private boolean isCustmDashboardSupportType(DatasourceSourceInput input) {
-        return input.getOracle() != null
-                || input.getTrino() != null
-                || input.getTiDB() != null
-                || input.getPresto() != null
-                || input.getHive() != null
-                || input.getPostgres() != null
-                || input.getMysql() != null;
-    }
-
     @Override
     public CompletableFuture<String> get(DataFetchingEnvironment environment) throws Exception {
 
@@ -176,7 +168,6 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
 
         final DatasourceInfo datasourceInfo = new DatasourceInfo();
 
-        datasourceInfo.setCategory(Configuration.getEnvironmentVariable("CUSTOM_DASHBOARD_API_CATEGORY"));
         String sourceRegion = input.getRegion();
         datasourceInfo.setRegion(sourceRegion);
 
@@ -246,26 +237,6 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
 
         final boolean hasGSB = gsbConn != null;
 
-        String customDashboardRequestBody;
-        String customDashboardResponse;
-        final MetadataChangeProposal customDashboardInfoProposal = new MetadataChangeProposal();
-        final boolean syncCDAPI = input.getSyncCDAPI() && isCustmDashboardSupportType(priInput);
-        if ("true".equals(Configuration.getEnvironmentVariable("CUSTOM_DASHBOARD_API_ENABLE"))
-                && syncCDAPI) {
-            customDashboardRequestBody = CustomDashboardAPIUtil.buildCreateRequestBody(inputMap);
-            customDashboardResponse = CustomDashboardAPIClient
-                    .createDatasource(customDashboardRequestBody, CustomDashboardAPIUtil.getAccessToken());
-
-            customDashboardInfoProposal.setEntityUrn(sourceUrn);
-            customDashboardInfoProposal.setAspectName("datasourceCustomDashboardInfo");
-            customDashboardInfoProposal.setEntityType("datasource");
-            final DatasourceCustomDashboardInfo customDashboardInfo = new DatasourceCustomDashboardInfo();
-            customDashboardInfo.setPostParam(customDashboardRequestBody);
-            customDashboardInfo.setResponse(customDashboardResponse);
-            customDashboardInfoProposal.setAspect(GenericRecordUtils.serializeAspect(customDashboardInfo));
-            customDashboardInfoProposal.setChangeType(ChangeType.UPSERT);
-        }
-
         final MetadataChangeProposal ownershipProposal = new MetadataChangeProposal();
         if(input.getCreate()) {
             Ownership ownership = new Ownership();
@@ -289,9 +260,6 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
                 datasourceClient.ingestProposal(primaryConnProposal, context.getAuthentication());
                 if (hasGSB) {
                     datasourceClient.ingestProposal(gsbConnProposal, context.getAuthentication());
-                }
-                if (syncCDAPI) {
-                    datasourceClient.ingestProposal(customDashboardInfoProposal, context.getAuthentication());
                 }
                 if(input.getCreate()) {
                     datasourceClient.ingestProposal(ownershipProposal, context.getAuthentication());

@@ -2,7 +2,6 @@ package com.linkedin.datahub.graphql.resolvers.datasource;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.linkedin.util.Configuration;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -117,32 +116,6 @@ public class CustomDashboardAPIUtil {
         return jdbcUrl;
     }
 
-    private static void parseJDBCRequestBody(String type, Map<String, Object> dbMap, ObjectNode node) {
-        node.put("username", (String) dbMap.get("username"));
-        node.put("password", (String) dbMap.get("password"));
-        node.put("url", parseJDBCURL(type, dbMap));
-    }
-
-    private static String getType(Map<String, Object> connMap) {
-        if (connMap.containsKey(DatasourceConstants.POSTGRES_SOURCE_NAME)) {
-            return DatasourceConstants.POSTGRES_SOURCE_NAME;
-        } else if (connMap.containsKey(DatasourceConstants.HIVE_SOURCE_NAME)) {
-            return DatasourceConstants.HIVE_SOURCE_NAME;
-        } else if (connMap.containsKey(DatasourceConstants.TIDB_SOURCE_NAME)) {
-            return DatasourceConstants.TIDB_SOURCE_NAME;
-        } else if (connMap.containsKey(DatasourceConstants.ORACLE_SOURCE_NAME)) {
-            return DatasourceConstants.ORACLE_SOURCE_NAME;
-        } else if (connMap.containsKey(DatasourceConstants.PINOT_SOURCE_NAME)) {
-            return DatasourceConstants.PINOT_SOURCE_NAME;
-        } else if (connMap.containsKey(DatasourceConstants.PRESTO_SOURCE_NAME)) {
-            return DatasourceConstants.PRESTO_SOURCE_NAME;
-        } else if (connMap.containsKey(DatasourceConstants.TRINO_SOURCE_NAME)) {
-            return DatasourceConstants.TRINO_SOURCE_NAME;
-        } else {
-            throw new IllegalArgumentException("the source type not supported.");
-        }
-    }
-
     public static boolean supportType(String type) {
         return DatasourceConstants.POSTGRES_SOURCE_NAME.equals(type)
                 || DatasourceConstants.HIVE_SOURCE_NAME.equals(type)
@@ -151,44 +124,6 @@ public class CustomDashboardAPIUtil {
                 || DatasourceConstants.PINOT_SOURCE_NAME.equals(type)
                 || DatasourceConstants.PRESTO_SOURCE_NAME.equals(type)
                 || DatasourceConstants.TRINO_SOURCE_NAME.equals(type);
-    }
-
-    public static String buildCreateRequestBody(Map<String, Object> inputMap) {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode json = mapper.createObjectNode();
-        json.put("flag", true);
-        json.put("name", (String) inputMap.get("name"));
-        Map<String, Object> primaryConnMap = (Map<String, Object>) inputMap.get("primaryConn");
-        ObjectNode primaryNode = mapper.createObjectNode();
-        String primaryType = getType(primaryConnMap);
-        parseJDBCRequestBody(primaryType, (Map<String, Object>) primaryConnMap.get(primaryType), primaryNode);
-
-        primaryNode.put("cluster", "PRIMARY");
-        primaryNode.put("driver", JDBC_DRIVER.get(primaryType));
-        ArrayNode dataSources = mapper.createArrayNode();
-        dataSources.add(primaryNode);
-
-        boolean hasGSB = inputMap.containsKey("gsbConn");
-        if (hasGSB) {
-            ObjectNode gsbNode = mapper.createObjectNode();
-            Map<String, Object> gsbConnMap = (Map<String, Object>) inputMap.get("gsbConn");
-            String gsbType = getType(gsbConnMap);
-            parseJDBCRequestBody(gsbType, (Map<String, Object>) gsbConnMap.get(gsbType), gsbNode);
-
-            if (!gsbType.equals(primaryType)) {
-                throw new IllegalArgumentException("GSB type was different from primary type.");
-            }
-
-            gsbNode.put("cluster", "GSB");
-            gsbNode.put("driver", JDBC_DRIVER.get(primaryType));
-            dataSources.add(gsbNode);
-        }
-        json.put("type", primaryType);
-        json.put("category", Configuration.getEnvironmentVariable("CUSTOM_DASHBOARD_API_CATEGORY"));
-        json.put("region", (String) inputMap.get("region"));
-        json.put("dataSources", dataSources);
-
-        return json.toString();
     }
 
     private static String accessToken = null;

@@ -48,7 +48,6 @@ export default function DatasourceEdit({ datasource: { urn } }: Props) {
         alias: dataSource?.alias || '',
         testQuerySql: dataSource?.testQuerySql || '',
         name: dataSource?.name || '',
-        syncCDAPI: dataSource?.syncCDAPI || false,
         create: false,
         group: dataSource?.group?.urn || '',
         region: dataSource?.region || '',

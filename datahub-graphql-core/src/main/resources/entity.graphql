@@ -9752,8 +9752,6 @@ type Datasource implements EntityWithRelationships & Entity {
     """
     status: Status
 
-    syncCDAPI: Boolean
-
     alias: String
 
     oracleTNSType: String
@@ -10232,7 +10230,6 @@ input DatasourceCreateInput {
     group: String
     region: String
     testQuerySql: String
-    syncCDAPI: Boolean!
     create: Boolean!
     primaryConn: DatasourceSourceInput!
     gsbConn: DatasourceSourceInput

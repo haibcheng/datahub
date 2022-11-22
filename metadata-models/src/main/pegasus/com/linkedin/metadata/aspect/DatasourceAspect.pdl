@@ -5,7 +5,6 @@ import com.linkedin.datasource.DatasourceDeprecation
 import com.linkedin.datasource.DatasourceProperties
 import com.linkedin.datasource.EditableDatasourceProperties
 import com.linkedin.datasource.DatasourceInfo
-import com.linkedin.datasource.DatasourceCustomDashboardInfo
 import com.linkedin.datasource.DatasourceConnectionPrimary
 import com.linkedin.datasource.DatasourceConnectionGSB
 import com.linkedin.common.InstitutionalMemory
@@ -29,7 +28,6 @@ typeref DatasourceAspect = union[
   DatasourceInfo,
   DatasourceConnectionPrimary,
   DatasourceConnectionGSB,
-  DatasourceCustomDashboardInfo,
   GlobalTags,
   GlossaryTerms,
   BrowsePaths
