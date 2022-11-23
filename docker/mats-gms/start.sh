@@ -55,6 +55,7 @@ COMMON="
     $WAIT_FOR_NEO4J \
     -timeout 240s \
     java $JAVA_OPTS $JMX_OPTS \
+    -DLOG_DIR=${LOG_DIR} \
     $OTEL_AGENT \
     $PROMETHEUS_AGENT \
     -jar jetty-runner.jar \
