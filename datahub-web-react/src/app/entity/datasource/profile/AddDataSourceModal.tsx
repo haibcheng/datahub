@@ -154,10 +154,6 @@ export default function AddDataSourceModal({
         return formData.sourceType === DbSourceTypeData.Postgres;
     };
 
-    const isOracleTNSType = () => {
-        return formData.oracleTNSType === 'tns';
-    };
-
     const checkFormData = () => {
         if (!formData) {
             return false;
@@ -616,6 +612,13 @@ export default function AddDataSourceModal({
         if (!item) {
             return;
         }
+        if (field === FormField.serviceName) {
+            item[FormField.tnsName] = '';
+        }
+        if (field === FormField.tnsName) {
+            item[FormField.serviceName] = '';
+            item[FormField.hostPort] = '';
+        }
         item[field] = value;
         updateDataSourceFormData(updatedData);
     };
@@ -934,7 +937,7 @@ export default function AddDataSourceModal({
                 <Form.Item
                     name={`hostPort_${info.id}`}
                     label="Host port"
-                    rules={[{ required: true, message: 'Please input connection host port!' }]}
+                    rules={[{ required: false, message: 'Please input connection host port!' }]}
                 >
                     <Input
                         placeholder="Please input connection host port"
@@ -991,7 +994,7 @@ export default function AddDataSourceModal({
                 <Form.Item
                     name={`tnsName_${info.id}`}
                     label="TNSName"
-                    rules={[{ required: true, message: 'Please input connection service name!' }]}
+                    rules={[{ required: false, message: 'Please input connection service name!' }]}
                 >
                     <Input
                         placeholder="Please input connection TNS name"
@@ -1011,7 +1014,7 @@ export default function AddDataSourceModal({
                 <Form.Item
                     name={`serviceName_${info.id}`}
                     label="ServiceName"
-                    rules={[{ required: true, message: 'Please input connection service name!' }]}
+                    rules={[{ required: false, message: 'Please input connection service name!' }]}
                 >
                     <Input
                         placeholder="Please input connection service name"
@@ -1027,27 +1030,8 @@ export default function AddDataSourceModal({
     const getOracleForm = (info: IFormConnectionData, index: number) => {
         return (
             <>
-                <Form.Item
-                    name={`oracleTNSType_${info.id}`}
-                    label="JDBCFormat"
-                    rules={[{ required: true, message: 'Please select JDBC Format!' }]}
-                >
-                    <Select
-                        defaultValue={info.tnsName === '' ? 'serviceName' : 'tns'}
-                        onChange={(value) => {
-                            selectChangeHandler(value, FormField.oracleTNSType);
-                        }}
-                    >
-                        <Option key="tns" value="tns">
-                            TNS
-                        </Option>
-                        <Option key="serviceName" value="serviceName">
-                            ServiceName
-                        </Option>
-                    </Select>
-                </Form.Item>
-                {isOracleTNSType() && getOracleTNSForm(info, index)}
-                {!isOracleTNSType() && getOracleServiceNameForm(info, index)}
+                {getOracleTNSForm(info, index)}
+                {getOracleServiceNameForm(info, index)}
             </>
         );
     };
