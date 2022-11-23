@@ -28,6 +28,7 @@ import com.linkedin.domain.Domains;
 import com.linkedin.entity.EntityResponse;
 import com.linkedin.entity.EnvelopedAspectMap;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nonnull;
 
@@ -85,12 +86,23 @@ public class DatasourceMapper implements ModelMapper<EntityResponse, Datasource>
 
     private void mapConnectionPrimary(@Nonnull Datasource datasource, @Nonnull DataMap dataMap) {
         DatasourceConnectionPrimary pri = new DatasourceConnectionPrimary(dataMap);
-        datasource.setPrimaryConn(DatasourceConnectionPrimaryMapper.map(pri));
+        DatasourceConnection dataConn = DatasourceConnectionPrimaryMapper.map(pri);
+        setOracleTNSType(datasource, dataConn);
+        datasource.setPrimaryConn(dataConn);
     }
 
     private void mapConnectionGSB(@Nonnull Datasource datasource, @Nonnull DataMap dataMap) {
         DatasourceConnectionGSB gsb = new DatasourceConnectionGSB(dataMap);
-        datasource.setGsbConn(DatasourceConnectionGSBMapper.map(gsb));
+        DatasourceConnection dataConn = DatasourceConnectionGSBMapper.map(gsb);
+        setOracleTNSType(datasource, dataConn);
+        datasource.setGsbConn(dataConn);
+    }
+
+    private void setOracleTNSType(Datasource datasource, DatasourceConnection dataConn) {
+        if(dataConn.getConnection() instanceof OracleSource) {
+            OracleSource os = (OracleSource)dataConn.getConnection();
+            datasource.setOracleTNSType (StringUtils.isNotEmpty(os.getTnsName()) ? "TNS" : "ServiceName");
+        }
     }
 
     private void mapDatasourceKey(@Nonnull Datasource datasource, @Nonnull DataMap dataMap) {
