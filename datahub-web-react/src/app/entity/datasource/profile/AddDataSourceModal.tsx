@@ -87,7 +87,7 @@ export default function AddDataSourceModal({
         return <Alert type="error" message={error?.message || 'Entity failed to load'} />;
     }
 
-    if (!originData) {
+    if (originData) {
         formData.group = groupList[0]?.urn;
     }
 
@@ -794,7 +794,6 @@ export default function AddDataSourceModal({
                             rules={[{ required: true, message: 'Please input connection hive meta store uri!' }]}
                         >
                             <Input
-                                type="text"
                                 placeholder="Please input connection hive meta store uri"
                                 autoComplete="off"
                                 defaultValue={info.hiveMetastoreUris}
@@ -855,7 +854,6 @@ export default function AddDataSourceModal({
                             rules={[{ required: true, message: 'Please input connection Bootstrap Server!' }]}
                         >
                             <Input
-                                type="text"
                                 placeholder="Please input connection bootstrap Server"
                                 autoComplete="off"
                                 defaultValue={info.bootstrap}
@@ -870,7 +868,6 @@ export default function AddDataSourceModal({
                             rules={[{ required: false, message: 'Please input connection Schema Registry URL!' }]}
                         >
                             <Input
-                                type="text"
                                 placeholder="Please input connection bootstrap Server"
                                 autoComplete="off"
                                 defaultValue={info.bootstrap}
@@ -885,7 +882,6 @@ export default function AddDataSourceModal({
                             rules={[{ required: false, message: 'Please input connection topic pattern allow!' }]}
                         >
                             <Input
-                                type="text"
                                 placeholder="Please input connection topic pattern allow"
                                 autoComplete="off"
                                 defaultValue={info.topicPatternsAllow}
@@ -909,9 +905,9 @@ export default function AddDataSourceModal({
                 >
                     {/* username as value ,will input issue */}
                     <Input
-                        // type="text"
                         placeholder="Please input connection username"
                         autoComplete="off"
+                        onBlur={(e) => updateDataSourceConnections(e.target.value, FormField.username, index)}
                         defaultValue={info.username}
                         onChange={(e) => updateDataSourceConnections(e.target.value, FormField.username, index)}
                     />
@@ -1037,7 +1033,7 @@ export default function AddDataSourceModal({
                     rules={[{ required: true, message: 'Please select JDBC Format!' }]}
                 >
                     <Select
-                        defaultValue={formData.oracleTNSType}
+                        defaultValue={info.tnsName === '' ? 'serviceName' : 'tns'}
                         onChange={(value) => {
                             selectChangeHandler(value, FormField.oracleTNSType);
                         }}
@@ -1242,7 +1238,6 @@ export default function AddDataSourceModal({
                             rules={[{ required: false, message: 'Please input connection schema pattern allow!' }]}
                         >
                             <Input
-                                type="text"
                                 placeholder="Please input connection schema pattern allow"
                                 autoComplete="off"
                                 defaultValue={info.schemaPatternAllow}
