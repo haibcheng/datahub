@@ -13,12 +13,15 @@ import com.linkedin.datahub.graphql.authorization.AuthorizationUtils;
 import com.linkedin.datahub.graphql.authorization.ConjunctivePrivilegeGroup;
 import com.linkedin.datahub.graphql.authorization.DisjunctivePrivilegeGroup;
 import com.linkedin.datahub.graphql.exception.AuthorizationException;
+import com.linkedin.datahub.graphql.generated.CorpGroup;
 import com.linkedin.datahub.graphql.generated.DatasourceCreateInput;
 import com.linkedin.datahub.graphql.generated.DatasourceSourceInput;
+import com.linkedin.datahub.graphql.types.corpgroup.mappers.CorpGroupMapper;
 import com.linkedin.datasource.DatasourceConnectionGSB;
 import com.linkedin.datasource.DatasourceConnectionPrimary;
 import com.linkedin.datasource.DatasourceInfo;
 import com.linkedin.datasource.sources.*;
+import com.linkedin.entity.EntityResponse;
 import com.linkedin.entity.client.EntityClient;
 import com.linkedin.events.metadata.ChangeType;
 import com.linkedin.metadata.authorization.PoliciesConfig;
@@ -29,13 +32,14 @@ import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 
 import javax.annotation.Nonnull;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import static com.linkedin.datahub.graphql.resolvers.ResolverUtils.bindArgument;
 import static com.linkedin.datahub.graphql.resolvers.datasource.DatasourceConstants.*;
-import static com.linkedin.metadata.Constants.BROWSE_PATHS_ASPECT_NAME;
-import static com.linkedin.metadata.Constants.OWNERSHIP_ASPECT_NAME;
+import static com.linkedin.metadata.Constants.*;
 
 public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<String>>
 {
@@ -243,30 +247,15 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
         final MetadataChangeProposal browsePathsProposal = new MetadataChangeProposal();
 
         if(input.getCreate()) {
-            Ownership ownership = new Ownership();
-            Owner owner = new Owner();
-            owner.setOwner(UrnUtils.getUrn(context.getActorUrn()));
-            owner.setType(OwnershipType.BUSINESS_OWNER);
-            owner.setSource(new OwnershipSource().setType(OwnershipSourceType.MANUAL));
-            Owner owner2 = new Owner();
-            owner2.setOwner(datasourceInfo.getGroup());
-            owner2.setType(OwnershipType.BUSINESS_OWNER);
-            owner2.setSource(new OwnershipSource().setType(OwnershipSourceType.MANUAL));
-            OwnerArray owners = new OwnerArray();
-            owners.add(owner);
-            owners.add(owner2);
-            ownership.setOwners(owners);
+            Ownership ownership = createOwnership(context, datasourceInfo);
             ownershipProposal.setEntityUrn(sourceUrn);
             ownershipProposal.setAspectName(OWNERSHIP_ASPECT_NAME);
             ownershipProposal.setEntityType("datasource");
             ownershipProposal.setAspect(GenericRecordUtils.serializeAspect(ownership));
             ownershipProposal.setChangeType(ChangeType.UPSERT);
 
-            BrowsePaths browsePaths = new BrowsePaths();
-            StringArray paths = new StringArray();
-            paths.add("/" + datasourceInfo.getRegion().toLowerCase() + "/" +
-                    primaryPlatformUrn.getPlatformNameEntity().toLowerCase());
-            browsePaths.setPaths(paths);
+            BrowsePaths browsePaths = createBrowsePaths(
+                    primaryPlatformUrn.getPlatformNameEntity(), datasourceInfo);
             browsePathsProposal.setEntityUrn(sourceUrn);
             browsePathsProposal.setAspectName(BROWSE_PATHS_ASPECT_NAME);
             browsePathsProposal.setEntityType("datasource");
@@ -310,5 +299,38 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
 
         return AuthorizationUtils.isAuthorized(context.getAuthorizer(),
                 context.getActorUrn(), entityUrn.getEntityType(), entityUrn.toString(), orPrivilegeGroups);
+    }
+
+    private Ownership createOwnership(QueryContext context, DatasourceInfo datasourceInfo) {
+        Ownership ownership = new Ownership();
+        Owner owner = new Owner();
+        owner.setOwner(UrnUtils.getUrn(context.getActorUrn()));
+        owner.setType(OwnershipType.BUSINESS_OWNER);
+        owner.setSource(new OwnershipSource().setType(OwnershipSourceType.MANUAL));
+        Owner owner2 = new Owner();
+        owner2.setOwner(datasourceInfo.getGroup());
+        owner2.setType(OwnershipType.BUSINESS_OWNER);
+        owner2.setSource(new OwnershipSource().setType(OwnershipSourceType.MANUAL));
+        OwnerArray owners = new OwnerArray();
+        owners.add(owner);
+        owners.add(owner2);
+        ownership.setOwners(owners);
+        return ownership;
+    }
+
+    private BrowsePaths createBrowsePaths(String platform, DatasourceInfo datasourceInfo) throws Exception {
+        Set<String> aspects = new HashSet<>();
+        aspects.add(CORP_GROUP_INFO_ASPECT_NAME);
+        EntityResponse entityResponse = entityService.getEntityV2(
+                CORP_GROUP_ENTITY_NAME, datasourceInfo.getGroup(), aspects);
+
+        assert entityResponse != null;
+        CorpGroup corpGroup = CorpGroupMapper.map(entityResponse);
+        BrowsePaths browsePaths = new BrowsePaths();
+        StringArray paths = new StringArray();
+        paths.add("/" + datasourceInfo.getRegion().toLowerCase() +
+                "/" + corpGroup.getProperties().getDisplayName().toLowerCase() + "/" + platform.toLowerCase());
+        browsePaths.setPaths(paths);
+        return browsePaths;
     }
 }
