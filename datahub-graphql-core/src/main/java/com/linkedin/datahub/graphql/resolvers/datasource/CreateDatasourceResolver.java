@@ -56,7 +56,9 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
                                             DatasourceConnectionGSB gsbConn) {
         DataPlatformUrn platformUrn;
         if (connInput.containsKey(POSTGRES_SOURCE_NAME)) {
-            PostgresSource postgres = bindArgument(connInput.get(POSTGRES_SOURCE_NAME), PostgresSource.class);
+            PostgresSource postgres = bindArgument(
+                    removeNullValues((Map<String, Object>)connInput.get(POSTGRES_SOURCE_NAME)),
+                    PostgresSource.class);
             postgres.setDriver(postgres.getDriver());
             if(gsbConn != null) {
                 gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(postgres));
@@ -65,7 +67,7 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             }
             platformUrn = new DataPlatformUrn(POSTGRES_SOURCE_NAME);
         } else if (connInput.containsKey(ORACLE_SOURCE_NAME)) {
-            Map<String, Object> params = (Map<String, Object>)connInput.get(ORACLE_SOURCE_NAME);
+            Map<String, Object> params = removeNullValues((Map<String, Object>)connInput.get(ORACLE_SOURCE_NAME));
             params.putIfAbsent("hostPort", "");
             params.putIfAbsent("serviceName", "");
             params.putIfAbsent("tnsName", "");
@@ -78,7 +80,9 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             }
             platformUrn = new DataPlatformUrn(ORACLE_SOURCE_NAME);
         } else if (connInput.containsKey(ICEBERG_SOURCE_NAME)) {
-            IcebergSource iceberg = bindArgument(connInput.get(ICEBERG_SOURCE_NAME), IcebergSource.class);
+            IcebergSource iceberg = bindArgument(
+                    removeNullValues((Map<String, Object>)connInput.get(ICEBERG_SOURCE_NAME)),
+                    IcebergSource.class);
             if(gsbConn != null) {
                 gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(iceberg));
             } else {
@@ -86,7 +90,9 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             }
             platformUrn = new DataPlatformUrn(ICEBERG_SOURCE_NAME);
         } else if (connInput.containsKey(KAFKA_SOURCE_NAME)) {
-            KafkaMetadataSource kafka = bindArgument(connInput.get(KAFKA_SOURCE_NAME), KafkaMetadataSource.class);
+            KafkaMetadataSource kafka = bindArgument(
+                    removeNullValues((Map<String, Object>)connInput.get(KAFKA_SOURCE_NAME)),
+                    KafkaMetadataSource.class);
             if(gsbConn != null) {
                 gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(kafka));
             } else {
@@ -94,7 +100,9 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             }
             platformUrn = new DataPlatformUrn(KAFKA_SOURCE_NAME);
         } else if (connInput.containsKey(MYSQL_SOURCE_NAME)) {
-            MysqlSource mysql = bindArgument(connInput.get(MYSQL_SOURCE_NAME), MysqlSource.class);
+            MysqlSource mysql = bindArgument(
+                    removeNullValues((Map<String, Object>)connInput.get(MYSQL_SOURCE_NAME)),
+                    MysqlSource.class);
             mysql.setDriver(mysql.getDriver());
             if(gsbConn != null) {
                 gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(mysql));
@@ -103,7 +111,9 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             }
             platformUrn = new DataPlatformUrn(MYSQL_SOURCE_NAME);
         } else if (connInput.containsKey(HIVE_SOURCE_NAME)) {
-            HiveSource hive = bindArgument(connInput.get(HIVE_SOURCE_NAME), HiveSource.class);
+            HiveSource hive = bindArgument(
+                    removeNullValues((Map<String, Object>)connInput.get(HIVE_SOURCE_NAME)),
+                    HiveSource.class);
             hive.setDriver(hive.getDriver());
             if(gsbConn != null) {
                 gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(hive));
@@ -112,7 +122,9 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             }
             platformUrn = new DataPlatformUrn(HIVE_SOURCE_NAME);
         } else if (connInput.containsKey(PINOT_SOURCE_NAME)) {
-            PinotSource pinot = bindArgument(connInput.get(PINOT_SOURCE_NAME), PinotSource.class);
+            PinotSource pinot = bindArgument(
+                    removeNullValues((Map<String, Object>)connInput.get(PINOT_SOURCE_NAME)),
+                    PinotSource.class);
             pinot.setDriver(pinot.getDriver());
             if(gsbConn != null) {
                 gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(pinot));
@@ -121,7 +133,9 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             }
             platformUrn = new DataPlatformUrn(PINOT_SOURCE_NAME);
         } else if (connInput.containsKey(PRESTO_SOURCE_NAME)) {
-            PrestoSource presto = bindArgument(connInput.get(PRESTO_SOURCE_NAME), PrestoSource.class);
+            PrestoSource presto = bindArgument(
+                    removeNullValues((Map<String, Object>)connInput.get(PRESTO_SOURCE_NAME)),
+                    PrestoSource.class);
             presto.setDriver(presto.getDriver());
             if(gsbConn != null) {
                 gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(presto));
@@ -130,7 +144,9 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             }
             platformUrn = new DataPlatformUrn(PRESTO_SOURCE_NAME);
         } else if (connInput.containsKey(TIDB_SOURCE_NAME)) {
-            TiDBSource tidb = bindArgument(connInput.get(TIDB_SOURCE_NAME), TiDBSource.class);
+            TiDBSource tidb = bindArgument(
+                    removeNullValues((Map<String, Object>)connInput.get(TIDB_SOURCE_NAME)),
+                    TiDBSource.class);
             tidb.setDriver(tidb.getDriver());
             if(gsbConn != null) {
                 gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(tidb));
@@ -139,7 +155,9 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             }
             platformUrn = new DataPlatformUrn(TIDB_SOURCE_NAME);
         } else if (connInput.containsKey(TRINO_SOURCE_NAME)) {
-            TrinoSource trino = bindArgument(connInput.get(TRINO_SOURCE_NAME), TrinoSource.class);
+            TrinoSource trino = bindArgument(
+                    removeNullValues((Map<String, Object>)connInput.get(TRINO_SOURCE_NAME)),
+                    TrinoSource.class);
             trino.setDriver(trino.getDriver());
             if(gsbConn != null) {
                 gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(trino));
@@ -148,7 +166,9 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             }
             platformUrn = new DataPlatformUrn(TRINO_SOURCE_NAME);
         } else if (connInput.containsKey(SNOWFLAKE_SOURCE_NAME)) {
-            SnowflakeSource snowflake = bindArgument(connInput.get(SNOWFLAKE_SOURCE_NAME), SnowflakeSource.class);
+            SnowflakeSource snowflake = bindArgument(
+                    removeNullValues((Map<String, Object>)connInput.get(SNOWFLAKE_SOURCE_NAME)),
+                    SnowflakeSource.class);
             snowflake.setDriver(snowflake.getDriver());
             if(gsbConn != null) {
                 gsbConn.setConnection(DatasourceConnectionGSB.Connection.create(snowflake));
@@ -332,5 +352,15 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
                 "/" + corpGroup.getProperties().getDisplayName().toLowerCase() + "/" + platform.toLowerCase());
         browsePaths.setPaths(paths);
         return browsePaths;
+    }
+
+    private Map<String, Object> removeNullValues(Map<String, Object> values) {
+        String[] keys = values.keySet().toArray(new String[0]);
+        for(String key : keys) {
+            if(values.get(key) == null) {
+                values.remove(key);
+            }
+        }
+        return values;
     }
 }
