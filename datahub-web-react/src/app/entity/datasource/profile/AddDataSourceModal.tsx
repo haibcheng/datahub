@@ -87,7 +87,7 @@ export default function AddDataSourceModal({
     }
 
     if (originData) {
-        formData.group = groupList[0]?.urn;
+        formData.group = originData.group;
     }
 
     const showValidateMsg = (msg) => {
@@ -712,7 +712,7 @@ export default function AddDataSourceModal({
                 >
                     <Select
                         disabled={!formData.create}
-                        defaultValue={groupList[0]?.urn}
+                        defaultValue={formData.create ? groupList[0]?.urn : formData.group}
                         onChange={(value) => {
                             selectChangeHandler(value, FormField.group);
                         }}
