@@ -59,7 +59,6 @@ export default function AddDataSourceModal({
         create: true,
         group: groupList[0]?.urn,
         region: regionList[0]?.value,
-        oracleTNSType: 'tns',
         connections: [
             {
                 id: 1,

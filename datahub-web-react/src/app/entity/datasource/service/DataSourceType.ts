@@ -44,7 +44,6 @@ export interface IFormData {
     group: string;
     region: string;
     connections: any[];
-    oracleTNSType: string;
 }
 
 export enum FormField {
@@ -77,7 +76,6 @@ export enum FormField {
     serviceName = 'serviceName',
     catalog = 'catalog',
     schema = 'schema',
-    oracleTNSType = 'oracleTNSType',
 }
 
 export enum NotificationLevel {

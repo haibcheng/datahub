@@ -56,7 +56,6 @@ query getBrowseResults($input: BrowseInput!) {
                 globalTags {
                     ...globalTagsFields
                 }
-                oracleTNSType
                 region
                 primaryConn {
                     dataCenter

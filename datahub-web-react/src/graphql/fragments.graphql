@@ -919,7 +919,6 @@ fragment nonRecursiveDatasourceFields on Datasource {
     ownership {
         ...ownershipFields
     }
-    oracleTNSType
     region
     primaryConn {
         dataCenter

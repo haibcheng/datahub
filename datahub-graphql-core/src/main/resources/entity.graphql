@@ -9754,8 +9754,6 @@ type Datasource implements EntityWithRelationships & Entity {
 
     alias: String
 
-    oracleTNSType: String
-
     region: String
 
     testQuerySql: String

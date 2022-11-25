@@ -52,7 +52,6 @@ export default function DatasourceEdit({ datasource: { urn } }: Props) {
         group: dataSource?.group?.urn || '',
         region: dataSource?.region || '',
         connections: conns,
-        oracleTNSType: dataSource?.oracleTNSType || 'tns',
     };
 
     const updateModalStatus = () => {
