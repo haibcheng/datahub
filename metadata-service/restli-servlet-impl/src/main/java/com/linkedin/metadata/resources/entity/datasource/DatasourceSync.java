@@ -187,7 +187,7 @@ public class DatasourceSync {
                                 .maxSize(getIntStr(eachConfig, "maxSize"))
                                 .minSize(getIntStr(eachConfig, "minSize"))
                                 .idleSize(getIntStr(eachConfig, "idleSize"))
-                                .status(getValueStr(eachConfig, "status", "1"))
+                                .status(getValueStr(eachConfig, "status"))
                                 .hostPort(hostPort)
                                 .database(database)
                                 .jdbcParams(jdbcParams)
@@ -244,8 +244,8 @@ public class DatasourceSync {
             return;
         }
         for (Source source : targetSources) {
-            log.info("Saving datasource[" + region + "," + group + ","
-                    + source.getDataSourceType() + "," + source.getDataSourceName() + "...");
+            log.info("Creating datasource[" + region + "," + group + ","
+                    + source.getDataSourceType() + "," + source.getDataSourceName() + "]...");
             try {
                 this.datasourceService.createDatasource(source, region, group);
             } catch (Exception ex) {
@@ -271,6 +271,7 @@ public class DatasourceSync {
             String ownerUrnStr = "urn:li:corpuser:" + owner;
             Urn ownerUrn = Urn.createFromString(ownerUrnStr);
             if (!this.entityService.exists(ownerUrn)) {
+                log.info("Creating user[" + ownerUrn + "]...");
                 this.nativeUserService.createNativeUser(
                         ownerUrnStr, "",
                         owner + "@cisco.com",
@@ -338,11 +339,7 @@ public class DatasourceSync {
     }
 
     private String getValueStr(JsonNode target, String fieldName) {
-        return getValueStr(target, fieldName, null);
-    }
-
-    private String getValueStr(JsonNode target, String fieldName, String defaultValue) {
-        return target.get(fieldName) == null ? defaultValue : target.get(fieldName).asText();
+        return target.get(fieldName) == null ? null : target.get(fieldName).asText();
     }
 
     private int getIntStr(JsonNode target, String fieldName) {

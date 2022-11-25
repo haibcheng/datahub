@@ -76,6 +76,9 @@ public class GroupService {
     try {
       // First, fetch user's group membership aspect.
       NativeGroupMembership nativeGroupMembership = getExistingNativeGroupMembership(userUrn, authentication);
+      if (nativeGroupMembership.getNativeGroups().contains(groupUrn)) {
+        return;
+      }
       // Handle the duplicate case.
       nativeGroupMembership.getNativeGroups().remove(groupUrn);
       nativeGroupMembership.getNativeGroups().add(groupUrn);
