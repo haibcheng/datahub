@@ -1,5 +1,5 @@
-# cud_datasource_monitor.yaml
-name: "cud_datasource_monitor"
+# udp_dataset.yaml
+name: "udp_dataset"
 source:
   type: "kafka"
   config:
@@ -12,10 +12,13 @@ source:
 action:
   type: "wap_actions.change_monitor:UrlNotificationAction"
   config:
+    type: UDP
     output_json: ${OUTPUT_JSON:-true}
     cache_root: ${CACHE_ROOT_PATH}
     entity_types:
-      - datasource
+      - dataset
+    entity_props:
+      - origin=UDP
     ci_config:
       access_token_url: ${CI_ACCESS_TOKEN_URL:-https://idbrokerbts.webex.com/idb/oauth2/v1/access_token}
       username: ${CI_ACCESS_TOKEN_USER:-user}
@@ -25,10 +28,4 @@ action:
       machine_account_pass: ${CI_MACHINE_PASS:-pass}
     callbacks:
       - region: AMER
-        url: https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh
-      - region: CANADA
-        url: https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh
-      - region: EMEA
-        url: https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh
-      - region: FedRAMP
         url: https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh
