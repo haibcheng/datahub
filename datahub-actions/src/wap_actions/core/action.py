@@ -19,14 +19,14 @@ class CommonAction(Action, ABC):
 
     def act(self, event: EventEnvelope) -> None:
         event_json = json.loads(event.as_json()).get("event")
-        if not self.matcher.matches(event_json):
+        re, target = self.matcher.matches(event_json)
+        if not re:
             return
         if self.config.output_json:
             message = json.dumps(json.loads(event.as_json()), indent=4)
             logger.info(message)
         entity_urn = event_json.get("entityUrn")
         if entity_urn is not None:
-            target = self.matcher.target_of()
             if target is None:
                 self._urn_dict.add(key=entity_urn)
             else:

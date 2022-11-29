@@ -10,9 +10,6 @@ class Matcher:
     def matches_type(self):
         return False
 
-    def target_of(self):
-        pass
-
 
 class EntityTypeMatcher(Matcher):
 
@@ -20,8 +17,8 @@ class EntityTypeMatcher(Matcher):
         if self.config.entity_types is not None and len(self.config.entity_types) > 0:
             entity_type = event_json.get("entityType")
             if entity_type is None or entity_type not in self.config.entity_types:
-                return False
-        return True
+                return False, None
+        return True, None
 
     def matches_type(self):
         return self.match_type == self.config.type
@@ -35,31 +32,27 @@ class PropValueMatcher(EntityTypeMatcher):
 
     def matches(self, event_json):
         if not super().matches(event_json):
-            return False
+            return False, None
         if self.config.entity_props is not None and len(self.config.entity_props) > 0:
             if self.aspect_name != event_json.get("aspectName"):
-                return False
+                return False, None
             aspect = event_json.get("aspect")
             if aspect is None or "value" not in aspect.keys():
-                return False
-            self.props = json.loads(aspect.get("value").replace("\\", "")).get("customProperties")
-            return self._match_value()
-        return True
+                return False, None
+            props = json.loads(aspect.get("value").replace("\\", "")).get("customProperties")
+            return self._match_value(props=props), props
+        return True, None
 
-    def _match_value(self):
+    def _match_value(self, props: dict):
         for each_prop in self.config.entity_props:
             pos = each_prop.index("=")
             key = each_prop[0:pos].strip()
-            if key not in self.props.keys():
+            if key not in props.keys():
                 return False
-            if self.props[key] != each_prop[pos+1:len(each_prop)].strip():
+            if props[key] != each_prop[pos+1:len(each_prop)].strip():
                 return False
         return True
 
-    def target_of(self):
-        return self.props
-
     def __init__(self, config: UrlNotificationConfig, match_type: str, aspect_name: str):
         super().__init__(config=config, match_type=match_type)
-        self.props = None
         self.aspect_name = aspect_name
