@@ -19,13 +19,6 @@ action:
       - dataset
     entity_props:
       - origin=UDP
-    ci_config:
-      access_token_url: ${CI_ACCESS_TOKEN_URL:-https://idbrokerbts.webex.com/idb/oauth2/v1/access_token}
-      username: ${CI_ACCESS_TOKEN_USER:-user}
-      password: ${CI_ACCESS_TOKEN_PASS:-pass}
-      bearer_token_url: ${CI_BEARER_TOKEN_URL:-https://idbrokerbts.webex.com/idb/token/6078fba4-49d9-4291-9f7b-80116aab6974/v2/actions/GetBearerToken/invoke}
-      machine_account_name: ${CI_MACHINE_NAME:-CTGWAP-DATAHUB}
-      machine_account_pass: ${CI_MACHINE_PASS:-pass}
     callbacks:
       - region: AMER
-        url: https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh
+        url: https://wapudp-lab.webex.com/dolphinscheduler/api/etl/nodeStatus

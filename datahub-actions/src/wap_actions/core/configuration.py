@@ -14,5 +14,5 @@ class UrlNotificationConfig(BaseModel):
     cache_root: str
     entity_types: Optional[list[str]]
     entity_props: Optional[list[str]]
-    ci_config: CITokenConfig
+    ci_config: Optional[CITokenConfig]
     callbacks: list[CallbackApi]

@@ -1,5 +1,5 @@
 from wap_actions.service.ci_token import CITokenConfig
-from wap_actions.service.notification import UrlNotificationService
+from wap_actions.service.notification import CudNotificationService
 
 
 def test_notify():
@@ -13,10 +13,10 @@ def test_notify():
         machine_account_name='CTGWAP-DATAHUB',
         machine_account_pass='pass'
     )
-    notification_s = UrlNotificationService(
+    notification_s = CudNotificationService(
         ci_config=ci_config
     )
     try:
-        notification_s.notify(url='https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh1')
+        notification_s.notify(url='https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh')
     except Exception as error:
         print(repr(error))

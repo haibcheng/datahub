@@ -18,28 +18,53 @@ class AtomicInteger(object):
             self._value = 0
 
 
-class AtomicList(object):
+class AtomicDict(object):
 
-    def __init__(self, unique_value: bool = False, cache: Cache = None):
-        self._values = list()
+    def __init__(self, unique_value: bool = False, cache: Cache = None, separator: str = ""):
+        self._values = dict()
         self._cache = cache
         self._unique_value = unique_value
+        self._separator = separator
         if self._cache is not None:
             c_values = self._cache.load()
             if c_values is not None and len(c_values) > 0:
                 for e in c_values:
-                    if e not in self._values or not self._unique_value:
-                        self._values.append(e)
+                    key = self.key_of(e)
+                    if key not in self._values.keys() or not self._unique_value:
+                        self._values[key] = self.value_of(e)
         self._lock = Lock()
 
-    def add(self, element: str):
+    def key_of(self, element: str):
+        if self._separator is None or self._separator == "":
+            return element
+        try:
+            idx = element.index(self._separator)
+            return element[:idx]
+        except ValueError:
+            return element
+
+    def value_of(self, element: str):
+        if self._separator is None or self._separator == "":
+            return ""
+        try:
+            idx = element.index(self._separator)
+            return element[idx + len(self._separator):]
+        except ValueError:
+            return ""
+
+    def add(self, key: str, value: str = None):
         with self._lock:
-            self._add_element(element)
+            if value is None:
+                self._add_element(key)
+            else:
+                self._add_element(key + self._separator + value)
 
     def fetch_elements(self):
         cp_values = list()
         with self._lock:
-            for e in self._values:
+            for e in self._values.keys():
+                if self._values[e] != "":
+                    e += self._separator + self._values[e]
                 cp_values.append(e)
                 if self._cache is not None:
                     self._cache.remove(e)
@@ -54,7 +79,8 @@ class AtomicList(object):
                 self._add_element(e)
 
     def _add_element(self, element: str):
-        if element not in self._values or not self._unique_value:
-            self._values.append(element)
+        key = self.key_of(element)
+        if key not in self._values.keys() or not self._unique_value:
+            self._values[key] = self.value_of(element)
             if self._cache is not None:
                 self._cache.add(element)
