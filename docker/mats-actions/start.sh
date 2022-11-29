@@ -17,7 +17,8 @@
 touch /tmp/datahub/logs/actions/actions.out
 
 mkdir -p "$CACHE_ROOT_PATH"
-mkdir -p "$ACTION_ROOT_PATH"
+mkdir -p "$ACTION_ROOT_PATH/conf"
+mkdir -p "$ACTION_ROOT_PATH/system/conf"
 
 # Deploy System Actions
 if [ "$(ls -A $ACTION_ROOT_PATH/system/conf/)" ]; then
