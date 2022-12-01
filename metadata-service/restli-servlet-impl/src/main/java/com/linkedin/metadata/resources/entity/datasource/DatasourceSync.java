@@ -199,7 +199,7 @@ public class DatasourceSync {
                 );
             }
 
-            if(!builder.configs.isEmpty()) {
+            if (!builder.configs.isEmpty()) {
                 targetSources.add(builder.build());
             }
         }
