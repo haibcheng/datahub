@@ -201,6 +201,10 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             CorpGroupUrn corpGroupUrn = CorpGroupUrn.createFromString(input.getGroup());
             datasourceInfo.setGroup(corpGroupUrn);
         }
+        if(input.getGroup() == null || input.getGroup().equalsIgnoreCase("urn:li:corpGroup:none")) {
+            throw new RuntimeException("No group was found");
+        }
+
         if (input.getAlias() != null) {
             datasourceInfo.setAlias(input.getAlias());
         }
