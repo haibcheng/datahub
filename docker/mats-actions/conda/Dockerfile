@@ -27,15 +27,12 @@ RUN chown -R rhel /home/rhel/datahub-actions \
     && chown rhel /home/rhel/start_datahub_actions.sh \
     && chmod a+x /home/rhel/start_datahub_actions.sh
 
-RUN mkdir -p /etc/datahub/actions/conf  \
-    && mkdir -p /etc/datahub/actions/system/conf  \
-    && mkdir -p /tmp/datahub/logs/actions/system
+RUN mkdir -p /home/rhel/actions/conf  \
+    && mkdir -p /home/rhel/actions/logs
 
-COPY datahub-actions/config /etc/datahub/actions/conf
-COPY docker/mats-actions/executor.yaml /etc/datahub/actions/system/conf
+COPY datahub-actions/config /home/rhel/actions/conf
 
-RUN chown -R rhel /etc/datahub \
-    && chown -R rhel /tmp/datahub
+RUN chown -R rhel /home/rhel/actions
 
 USER rhel
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-$(arch).sh \

@@ -14,49 +14,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-touch /tmp/datahub/logs/actions/actions.out
+touch /home/rhel/actions/logs/actions.out
 
 mkdir -p "$CACHE_ROOT_PATH"
 
-# Deploy System Actions
-if [ "$(ls -A /etc/datahub/actions/system/conf/)" ]; then
-    config_files=""
-    # .yml
-    for file in /etc/datahub/actions/system/conf/*.yml;
+if [ "$(ls -A /home/rhel/actions/conf/)" ]; then
+    #.yml
+    for file in /home/rhel/actions/conf/*.yml;
     do
         if [ -f "$file" ]; then
             config_files+="-c $file "
         fi
     done
     #.yaml
-    for file in /etc/datahub/actions/system/conf/*.yaml;
+    for file in /home/rhel/actions/conf/*.yaml;
     do
         if [ -f "$file" ]; then
             config_files+="-c $file "
         fi
     done
 else
-    echo "No system action configurations found. Not starting system actions."
+    echo "No action configurations found. Not starting actions."
 fi
 
-# Deploy User Actions
-if [ "$(ls -A /etc/datahub/actions/conf/)" ]; then
-    # .yml
-    for file in /etc/datahub/actions/conf/*.yml;
-    do
-        if [ -f "$file" ]; then
-            config_files+="-c $file "
-        fi
-    done
-    #.yaml
-    for file in /etc/datahub/actions/conf/*.yaml;
-    do
-        if [ -f "$file" ]; then
-            config_files+="-c $file "
-        fi
-    done
-else
-    echo "No user action configurations found. Not starting user actions."
-fi
-
-datahub actions $config_files
+datahub actions "$config_files"
