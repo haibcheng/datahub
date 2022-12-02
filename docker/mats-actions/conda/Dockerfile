@@ -47,8 +47,8 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-$(arch).sh 
 
 RUN python3 -m ensurepip --upgrade \
     && python3 -m pip install --upgrade pip wheel setuptools \
-    && python3 -m pip install --upgrade acryl-datahub \
-    && python3 -m pip install --upgrade acryl-datahub-actions \
+    && python3 -m pip install --upgrade acryl-datahub==v0.9.0 \
+    && python3 -m pip install --upgrade acryl-datahub-actions==v0.0.8 \
     && pip install 'acryl-datahub-actions[executor]'
 
 RUN cd /home/rhel/datahub-actions  \
@@ -59,4 +59,4 @@ USER root
 
 STOPSIGNAL SIGINT
 
-CMD dockerize -wait http://$DATAHUB_GMS_HOST:$DATAHUB_GMS_PORT/health -timeout 240s /home/rhel/start_datahub_actions.sh
+CMD ["/bin/sh", "-c", "dockerize -wait http://$DATAHUB_GMS_HOST:$DATAHUB_GMS_PORT/health -timeout 240s /home/rhel/start_datahub_actions.sh"]
