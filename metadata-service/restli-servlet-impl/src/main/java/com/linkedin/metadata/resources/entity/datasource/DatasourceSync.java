@@ -34,6 +34,7 @@ public class DatasourceSync {
     private GroupService groupService;
     private NativeUserService nativeUserService;
     private DatasourceService datasourceService;
+    private String url = "http://10.29.42.205:8023/api/v1/datasource/datasources-for-datahub";
 
     public static void main(String[] args) {
         new DatasourceSync().sync();
@@ -41,13 +42,14 @@ public class DatasourceSync {
 
     private DatasourceSync() { }
 
-    public DatasourceSync(EntityService entityService, JavaEntityClient entityClient, GraphService graphService) {
+    public DatasourceSync(EntityService entityService, JavaEntityClient entityClient, GraphService graphService, String url) {
         this.entityService = entityService;
         this.entityClient = entityClient;
         this.graphClient = new JavaGraphClient(graphService);
         this.groupService = new GroupService(entityClient, entityService, this.graphClient);
         this.nativeUserService = new NativeUserService(entityService, entityClient);
         this.datasourceService = new DatasourceService(entityClient, entityService);
+        this.url = url;
     }
 
     public List<String> sync() {
@@ -321,8 +323,7 @@ public class DatasourceSync {
 
     private JsonNode getDataSources(String region) throws Exception {
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(
-                "http://10.29.42.205:8023/api/v1/datasource/datasources-for-datahub?region=" + region);
+        HttpGet httpGet = new HttpGet(this.url + "?region=" + region);
         CloseableHttpResponse response = null;
         try {
             response = httpclient.execute(httpGet);
