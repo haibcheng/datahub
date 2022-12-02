@@ -21,7 +21,7 @@ mkdir -p "$CACHE_ROOT_PATH"
 # Deploy System Actions
 if [ "$(ls -A /etc/datahub/actions/system/conf/)" ]; then
     config_files=""
-    # .yml
+    #.yml
     for file in /etc/datahub/actions/system/conf/*.yml;
     do
         if [ -f "$file" ]; then
@@ -41,7 +41,7 @@ fi
 
 # Deploy User Actions
 if [ "$(ls -A /etc/datahub/actions/conf/)" ]; then
-    # .yml
+    #.yml
     for file in /etc/datahub/actions/conf/*.yml;
     do
         if [ -f "$file" ]; then
@@ -59,4 +59,4 @@ else
     echo "No user action configurations found. Not starting user actions."
 fi
 
-datahub actions "$config_files"
+datahub-actions actions $config_files
