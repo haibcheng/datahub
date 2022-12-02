@@ -88,6 +88,8 @@ export default function AddDataSourceModal({
 
     if (originData) {
         formData.group = originData.group;
+    } else {
+        formData.group = groupList[0]?.urn;
     }
 
     const showValidateMsg = (msg) => {
@@ -611,7 +613,7 @@ export default function AddDataSourceModal({
         if (!item) {
             return;
         }
-        if (field === FormField.serviceName) {
+        if (field === FormField.serviceName || field === FormField.hostPort) {
             item[FormField.tnsName] = '';
         }
         if (field === FormField.tnsName) {
@@ -712,7 +714,7 @@ export default function AddDataSourceModal({
                 >
                     <Select
                         disabled={!formData.create}
-                        defaultValue={formData.create ? groupList[0]?.urn : formData.group}
+                        defaultValue={formData.group}
                         onChange={(value) => {
                             selectChangeHandler(value, FormField.group);
                         }}
@@ -936,7 +938,7 @@ export default function AddDataSourceModal({
                 <Form.Item
                     name={`hostPort_${info.id}`}
                     label="Host port"
-                    rules={[{ required: false, message: 'Please input connection host port!' }]}
+                    rules={[{ required: true, message: 'Please input connection host port!' }]}
                 >
                     <Input
                         placeholder="Please input connection host port"
