@@ -16,20 +16,20 @@
 
 touch /tmp/datahub/logs/actions/actions.out
 
-mkdir -p "$CACHE_ROOT_PATH"
+mkdir -p "$DATAHUB_ACTIONS_HOME"/cache
 
 # Deploy System Actions
-if [ "$(ls -A /etc/datahub/actions/system/conf/)" ]; then
+if [ "$(ls -A "$DATAHUB_ACTIONS_HOME"/system/conf/)" ]; then
     config_files=""
     #.yml
-    for file in /etc/datahub/actions/system/conf/*.yml;
+    for file in "$DATAHUB_ACTIONS_HOME"/system/conf/*.yml;
     do
         if [ -f "$file" ]; then
             config_files+="-c $file "
         fi
     done
     #.yaml
-    for file in /etc/datahub/actions/system/conf/*.yaml;
+    for file in "$DATAHUB_ACTIONS_HOME"/system/conf/*.yaml;
     do
         if [ -f "$file" ]; then
             config_files+="-c $file "
@@ -40,16 +40,16 @@ else
 fi
 
 # Deploy User Actions
-if [ "$(ls -A /etc/datahub/actions/conf/)" ]; then
+if [ "$(ls -A "$DATAHUB_ACTIONS_HOME"/conf/)" ]; then
     #.yml
-    for file in /etc/datahub/actions/conf/*.yml;
+    for file in "$DATAHUB_ACTIONS_HOME"/conf/*.yml;
     do
         if [ -f "$file" ]; then
             config_files+="-c $file "
         fi
     done
     #.yaml
-    for file in /etc/datahub/actions/conf/*.yaml;
+    for file in "$DATAHUB_ACTIONS_HOME"/conf/*.yaml;
     do
         if [ -f "$file" ]; then
             config_files+="-c $file "

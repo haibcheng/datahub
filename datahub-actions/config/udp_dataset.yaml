@@ -14,7 +14,7 @@ action:
   config:
     type: UDP
     output_json: ${OUTPUT_JSON:-true}
-    cache_root: ${CACHE_ROOT_PATH}
+    cache_root: ${DATAHUB_ACTIONS_HOME}/cache
     entity_types:
       - dataset
     entity_props:
