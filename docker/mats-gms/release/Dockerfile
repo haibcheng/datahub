@@ -3,7 +3,7 @@ ARG APP_ENV=prod
 ARG FIPS=nonfips
 ARG OSAAS_VERSION=1.9.202207
 
-FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
+FROM registry-rmc.webex.com/mats/rhel8-osaas-${FIPS}:${OSAAS_VERSION} as base
 
 ENV USER=rhel
 
