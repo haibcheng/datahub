@@ -88,6 +88,7 @@ export default function AddDataSourceModal({
 
     if (originData) {
         formData.group = originData.group;
+        console.log('originData====', originData);
     } else {
         formData.group = groupList[0]?.urn;
     }
@@ -613,14 +614,57 @@ export default function AddDataSourceModal({
         if (!item) {
             return;
         }
-        if (field === FormField.serviceName || field === FormField.hostPort) {
+        console.log('updateDataSourceConnections field....', field, item[field], value);
+        console.log('formData field....', formData, formData.connections[ix]);
+        // if (isOracle() && field === FormField.serviceName) {
+        //     if (value === '') {
+        //         if (formData.connections[ix].hostPort === '') {
+        //             if (formData.connections[ix].tnsName === '') {
+        //                 isTns = '';
+        //             } else {
+        //                 isTns = 'true';
+        //             }
+        //         } else {
+        //             isTns = 'false';
+        //         }
+        //     } else {
+        //         isTns = 'false';
+        //     }
+        // }
+        // if (isOracle() && field === FormField.hostPort) {
+        //     if (value === '') {
+        //         if (formData.connections[ix].serviceName === '') {
+        //             if (formData.connections[ix].tnsName === '') {
+        //                 isTns = '';
+        //             } else {
+        //                 isTns = 'true';
+        //             }
+        //         } else {
+        //             isTns = 'false';
+        //         }
+        //     } else {
+        //         isTns = 'false';
+        //     }
+        // }
+        // if (isOracle() && field === FormField.tnsName) {
+        //     if (value === '') {
+        //         if (formData.connections[ix].serviceName === '' && formData.connections[ix].hostPort === '') {
+        //             isTns = '';
+        //         } else {
+        //             isTns = 'false';
+        //         }
+        //     } else {
+        //         isTns = 'true';
+        //     }
+        // }
+        item[field] = value;
+        if (isOracle() && (field === FormField.serviceName || field === FormField.hostPort)) {
             item[FormField.tnsName] = '';
         }
-        if (field === FormField.tnsName) {
+        if (isOracle() && field === FormField.tnsName) {
             item[FormField.serviceName] = '';
             item[FormField.hostPort] = '';
         }
-        item[field] = value;
         updateDataSourceFormData(updatedData);
     };
 
@@ -938,10 +982,11 @@ export default function AddDataSourceModal({
                 <Form.Item
                     name={`hostPort_${info.id}`}
                     label="Host port"
-                    rules={[{ required: true, message: 'Please input connection host port!' }]}
+                    rules={[{ required: false, message: 'Please input connection host port!' }]}
                 >
                     <Input
                         placeholder="Please input connection host port"
+                        disabled={isOracle() && info.tnsName !== '' && !formData.create}
                         autoComplete="off"
                         defaultValue={info.hostPort}
                         onChange={(e) => updateDataSourceConnections(e.target.value, FormField.hostPort, index)}
@@ -995,11 +1040,12 @@ export default function AddDataSourceModal({
                 <Form.Item
                     name={`tnsName_${info.id}`}
                     label="TNSName"
-                    rules={[{ required: false, message: 'Please input connection service name!' }]}
+                    rules={[{ required: false, message: 'Please input connection tns name!' }]}
                 >
                     <Input
                         placeholder="Please input connection TNS name"
                         autoComplete="off"
+                        disabled={isOracle() && (info.serviceName !== '' || info.hostPort !== '') && !formData.create}
                         defaultValue={info.tnsName}
                         onChange={(e) => updateDataSourceConnections(e.target.value, FormField.tnsName, index)}
                     />
@@ -1019,6 +1065,7 @@ export default function AddDataSourceModal({
                 >
                     <Input
                         placeholder="Please input connection service name"
+                        disabled={isOracle() && info.tnsName !== '' && !formData.create}
                         autoComplete="off"
                         defaultValue={info.serviceName}
                         onChange={(e) => updateDataSourceConnections(e.target.value, FormField.serviceName, index)}
