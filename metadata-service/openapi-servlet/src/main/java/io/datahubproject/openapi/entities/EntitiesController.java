@@ -128,7 +128,7 @@ public class EntitiesController {
     }
   }
 
-  @DeleteMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+  //@DeleteMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<RollbackRunResultDto>> deleteEntities(
       @Parameter(name = "urns", required = true, description = "A list of raw urn strings, only supports a single entity type per request.")
       @RequestParam("urns") @Nonnull String[] urns,
