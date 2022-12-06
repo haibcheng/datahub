@@ -22,8 +22,8 @@ COPY ./docker/mats-confluent/cp-schema-registry/docker /etc/confluent/docker/
 
 RUN echo "===> Setting up ${COMPONENT} dirs" \
     && mkdir -p /etc/${COMPONENT}/secrets /usr/logs \
-    && chown -R 1000:1000 /etc/${COMPONENT} /usr/logs /etc/confluent/docker \
-    && chmod -R ug+w /etc/${COMPONENT} /etc/confluent/docker \
+    && chown -R rhel:rhel /etc/${COMPONENT} /usr/logs /etc/confluent/docker \
+    && chmod -R +x /etc/${COMPONENT} /etc/confluent/docker \
     && chmod -R 755 /usr/bin && chmod -R 755 /usr/share/java \
     && dnf -y install hostname
 
