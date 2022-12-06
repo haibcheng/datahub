@@ -9,22 +9,6 @@ ARG PATH="/home/rhel/miniconda3/bin:${PATH}"
 ENV COMPONENT=schema-registry
 RUN yum install -y WBXjava-1.8.0-openjdk-hardening WBXFIPSJar wget
 
-USER rhel
-
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-$(arch).sh \
-    && mkdir /home/rhel/.conda \
-    && bash Miniconda3-latest-Linux-$(arch).sh -b \
-    && rm -f Miniconda3-latest-Linux-$(arch).sh \
-    && conda install git
-
-RUN python3 -m ensurepip --upgrade \
-    && python3 -m pip install --upgrade pip wheel setuptools
-
-ENV PYTHON_CONFLUENT_DOCKER_UTILS_INSTALL_SPEC=git+https://github.com/confluentinc/confluent-docker-utils@v0.0.52
-RUN python3 -m pip install --upgrade "${PYTHON_CONFLUENT_DOCKER_UTILS_INSTALL_SPEC}"
-
-USER root
-
 COPY ./docker/mats-confluent/confluent-7.2.0/bin/schema-registry-run-class /usr/bin/
 COPY ./docker/mats-confluent/confluent-7.2.0/bin/schema-registry-start /usr/bin/
 COPY ./docker/mats-confluent/confluent-7.2.0/bin/schema-registry-stop /usr/bin/
@@ -43,8 +27,24 @@ RUN echo "===> Setting up ${COMPONENT} dirs" \
     && chmod -R 755 /usr/bin && chmod -R 755 /usr/share/java \
     && dnf -y install hostname
 
+USER rhel
+
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-$(arch).sh \
+    && mkdir /home/rhel/.conda \
+    && bash Miniconda3-latest-Linux-$(arch).sh -b \
+    && rm -f Miniconda3-latest-Linux-$(arch).sh \
+    && conda install git
+
+RUN python3 -m ensurepip --upgrade \
+    && python3 -m pip install --upgrade pip wheel setuptools
+
+ENV PYTHON_CONFLUENT_DOCKER_UTILS_INSTALL_SPEC=git+https://github.com/confluentinc/confluent-docker-utils@v0.0.52
+RUN python3 -m pip install --upgrade "${PYTHON_CONFLUENT_DOCKER_UTILS_INSTALL_SPEC}"
+
 EXPOSE 8081
 
 ENV JAVA_OPTS=""
+
+ENTRYPOINT ["/usr/local/bin/dumb-init","/main.sh"]
 
 CMD ["/etc/confluent/docker/run"]
