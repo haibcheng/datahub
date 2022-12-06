@@ -10,6 +10,7 @@ ENV COMPONENT=schema-registry
 RUN yum install -y WBXjava-1.8.0-openjdk-hardening WBXFIPSJar wget
 
 USER rhel
+
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-$(arch).sh \
     && mkdir /home/rhel/.conda \
     && bash Miniconda3-latest-Linux-$(arch).sh -b \
@@ -37,12 +38,10 @@ COPY ./docker/mats-confluent/cp-schema-registry/docker /etc/confluent/docker/
 
 RUN echo "===> Setting up ${COMPONENT} dirs" \
     && mkdir -p /etc/${COMPONENT}/secrets /usr/logs \
-    && chown 1000:1000 -R /etc/${COMPONENT} /usr/logs /etc/confluent/docker \
+    && chown -R 1000:1000 /etc/${COMPONENT} /usr/logs /etc/confluent/docker \
     && chmod -R ug+w /etc/${COMPONENT} /etc/confluent/docker \
     && chmod -R 755 /usr/bin && chmod -R 755 /usr/share/java \
     && dnf -y install hostname
-
-VOLUME ["/etc/schema-registry/secrets"]
 
 EXPOSE 8081
 
