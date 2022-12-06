@@ -1,7 +1,7 @@
 ARG FIPS=nonfips
-ARG OSAAS_VERSION=1.9.202207
+ARG OSAAS_VERSION=1.14.202212
 
-FROM registry-rmc.webex.com/mats/rhel8-osaas-${FIPS}:${OSAAS_VERSION} as base
+FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
 
 ENV COMPONENT=schema-registry
 RUN yum install -y WBXjava-1.8.0-openjdk-hardening WBXFIPSJar python3.9 python39-pip python39-setuptools git
@@ -24,11 +24,9 @@ COPY ./docker/mats-confluent/cp-schema-registry/docker /etc/confluent/docker/
 
 RUN echo "===> Setting up ${COMPONENT} dirs" \
     && mkdir -p /etc/${COMPONENT}/secrets /usr/logs \
-    && chown 1000:1000 -R /etc/${COMPONENT} /usr/logs /etc/confluent/docker \
+    && chown -R 1000:1000 /etc/${COMPONENT} /usr/logs /etc/confluent/docker \
     && chmod -R ug+w /etc/${COMPONENT} /etc/confluent/docker \
     && chmod -R 755 /usr/bin && chmod -R 755 /usr/share/java
-
-VOLUME ["/etc/schema-registry/secrets"]
 
 EXPOSE 8082
 
