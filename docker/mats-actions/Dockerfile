@@ -5,8 +5,8 @@ FROM registry-rmc.webex.com/mats/rhel8-osaas-${FIPS}:${OSAAS_VERSION} as base
 
 RUN yum install -y WBXjava-1.8.0-openjdk-hardening WBXFIPSJar python39 curl
 
-ENV DATAHUB_ACTIONS_HOME=/etc/datahub/actions
-ENV DATAHUB_ACTIONS_CONF=/etc/datahub-actions/conf
+ENV DATAHUB_ACTIONS_HOME=/opt/datahub/actions
+ENV DATAHUB_ACTIONS_CONF=/etc/datahub/actions
 
 ENV DR_VERSION v0.6.1
 RUN if [ $(arch) = "aarch64" ]; then \
@@ -39,7 +39,7 @@ RUN mkdir -p $DATAHUB_ACTIONS_HOME \
     && mkdir -p /tmp/datahub/logs/actions/system
 
 COPY datahub-actions/config $DATAHUB_ACTIONS_CONF
-COPY docker/mats-actions/executor.yaml $DATAHUB_ACTIONS_CONF/system
+COPY docker/mats-actions/executor.yaml $DATAHUB_ACTIONS_CONF/system/
 
 RUN chown -R rhel:rhel $DATAHUB_ACTIONS_HOME \
     && chmod -R 755 $DATAHUB_ACTIONS_CONF \
