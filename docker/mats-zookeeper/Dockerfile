@@ -22,11 +22,11 @@ COPY ./docker/mats-zookeeper/zoo.cfg /opt/apache-zookeeper/conf/zoo.cfg
 COPY ./docker/mats-zookeeper/log4j.properties /opt/apache-zookeeper/conf/log4j.properties
 
 RUN echo "===> Setting up zookeeper dirs" \
-    && mkdir -p /var/zookeeper/data /var/zookeeper/datalog \
-    && chmod 644 /opt/apache-zookeeper/conf/zoo.cfg \
-    && chmod 644 /opt/apache-zookeeper/conf/log4j.properties \
+    && mkdir -p /var/zookeeper/data /var/zookeeper/datalog /opt/apache-zookeeper/logs \
+    && chown -R rhel:rhel /opt/apache-zookeeper/conf /opt/apache-zookeeper/logs \
+    && chmod -R 755 /opt/apache-zookeeper/conf \
     && chmod -R 755 /opt/apache-zookeeper/bin \
-    && chown -R 1000:1000 /var/zookeeper
+    && chown -R rhel:rhel /var/zookeeper
 
 VOLUME ["/var/zookeeper/data", "/var/zookeeper/datalog"]
 
