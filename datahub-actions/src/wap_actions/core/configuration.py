@@ -11,7 +11,7 @@ class CallbackApi(BaseModel):
 class UrlNotificationConfig(BaseModel):
     type: str
     output_json: Optional[bool]
-    cache_root: str
+    actions_home: str
     entity_types: Optional[list[str]]
     entity_props: Optional[list[str]]
     ci_config: Optional[CITokenConfig]

@@ -5,6 +5,9 @@ FROM registry-rmc.webex.com/mats/rhel8-osaas-${FIPS}:${OSAAS_VERSION} as base
 
 RUN yum install -y WBXjava-1.8.0-openjdk-hardening WBXFIPSJar python39 curl
 
+ENV DATAHUB_ACTIONS_HOME=/etc/datahub/actions
+ENV DATAHUB_ACTIONS_CONF=/etc/datahub-actions/conf
+
 ENV DR_VERSION v0.6.1
 RUN if [ $(arch) = "aarch64" ]; then \
       DR_ARCH='aarch64';\
@@ -31,15 +34,16 @@ RUN chmod +x /datahub-actions/setup.py \
     && cd .. && rm -rf /datahub-actions \
     && chmod a+x /start_datahub_actions.sh
 
-RUN mkdir -p /etc/datahub/actions/conf  \
-    && mkdir -p /etc/datahub/actions/system/conf  \
+RUN mkdir -p $DATAHUB_ACTIONS_HOME \
+    && mkdir -p $DATAHUB_ACTIONS_CONF  \
     && mkdir -p /tmp/datahub/logs/actions/system
 
-COPY datahub-actions/config /etc/datahub/actions/conf
-COPY docker/mats-actions/executor.yaml /etc/datahub/actions/system/conf
+COPY datahub-actions/config $DATAHUB_ACTIONS_CONF
+COPY docker/mats-actions/executor.yaml $DATAHUB_ACTIONS_CONF/system
 
-RUN chown -R rhel /etc/datahub \
-    && chown -R rhel /tmp/datahub
+RUN chown -R rhel:rhel $DATAHUB_ACTIONS_HOME \
+    && chmod -R 755 $DATAHUB_ACTIONS_CONF \
+    && chown -R rhel:rhel /tmp/datahub
 
 RUN mkdir -p /home/rhel/.cache \
     && mv /root/.cache/pip /home/rhel/.cache/pip \

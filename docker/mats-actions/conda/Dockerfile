@@ -6,6 +6,9 @@ FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
 ENV PATH="/home/rhel/miniconda3/bin:${PATH}"
 ARG PATH="/home/rhel/miniconda3/bin:${PATH}"
 
+ENV DATAHUB_ACTIONS_HOME=/etc/datahub/actions
+ENV DATAHUB_ACTIONS_CONF=/etc/datahub-actions/conf
+
 RUN yum install -y WBXjava-1.8.0-openjdk-hardening WBXFIPSJar curl wget
 
 ENV DR_VERSION v0.6.1
@@ -27,16 +30,16 @@ RUN chown -R rhel /home/rhel/datahub-actions \
     && chown rhel /home/rhel/start_datahub_actions.sh \
     && chmod a+x /home/rhel/start_datahub_actions.sh
 
-RUN mkdir -p /etc/datahub/actions/system/conf  \
+RUN mkdir -p $DATAHUB_ACTIONS_HOME \
+    && mkdir -p $DATAHUB_ACTIONS_CONF  \
     && mkdir -p /tmp/datahub/logs/actions/system
 
-COPY datahub-actions/config /etc/datahub/actions
-COPY docker/mats-actions/executor.yaml /etc/datahub/actions/system/conf
+COPY datahub-actions/config $DATAHUB_ACTIONS_CONF
+COPY docker/mats-actions/executor.yaml $DATAHUB_ACTIONS_CONF/system
 
-RUN chown -R rhel:rhel /etc/datahub \
-    && chmod -R 755 /etc/datahub \
-    && chown -R rhel:rhel /tmp/datahub \
-    && chmod -R 755 /tmp/datahub
+RUN chown -R rhel:rhel $DATAHUB_ACTIONS_HOME \
+    && chmod -R 755 $DATAHUB_ACTIONS_CONF \
+    && chown -R rhel:rhel /tmp/datahub
 
 USER rhel
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-$(arch).sh \

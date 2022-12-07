@@ -77,7 +77,7 @@ class CommonAction(Action, ABC):
         for matcher in self._matchers():
             if matcher.matches_type():
                 self.matcher = matcher
-        self._cache = FileCache(config.cache_root, ctx.pipeline_name + ".txt")
+        self._cache = FileCache(config.actions_home + "/cache", ctx.pipeline_name + ".txt")
         self._counter = AtomicInteger()
         self._urn_dict = AtomicDict(unique_value=True, cache=self._cache, separator=self.SEPARATOR)
         self._close = False

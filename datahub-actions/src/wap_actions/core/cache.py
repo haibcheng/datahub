@@ -1,4 +1,5 @@
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,8 @@ class FileCache(Cache):
     def __init__(self, pa: str, fn: str):
         super().__init__()
         if pa is not None and pa != '':
+            if not os.path.exists(pa):
+                os.makedirs(pa)
             self.fi = pa + '/' + fn
         else:
             self.fi = fn

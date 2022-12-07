@@ -14,7 +14,7 @@ action:
   config:
     type: CUD
     output_json: ${OUTPUT_JSON:-true}
-    cache_root: ${DATAHUB_ACTIONS_HOME}/cache
+    actions_home: ${DATAHUB_ACTIONS_HOME}
     entity_types:
       - datasource
     ci_config:
