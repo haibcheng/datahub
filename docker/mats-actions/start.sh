@@ -18,45 +18,24 @@ touch /tmp/datahub/logs/actions/actions.out
 
 mkdir -p "$DATAHUB_ACTIONS_HOME"/cache
 
-# Deploy System Actions
-if [ "$(ls -A "$DATAHUB_ACTIONS_HOME"/system/conf/)" ]; then
-    config_files=""
-    #.yml
-    for file in "$DATAHUB_ACTIONS_HOME"/system/conf/*.yml;
-    do
-        if [ -f "$file" ]; then
-            config_files+="-c $file "
-        fi
-    done
-    #.yaml
-    for file in "$DATAHUB_ACTIONS_HOME"/system/conf/*.yaml;
-    do
-        if [ -f "$file" ]; then
-            config_files+="-c $file "
-        fi
-    done
-else
-    echo "No system action configurations found. Not starting system actions."
-fi
-
-# Deploy User Actions
 if [ "$(ls -A "$DATAHUB_ACTIONS_HOME"/conf/)" ]; then
-    #.yml
-    for file in "$DATAHUB_ACTIONS_HOME"/conf/*.yml;
-    do
-        if [ -f "$file" ]; then
-            config_files+="-c $file "
-        fi
-    done
-    #.yaml
-    for file in "$DATAHUB_ACTIONS_HOME"/conf/*.yaml;
-    do
-        if [ -f "$file" ]; then
-            config_files+="-c $file "
-        fi
-    done
+  config_files=""
+  #.yml
+  for file in "$DATAHUB_ACTIONS_HOME"/conf/*.yml;
+  do
+    if [ -f "$file" ]; then
+      config_files+="-c $file "
+    fi
+  done
+  #.yaml
+  for file in "$DATAHUB_ACTIONS_HOME"/conf/*.yaml;
+  do
+    if [ -f "$file" ]; then
+      config_files+="-c $file "
+    fi
+  done
 else
-    echo "No user action configurations found. Not starting user actions."
+  echo "No action configurations found. Not starting actions."
 fi
 
 datahub-actions actions $config_files

@@ -27,16 +27,15 @@ RUN chown -R rhel /home/rhel/datahub-actions \
     && chown rhel /home/rhel/start_datahub_actions.sh \
     && chmod a+x /home/rhel/start_datahub_actions.sh
 
-RUN mkdir -p /etc/datahub/actions/conf  \
-    && mkdir -p /etc/datahub/actions/system/conf  \
+RUN mkdir -p /etc/datahub/actions/system/conf  \
     && mkdir -p /tmp/datahub/logs/actions/system
 
-COPY datahub-actions/config /etc/datahub/actions/conf
+COPY datahub-actions/config /etc/datahub/actions
 COPY docker/mats-actions/executor.yaml /etc/datahub/actions/system/conf
 
-RUN chown -R rhel /etc/datahub \
+RUN chown -R rhel:rhel /etc/datahub \
     && chmod -R 755 /etc/datahub \
-    && chown -R rhel /tmp/datahub \
+    && chown -R rhel:rhel /tmp/datahub \
     && chmod -R 755 /tmp/datahub
 
 USER rhel
