@@ -1,0 +1,6 @@
+- entity: "*" # denotes that policy will be applied to all entities
+  aspect: "*" # denotes that policy will be applied to all aspects
+  config:
+    retention:
+      version:
+        maxVersions: 2

@@ -36,6 +36,9 @@ VOLUME [ "/datahub-frontend" ]
 
 FROM ${APP_ENV}-install as final
 
+ENV LOG_DIR=/tmp/datahub/logs/frontend
+RUN mkdir -p $LOG_DIR && chown -R rhel:rhel /tmp/datahub
+
 WORKDIR /
 ARG SERVER_PORT=9002
 ENV SERVER_PORT=$SERVER_PORT

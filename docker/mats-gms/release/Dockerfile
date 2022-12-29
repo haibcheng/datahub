@@ -1,7 +1,7 @@
 # Defining environment
 ARG APP_ENV=prod
 ARG FIPS=nonfips
-ARG OSAAS_VERSION=1.9.202207
+ARG OSAAS_VERSION=1.14.202212
 
 FROM registry-rmc.webex.com/mats/rhel8-osaas-${FIPS}:${OSAAS_VERSION} as base
 
@@ -66,7 +66,12 @@ FROM base as dev-install
 
 FROM ${APP_ENV}-install as final
 
-RUN mkdir -p /etc/datahub/plugins/auth/resources
+ENV LOG_DIR=/tmp/datahub/logs/gms
+RUN mkdir -p $LOG_DIR && chown -R rhel:rhel /tmp/datahub
+
+COPY docker/mats-gms/retention.yaml /etc/datahub/plugins/retention/
+RUN mkdir -p /etc/datahub/plugins/auth/resources \
+    && chmod -R 755 /etc/datahub
 
 ENV JMX_OPTS=""
 ENV JAVA_OPTS=""

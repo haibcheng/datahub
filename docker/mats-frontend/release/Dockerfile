@@ -1,7 +1,7 @@
 # Defining environment
 ARG APP_ENV=prod
 ARG FIPS=nonfips
-ARG OSAAS_VERSION=1.9.202207
+ARG OSAAS_VERSION=1.14.202212
 
 FROM registry-rmc.webex.com/mats/rhel8-osaas-${FIPS}:${OSAAS_VERSION} as base
 
@@ -51,6 +51,9 @@ FROM base as dev-install
 VOLUME [ "/datahub-frontend" ]
 
 FROM ${APP_ENV}-install as final
+
+ENV LOG_DIR=/tmp/datahub/logs/frontend
+RUN mkdir -p $LOG_DIR && chown -R rhel:rhel /tmp/datahub
 
 WORKDIR /
 ARG SERVER_PORT=9002

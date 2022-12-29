@@ -50,7 +50,12 @@ FROM base as dev-install
 
 FROM ${APP_ENV}-install as final
 
-RUN mkdir -p /etc/datahub/plugins/auth/resources
+ENV LOG_DIR=/tmp/datahub/logs/gms
+RUN mkdir -p $LOG_DIR && chown -R rhel:rhel /tmp/datahub
+
+COPY docker/mats-gms/retention.yaml /etc/datahub/plugins/retention/
+RUN mkdir -p /etc/datahub/plugins/auth/resources \
+    && chmod -R 755 /etc/datahub
 
 ENV JMX_OPTS=""
 ENV JAVA_OPTS=""
