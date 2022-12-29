@@ -49,8 +49,8 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-$(arch).sh 
 
 RUN python3 -m ensurepip --upgrade \
     && python3 -m pip install --upgrade pip wheel setuptools \
-    && python3 -m pip install --upgrade acryl-datahub==v0.9.0 \
-    && python3 -m pip install --upgrade acryl-datahub-actions==v0.0.8 \
+    && python3 -m pip install --upgrade acryl-datahub==v0.9.5 \
+    && python3 -m pip install --upgrade acryl-datahub-actions==v0.0.10 \
     && pip install 'acryl-datahub-actions[executor]'
 
 RUN cd /home/rhel/datahub-actions  \

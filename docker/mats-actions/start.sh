@@ -18,24 +18,30 @@ touch /tmp/datahub/logs/actions/actions.out
 
 mkdir -p "$DATAHUB_ACTIONS_HOME"
 
-if [ "$(ls -A "$DATAHUB_ACTIONS_CONF")" ]; then
-  config_files=""
-  #.yml
-  for file in "$DATAHUB_ACTIONS_CONF"/*.yml;
-  do
-    if [ -f "$file" ]; then
-      config_files+="-c $file "
-    fi
-  done
-  #.yaml
-  for file in "$DATAHUB_ACTIONS_CONF"/*.yaml;
-  do
-    if [ -f "$file" ]; then
-      config_files+="-c $file "
-    fi
-  done
-else
-  echo "No action configurations found. Not starting actions."
-fi
+config_files=""
+
+IFS=',' read -r -a action_types <<< "$DATAHUB_ACTIONS_TYPES"
+
+for action_type in "${action_types[@]}"
+do
+  if [ "$(ls -A "$DATAHUB_ACTIONS_CONF/$action_type")" ]; then
+    #.yml
+    for file in "$DATAHUB_ACTIONS_CONF/$action_type"/*.yml;
+    do
+      if [ -f "$file" ]; then
+        config_files+="-c $file "
+      fi
+    done
+    #.yaml
+    for file in "$DATAHUB_ACTIONS_CONF/$action_type"/*.yaml;
+    do
+      if [ -f "$file" ]; then
+        config_files+="-c $file "
+      fi
+    done
+  else
+    echo "No action[$action_type] configurations found. Not starting actions."
+  fi
+done
 
 datahub-actions actions $config_files

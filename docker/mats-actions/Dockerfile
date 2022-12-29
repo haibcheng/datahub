@@ -1,5 +1,5 @@
 ARG FIPS=nonfips
-ARG OSAAS_VERSION=1.9.202207
+ARG OSAAS_VERSION=1.14.202212
 
 FROM registry-rmc.webex.com/mats/rhel8-osaas-${FIPS}:${OSAAS_VERSION} as base
 
@@ -20,8 +20,8 @@ RUN if [ $(arch) = "aarch64" ]; then \
 
 RUN python3 -m ensurepip --upgrade \
     && python3 -m pip install --upgrade pip wheel setuptools \
-    && python3 -m pip install --upgrade acryl-datahub \
-    && python3 -m pip install --upgrade acryl-datahub-actions \
+    && python3 -m pip install --upgrade acryl-datahub==v0.9.5 \
+    && python3 -m pip install --upgrade acryl-datahub-actions==v0.0.10 \
     && pip install 'acryl-datahub-actions[executor]'
 
 COPY datahub-actions/src/wap_actions /datahub-actions/src/wap_actions
