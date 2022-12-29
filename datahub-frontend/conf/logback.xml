@@ -1,67 +1,75 @@
 <configuration scan="true" scanPeriod="120 seconds">
-
-  <property name="LOG_DIR" value="${LOG_DIR:- /tmp/datahub/logs/datahub-frontend}"/>
-  <timestamp key="bySecond" datePattern="yyyy-MM-dd'_'HH-mm-ss"/>
-  <timestamp key="byDate" datePattern="yyyy-MM-dd"/>
+  <property name="LOG_DIR" value="${LOG_DIR:-/tmp/datahub/logs/frontend}"/>
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <layout class="ch.qos.logback.classic.PatternLayout">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L - %msg%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+  </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/frontend.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <FileNamePattern>${LOG_DIR}/frontend.%d{yyyy-dd-MM}-%i.log</FileNamePattern>
+      <!-- each archived file, size max 10MB -->
+      <maxFileSize>100MB</maxFileSize>
+      <!-- total size of all archive files, if total size > 10GB, it will delete old archived file -->
+      <totalSizeCap>10GB</totalSizeCap>
+      <!-- 30 days to keep -->
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+    <encoder>
       <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
-    </layout>
-    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>INFO</level>
-    </filter>
+    </encoder>
   </appender>
 
-  <appender name="MATS_ES_INFO" class="com.webex.mats.logback.ElasticAppender">
-    <esURL>${ES_API_URL:-https://esaaslab-esbtpt1-s.webex.com/esapi}</esURL>
-    <esIndex>${ES_LOG_INDEX:-mats_datahub_logs}</esIndex>
-    <esUserName>${ES_USERNAME}</esUserName>
-    <esPassword>${ES_PASSWORD}</esPassword>
-    <intervalSecs>${ES_LOG_INTERVAL:-1}</intervalSecs>
-    <hostName>${HOST_NAME}</hostName>
-    <appName>${APP_NAME:-FRONTEND}</appName>
-    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>INFO</level>
-    </filter>
-  </appender>
-
-  <appender name="MATS_ES_DEBUG" class="com.webex.mats.logback.ElasticAppender">
-    <esURL>${ES_API_URL:-https://esaaslab-esbtpt1-s.webex.com/esapi}</esURL>
-    <esIndex>${ES_LOG_INDEX:-mats_datahub_debug}</esIndex>
-    <esUserName>${ES_USERNAME}</esUserName>
-    <esPassword>${ES_PASSWORD}</esPassword>
-    <intervalSecs>${ES_LOG_INTERVAL:-1}</intervalSecs>
-    <hostName>${HOST_NAME}</hostName>
-    <appName>${APP_NAME:-FRONTEND}</appName>
+  <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/frontend.debug.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <FileNamePattern>${LOG_DIR}/frontend.debug.%d{yyyy-dd-MM}-%i.log</FileNamePattern>
+      <!-- each archived file, size max 10MB -->
+      <maxFileSize>100MB</maxFileSize>
+      <!-- total size of all archive files, if total size > 2GB, it will delete old archived file -->
+      <totalSizeCap>2GB</totalSizeCap>
+      <!-- 1 days to keep -->
+      <maxHistory>1</maxHistory>
+    </rollingPolicy>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
       <level>DEBUG</level>
       <onMatch>ACCEPT</onMatch>
       <onMismatch>DENY</onMismatch>
     </filter>
+    <encoder>
+      <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
   </appender>
 
-  <appender name="MATS_WEBEX" class="com.webex.mats.logback.WebexAlertAppender">
-    <messageApiURL>${WBX_API:-https://api.ciscospark.com/v1/messages}</messageApiURL>
-    <roomId>${WBX_ROOM_ID:-Y2lzY29zcGFyazovL3VzL1JPT00vNGZiNzg2ODAtZDdkYi0xMWVjLWExYzYtY2RmNGFiOWI5Y2Vk}</roomId>
-    <kibanaLink>${WBX_KIBANA_LINK:-https://esaaslab-esbtpt1-s.webex.com/mats/goto/c9748444d1245732a05cc507667d2f81}</kibanaLink>
-    <alertPersonEmail>${WBX_ALERT_EMAIL:-csg-mats-data@cisco.com}</alertPersonEmail>
-    <botBearToken>${WBX_BOT_TOKEN:-MTlkNDQwYjktN2QzYS00ODY4LWEzZDctNGUwNjk3OThmOWJhNjU1MDZmMmUtMWJh_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f}</botBearToken>
-    <intervalMins>${WBX_ALERT_INTERVAL:-30}</intervalMins>
-    <hostName>${HOST_NAME}</hostName>
-    <messageExclusionPattern>${WBX_ALERT_EXCLUSION_PATTERN:-Unable to renew the session.*}</messageExclusionPattern>
-    <filter class="ch.qos.logback.classic.filter.LevelFilter">
-      <level>ERROR</level>
-      <onMatch>ACCEPT</onMatch>
-      <onMismatch>DENY</onMismatch>
-    </filter>
-  </appender>
+  <!-- Remove this to disable logging debug -->
+  <logger name="com.linkedin" level="DEBUG">
+    <appender-ref ref="DEBUG_FILE"/>
+  </logger>
+
+  <logger name="org.apache.kafka.clients" level="INFO">
+    <appender-ref ref="STDOUT" />
+  </logger>
+
+  <logger name="org.reflections.Reflections" level="ERROR">
+    <appender-ref ref="STDOUT" />
+  </logger>
+
+  <logger name="com.linkedin.metadata.models.registry.PatchEntityRegistry" level="INFO">
+    <appender-ref ref="STDOUT" />
+  </logger>
 
   <root level="INFO">
-    <appender-ref ref="STDOUT"/>
-    <appender-ref ref="MATS_ES_DEBUG"/>
-    <appender-ref ref="MATS_ES_INFO"/>
-    <appender-ref ref="MATS_WEBEX"/>
+    <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILE"/>
   </root>
 
 </configuration>
