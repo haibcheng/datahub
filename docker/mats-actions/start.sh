@@ -24,24 +24,44 @@ IFS=',' read -r -a action_types <<< "$DATAHUB_ACTIONS_TYPES"
 
 for action_type in "${action_types[@]}"
 do
-  if [ "$(ls -A "$DATAHUB_ACTIONS_CONF/$action_type")" ]; then
-    #.yml
-    for file in "$DATAHUB_ACTIONS_CONF/$action_type"/*.yml;
+  common_active="$DATAHUB_ACTIONS_CONF/$action_type"
+  if [ "$(ls -A "$common_active"/*.yml 2> /dev/null)" ] || [ "$(ls -A "$common_active"/*.yaml 2> /dev/null)" ]; then
+    for file in "$common_active"/*.yml;
     do
       if [ -f "$file" ]; then
         config_files+="-c $file "
       fi
     done
-    #.yaml
-    for file in "$DATAHUB_ACTIONS_CONF/$action_type"/*.yaml;
+    for file in "$common_active"/*.yaml;
     do
       if [ -f "$file" ]; then
         config_files+="-c $file "
       fi
     done
   else
-    echo "No action[$action_type] configurations found. Not starting actions."
+    echo "No action[$common_active] configurations found."
   fi
+
+  if [ -n "$DATAHUB_ACTIONS_PROFILES_ACTIVE" ]; then
+    profiles_active="$DATAHUB_ACTIONS_CONF/$action_type/$DATAHUB_ACTIONS_PROFILES_ACTIVE"
+    if [ "$(ls -A "$profiles_active"/*.yml 2> /dev/null)" ] || [ "$(ls -A "$profiles_active"/*.yaml 2> /dev/null)" ]; then
+      for file in "$profiles_active"/*.yml;
+      do
+        if [ -f "$file" ]; then
+          config_files+="-c $file "
+        fi
+      done
+      for file in "$profiles_active"/*.yaml;
+      do
+        if [ -f "$file" ]; then
+          config_files+="-c $file "
+        fi
+      done
+    else
+      echo "No action[$profiles_active] configurations found."
+    fi
+  fi
+
 done
 
 datahub-actions actions $config_files
