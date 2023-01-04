@@ -16,6 +16,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Singular;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -39,13 +40,15 @@ public class DatasourceSync {
     private CITokenInfo ciTokenInfo;
     private CITokenService ciTokenService;
     private String url;
+    private String regions;
 
     public DatasourceSync(EntityService entityService,
                           JavaEntityClient entityClient,
                           GraphService graphService,
                           CITokenInfo ciTokenInfo,
                           CITokenService ciTokenService,
-                          String url) {
+                          String url,
+                          String regions) {
         this.entityService = entityService;
         this.entityClient = entityClient;
         this.graphClient = new JavaGraphClient(graphService);
@@ -55,6 +58,7 @@ public class DatasourceSync {
         this.ciTokenInfo = ciTokenInfo;
         this.ciTokenService = ciTokenService;
         this.url = url;
+        this.regions = regions;
     }
 
     public List<String> sync() {
@@ -63,8 +67,11 @@ public class DatasourceSync {
 
         List<String> failures = new ArrayList<>();
         try {
-            String[] regions = {"CANADA", "AMER", "GERMANY"};
-            for (String region : regions) {
+            String[] localRegions = {"CANADA", "AMER", "GERMANY"};
+            if(StringUtils.isNotEmpty(this.regions)) {
+                localRegions = StringUtils.split(this.regions, ",");
+            }
+            for (String region : localRegions) {
                 JsonNode sources = getDataSources(region, token);
                 for (int i1 = 0; i1 < sources.size(); ++i1) {
                     JsonNode eachNode = sources.get(i1);
