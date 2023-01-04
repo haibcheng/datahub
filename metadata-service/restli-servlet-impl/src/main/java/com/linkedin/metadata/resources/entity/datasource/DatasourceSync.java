@@ -1,5 +1,7 @@
 package com.linkedin.metadata.resources.entity.datasource;
 
+import com.datahub.cisco.wap.CITokenInfo;
+import com.datahub.cisco.wap.CITokenService;
 import com.datahub.authentication.AuthenticationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,31 +36,36 @@ public class DatasourceSync {
     private GroupService groupService;
     private NativeUserService nativeUserService;
     private DatasourceService datasourceService;
-    private String url = "http://10.29.42.205:8023/api/v1/datasource/datasources-for-datahub";
+    private CITokenInfo ciTokenInfo;
+    private CITokenService ciTokenService;
+    private String url;
 
-    public static void main(String[] args) {
-        new DatasourceSync().sync();
-    }
-
-    private DatasourceSync() { }
-
-    public DatasourceSync(EntityService entityService, JavaEntityClient entityClient, GraphService graphService, String url) {
+    public DatasourceSync(EntityService entityService,
+                          JavaEntityClient entityClient,
+                          GraphService graphService,
+                          CITokenInfo ciTokenInfo,
+                          CITokenService ciTokenService,
+                          String url) {
         this.entityService = entityService;
         this.entityClient = entityClient;
         this.graphClient = new JavaGraphClient(graphService);
         this.groupService = new GroupService(entityClient, entityService, this.graphClient);
         this.nativeUserService = new NativeUserService(entityService, entityClient);
         this.datasourceService = new DatasourceService(entityClient, entityService);
+        this.ciTokenInfo = ciTokenInfo;
+        this.ciTokenService = ciTokenService;
         this.url = url;
     }
 
     public List<String> sync() {
 
+        String token = ciTokenService.getAccessToken(ciTokenInfo);
+
         List<String> failures = new ArrayList<>();
         try {
             String[] regions = {"CANADA", "AMER", "GERMANY"};
             for (String region : regions) {
-                JsonNode sources = getDataSources(region);
+                JsonNode sources = getDataSources(region, token);
                 for (int i1 = 0; i1 < sources.size(); ++i1) {
                     JsonNode eachNode = sources.get(i1);
                     handleDataSources(failures, eachNode, "GERMANY".equals(region) ? "EMEA" : region);
@@ -201,7 +208,7 @@ public class DatasourceSync {
                 );
             }
 
-            if (!builder.configs.isEmpty()) {
+            if (builder.configs != null && !builder.configs.isEmpty()) {
                 targetSources.add(builder.build());
             }
         }
@@ -321,9 +328,10 @@ public class DatasourceSync {
         public final List<SourceConfig> configs;
     }
 
-    private JsonNode getDataSources(String region) throws Exception {
+    private JsonNode getDataSources(String region, String token) throws Exception {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(this.url + "?region=" + region);
+        httpGet.addHeader("Authorization", "Bearer " + token);
         CloseableHttpResponse response = null;
         try {
             response = httpclient.execute(httpGet);
