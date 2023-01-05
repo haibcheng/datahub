@@ -220,8 +220,8 @@ cisco:
     wapDataHub:
       scope: ${CI_WDH_SCOPE:Identity:SCIM}
       org-id: ${CI_WDH_ORG_ID:6078fba4-49d9-4291-9f7b-80116aab6974}
-      bearer-token-url: ${CI_WDH_BEARER_TOKEN_URL:https://idbrokerbts.webex.com/idb/token/{orgId}/v2/actions/GetBearerToken/invoke}
-      access-token-url: ${CI_WDH_ACCESS_TOKEN_URL:https://idbrokerbts.webex.com/idb/oauth2/v1/access_token}
+      bearer-token-url: ${CI_WDH_HOST:https://idbrokerbts.webex.com}/idb/token/{orgId}/v2/actions/GetBearerToken/invoke
+      access-token-url: ${CI_WDH_HOST:https://idbrokerbts.webex.com}/idb/oauth2/v1/access_token
       machine-account-name: ${CI_WDH_MACHINE_ACCT_NAME:CTGWAP-DATAHUB}
       machine-account-pass: ${CI_WDH_MACHINE_ACCT_PASS:pass}
       client-id: ${CI_WDH_CLIENT_ID:C4d7507eca0d56509f82db6919ec550fd1cd76dd67d125fc14e1fe9c2b24d5e10}
