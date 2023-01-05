@@ -68,7 +68,7 @@ public class DatasourceSync {
         List<String> failures = new ArrayList<>();
         try {
             String[] localRegions = {"CANADA", "AMER", "GERMANY"};
-            if(StringUtils.isNotEmpty(this.regions)) {
+            if (StringUtils.isNotEmpty(this.regions)) {
                 localRegions = StringUtils.split(this.regions, ",");
             }
             for (String region : localRegions) {
