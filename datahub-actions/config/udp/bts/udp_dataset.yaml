@@ -21,4 +21,4 @@ action:
       - origin=UDP
     callbacks:
       - region: All
-        url: https://wapudp-lab.webex.com/dolphinscheduler/api/etl/nodeStatus
+        url: https://wapudp-bts.webex.com/dolphinscheduler/api/etl/nodeStatus
