@@ -10235,6 +10235,7 @@ input DatasourceCreateInput {
 }
 
 input DatasourceTestInput {
+    testQuerySql: String
     connection: DatasourceSourceInput!
 }
 

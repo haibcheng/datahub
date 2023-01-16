@@ -106,6 +106,8 @@ export default function AddDataSourceModal({
     const enableSync =
         formData.sourceType === DbSourceTypeData.Oracle ||
         formData.sourceType === DbSourceTypeData.TiDB ||
+        formData.sourceType === DbSourceTypeData.Mysql ||
+        formData.sourceType === DbSourceTypeData.Snowflake ||
         formData.sourceType === DbSourceTypeData.Pinot ||
         formData.sourceType === DbSourceTypeData.Postgres ||
         formData.sourceType === DbSourceTypeData.Hive ||
@@ -469,6 +471,7 @@ export default function AddDataSourceModal({
         }
 
         const input = {
+            testQuerySql: formData.testQuerySql,
             connection: {
                 ...conn,
             },

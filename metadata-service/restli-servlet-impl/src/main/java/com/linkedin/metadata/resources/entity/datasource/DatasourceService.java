@@ -352,7 +352,7 @@ public class DatasourceService {
         DatasourceConnectionGSB gsbConn = new DatasourceConnectionGSB();
 
         ConnectInfo connectInfo = parseConnection(source, primaryConn, gsbConn);
-        final DatasourceUrn sourceUrn = new DatasourceUrn(connectInfo.getUrn(), sourceName, sourceRegion);
+        final DatasourceUrn sourceUrn = new DatasourceUrn(connectInfo.getUrn(), sourceName.toLowerCase(), sourceRegion);
 
         if (entityService.exists(sourceUrn)) {
             log.info("Datasource[" + sourceUrn + "] exists!!!");

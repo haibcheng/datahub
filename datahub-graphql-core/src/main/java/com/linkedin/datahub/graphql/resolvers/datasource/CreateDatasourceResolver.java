@@ -221,7 +221,7 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
         DataPlatformUrn primaryPlatformUrn = parseConnection(
                 (Map<String, Object>)inputMap.get("primaryConn"), primaryConn, null);
 
-        final DatasourceUrn sourceUrn = new DatasourceUrn(primaryPlatformUrn, sourceName, sourceRegion);
+        final DatasourceUrn sourceUrn = new DatasourceUrn(primaryPlatformUrn, sourceName.toLowerCase(), sourceRegion);
         if (input.getCreate() && entityService.exists(sourceUrn)) {
             throw new IllegalArgumentException("Failed to add data source, duplicate data source!");
         }
@@ -367,4 +367,5 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
         }
         return values;
     }
+
 }
