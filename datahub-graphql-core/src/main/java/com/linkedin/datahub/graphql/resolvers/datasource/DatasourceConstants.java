@@ -28,16 +28,4 @@ public interface DatasourceConstants
             SNOWFLAKE_SOURCE_NAME, "snowflake"
         );
 
-    Map<String, String> JDBC_DRIVERS = Map.of(
-            POSTGRES_SOURCE_NAME, "org.postgresql.Driver",
-            ORACLE_SOURCE_NAME, "oracle.jdbc.OracleDriver",
-            TIDB_SOURCE_NAME, "com.mysql.jdbc.Driver",
-            MYSQL_SOURCE_NAME, "com.mysql.jdbc.Driver",
-            HIVE_SOURCE_NAME, "org.apache.hive.jdbc.HiveDriver",
-            PRESTO_SOURCE_NAME, "com.facebook.presto.jdbc.PrestoDriver",
-            PINOT_SOURCE_NAME, "org.apache.pinot.client.PinotDriver",
-            TRINO_SOURCE_NAME, "io.trino.jdbc.TrinoDriver",
-            SNOWFLAKE_SOURCE_NAME, "com.snowflake.client.jdbc.SnowflakeDriver"
-    );
-
 }
