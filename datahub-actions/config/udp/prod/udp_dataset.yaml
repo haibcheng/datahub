@@ -1,0 +1,24 @@
+# udp_dataset.yaml
+name: "udp_dataset"
+source:
+  type: "kafka"
+  config:
+    connection:
+      bootstrap: ${KAFKA_BOOTSTRAP_SERVER:-localhost:9092}
+      schema_registry_url: ${SCHEMA_REGISTRY_URL:-http://localhost:8081}
+    topic_routes:
+      mcl: ${METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME:-DataHubMetadataChangeLog_Versioned_v1}
+      pe: ${PLATFORM_EVENT_TOPIC_NAME:-DataHubPlatformEvent_v1}
+action:
+  type: "wap_actions.change_monitor:UrlNotificationAction"
+  config:
+    type: UDP
+    output_json: ${OUTPUT_JSON:-true}
+    actions_home: ${DATAHUB_ACTIONS_HOME}
+    entity_types:
+      - dataset
+    entity_props:
+      - origin=UDP
+    callbacks:
+      - region: All
+        url: https://wapudp.webex.com/dolphinscheduler/api/etl/nodeStatus
