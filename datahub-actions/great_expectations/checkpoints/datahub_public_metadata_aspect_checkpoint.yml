@@ -7,12 +7,12 @@ run_name_template: '%Y%m%d-%H%M%S'
 #expectation_suite_name:
 #batch_request: {}
 action_list:
-  - name: store_validation_result
-    action:
-      class_name: StoreValidationResultAction
-  - name: store_evaluation_params
-    action:
-      class_name: StoreEvaluationParametersAction
+#  - name: store_validation_result
+#    action:
+#      class_name: StoreValidationResultAction
+#  - name: store_evaluation_params
+#    action:
+#      class_name: StoreEvaluationParametersAction
 #  - name: update_data_docs
 #    action:
 #      class_name: UpdateDataDocsAction
@@ -21,9 +21,10 @@ action_list:
     action:
       module_name: datahub.integrations.great_expectations.action
       class_name: DataHubValidationAction
-      server_url: http://localhost:8080
+      server_url: http://mtbt2wdh002.webex.com:8080
       platform_alias: postgres
       platform_instance_map: { "datahub": "" }
+      token: ${gms_token}
 evaluation_parameters: {}
 runtime_configuration: {}
 validations:

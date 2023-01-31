@@ -53,10 +53,10 @@ stores:
   validations_store:
     class_name: ValidationsStore
     store_backend:
-#      class_name: TupleFilesystemStoreBackend
-#      base_directory: uncommitted/validations/
-      class_name: DatabaseStoreBackend
-      credentials: ${db_creds}
+      class_name: TupleFilesystemStoreBackend
+      base_directory: uncommitted/validations/
+#      class_name: DatabaseStoreBackend
+#      credentials: ${db_creds}
 
   evaluation_parameter_store:
     class_name: EvaluationParameterStore
