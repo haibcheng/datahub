@@ -39,7 +39,6 @@ public class DatasourceUtils {
             com.linkedin.datasource.sources.MysqlSource source) {
         MysqlSource mysqlSource = new MysqlSource();
         mysqlSource.setUsername(source.getUsername());
-        mysqlSource.setPassword(source.getPassword());
         mysqlSource.setHostPort(source.getHostPort());
         mysqlSource.setDatabase(source.getDatabase());
         mysqlSource.setDriver(source.getDriver());
@@ -61,7 +60,6 @@ public class DatasourceUtils {
             com.linkedin.datasource.sources.PostgresSource source) {
         PostgresSource postgresSource = new PostgresSource();
         postgresSource.setUsername(source.getUsername());
-        postgresSource.setPassword(source.getPassword());
         postgresSource.setHostPort(source.getHostPort());
         postgresSource.setDatabase(source.getDatabase());
         postgresSource.setDriver(source.getDriver());
@@ -83,7 +81,6 @@ public class DatasourceUtils {
             com.linkedin.datasource.sources.TiDBSource source) {
         TiDBSource tidbSource = new TiDBSource();
         tidbSource.setUsername(source.getUsername());
-        tidbSource.setPassword(source.getPassword());
         tidbSource.setHostPort(source.getHostPort());
         tidbSource.setDatabase(source.getDatabase());
         tidbSource.setDriver(source.getDriver());
@@ -105,7 +102,6 @@ public class DatasourceUtils {
             com.linkedin.datasource.sources.HiveSource source) {
         HiveSource hiveSource = new HiveSource();
         hiveSource.setUsername(source.getUsername());
-        hiveSource.setPassword(source.getPassword());
         hiveSource.setHostPort(source.getHostPort());
         hiveSource.setDatabase(source.getDatabase());
         hiveSource.setDriver(source.getDriver());
@@ -127,7 +123,6 @@ public class DatasourceUtils {
             com.linkedin.datasource.sources.OracleSource source) {
         OracleSource oracleSource = new OracleSource();
         oracleSource.setUsername(source.getUsername());
-        oracleSource.setPassword(source.getPassword());
         oracleSource.setHostPort(source.getHostPort());
         oracleSource.setServiceName(source.getServiceName());
         oracleSource.setDriver(source.getDriver());
@@ -149,7 +144,6 @@ public class DatasourceUtils {
             com.linkedin.datasource.sources.PinotSource source) {
         PinotSource pinotSource = new PinotSource();
         pinotSource.setUsername(source.getUsername());
-        pinotSource.setPassword(source.getPassword());
         pinotSource.setHostPort(source.getHostPort());
         pinotSource.setDriver(source.getDriver());
         pinotSource.setMinSize(source.getMinSize());
@@ -169,7 +163,6 @@ public class DatasourceUtils {
             com.linkedin.datasource.sources.PrestoSource source) {
         PrestoSource prestoSource = new PrestoSource();
         prestoSource.setUsername(source.getUsername());
-        prestoSource.setPassword(source.getPassword());
         prestoSource.setHostPort(source.getHostPort());
         prestoSource.setCatalog(source.getCatalog());
         prestoSource.setSchema(source.getSchema());
@@ -192,7 +185,6 @@ public class DatasourceUtils {
             com.linkedin.datasource.sources.TrinoSource source) {
         TrinoSource trinoSource = new TrinoSource();
         trinoSource.setUsername(source.getUsername());
-        trinoSource.setPassword(source.getPassword());
         trinoSource.setHostPort(source.getHostPort());
         trinoSource.setCatalog(source.getCatalog());
         trinoSource.setSchema(source.getSchema());
@@ -215,7 +207,6 @@ public class DatasourceUtils {
             com.linkedin.datasource.sources.SnowflakeSource source) {
         SnowflakeSource snowflakeSource = new SnowflakeSource();
         snowflakeSource.setUsername(source.getUsername());
-        snowflakeSource.setPassword(source.getPassword());
         snowflakeSource.setHostPort(source.getHostPort());
         snowflakeSource.setDriver(source.getDriver());
         snowflakeSource.setMinSize(source.getMinSize());
