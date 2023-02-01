@@ -84,6 +84,7 @@ public class DatasourceMapper implements ModelMapper<EntityResponse, Datasource>
                 datasource.setDeprecation(
                         DatasourceDeprecationMapper.map(new DatasourceDeprecation(dataMap))));
 
+        ownedDatasource(result);
         mappingHelper.mapToResult("datasourceConnectionPrimary", this::mapConnectionPrimary);
         mappingHelper.mapToResult("datasourceConnectionGSB", this::mapConnectionGSB);
 
@@ -104,24 +105,25 @@ public class DatasourceMapper implements ModelMapper<EntityResponse, Datasource>
         }
     }
 
-    private boolean isOwner(@Nonnull Datasource datasource) {
+    private void ownedDatasource(@Nonnull Datasource datasource) {
         List<String> ownerUrns = datasource.getOwnership().getOwners().stream()
                 .map(this::ownerUrnStrOf).collect(Collectors.toList());
         String actor = context.getAuthentication().getActor().toUrnStr();
         List<String> actorGroups = groupMembership.getNativeGroups().stream()
                 .map(Urn::toString).collect(Collectors.toList());
-        return ownerUrns.contains(actor) || ownerUrns.stream().anyMatch(actorGroups::contains);
+        boolean isOwner = ownerUrns.contains(actor) || ownerUrns.stream().anyMatch(actorGroups::contains);
+        datasource.setOwned(isOwner);
     }
 
     private void mapConnectionPrimary(@Nonnull Datasource datasource, @Nonnull DataMap dataMap) {
         DatasourceConnectionPrimary pri = new DatasourceConnectionPrimary(dataMap);
-        DatasourceConnection dataConn = DatasourceConnectionPrimaryMapper.map(pri, isOwner(datasource));
+        DatasourceConnection dataConn = DatasourceConnectionPrimaryMapper.map(pri, datasource.getOwned());
         datasource.setPrimaryConn(dataConn);
     }
 
     private void mapConnectionGSB(@Nonnull Datasource datasource, @Nonnull DataMap dataMap) {
         DatasourceConnectionGSB gsb = new DatasourceConnectionGSB(dataMap);
-        DatasourceConnection dataConn = DatasourceConnectionGSBMapper.map(gsb, isOwner(datasource));
+        DatasourceConnection dataConn = DatasourceConnectionGSBMapper.map(gsb, datasource.getOwned());
         datasource.setGsbConn(dataConn);
     }
 

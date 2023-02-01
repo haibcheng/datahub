@@ -9758,6 +9758,8 @@ type Datasource implements EntityWithRelationships & Entity {
 
     testQuerySql: String
 
+    owned: Boolean
+
     group: CorpGroup
 
     primaryConn: DatasourceConnection
