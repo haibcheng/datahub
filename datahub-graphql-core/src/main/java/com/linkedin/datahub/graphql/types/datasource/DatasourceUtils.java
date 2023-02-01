@@ -1,7 +1,7 @@
 package com.linkedin.datahub.graphql.types.datasource;
 
-import com.linkedin.datahub.graphql.generated.*;
 import com.linkedin.common.urn.DatasourceUrn;
+import com.linkedin.datahub.graphql.generated.*;
 
 import java.net.URISyntaxException;
 
@@ -18,14 +18,14 @@ public class DatasourceUtils {
     }
 
     public static IcebergSource convertIcebergSource(
-            com.linkedin.datasource.sources.IcebergSource source) {
+            com.linkedin.datasource.sources.IcebergSource source, boolean isOwner) {
         IcebergSource icebergSource = new IcebergSource();
         icebergSource.setHiveMetastoreUris(source.getHiveMetastoreUris());
         return icebergSource;
     }
 
     public static KafkaMetadataSource convertKafkaMetadataSource(
-            com.linkedin.datasource.sources.KafkaMetadataSource source) {
+            com.linkedin.datasource.sources.KafkaMetadataSource source, boolean isOwner) {
         KafkaMetadataSource kafkaSource = new KafkaMetadataSource();
         kafkaSource.setBootstrap(source.getBootstrap());
         kafkaSource.setSchemaRegistryUrl(source.getSchemaRegistryUrl());
@@ -36,9 +36,12 @@ public class DatasourceUtils {
     }
 
     public static MysqlSource convertMysqlSource(
-            com.linkedin.datasource.sources.MysqlSource source) {
+            com.linkedin.datasource.sources.MysqlSource source, boolean isOwner) {
         MysqlSource mysqlSource = new MysqlSource();
-        mysqlSource.setUsername(source.getUsername());
+        if (isOwner) {
+            mysqlSource.setUsername(source.getUsername());
+            mysqlSource.setPassword(source.getPassword());
+        }
         mysqlSource.setHostPort(source.getHostPort());
         mysqlSource.setDatabase(source.getDatabase());
         mysqlSource.setDriver(source.getDriver());
@@ -57,9 +60,12 @@ public class DatasourceUtils {
     }
 
     public static PostgresSource convertPostgresSource(
-            com.linkedin.datasource.sources.PostgresSource source) {
+            com.linkedin.datasource.sources.PostgresSource source, boolean isOwner) {
         PostgresSource postgresSource = new PostgresSource();
-        postgresSource.setUsername(source.getUsername());
+        if (isOwner) {
+            postgresSource.setUsername(source.getUsername());
+            postgresSource.setPassword(source.getPassword());
+        }
         postgresSource.setHostPort(source.getHostPort());
         postgresSource.setDatabase(source.getDatabase());
         postgresSource.setDriver(source.getDriver());
@@ -78,9 +84,12 @@ public class DatasourceUtils {
     }
 
     public static TiDBSource convertTiDBSource(
-            com.linkedin.datasource.sources.TiDBSource source) {
+            com.linkedin.datasource.sources.TiDBSource source, boolean isOwner) {
         TiDBSource tidbSource = new TiDBSource();
-        tidbSource.setUsername(source.getUsername());
+        if (isOwner) {
+            tidbSource.setUsername(source.getUsername());
+            tidbSource.setPassword(source.getPassword());
+        }
         tidbSource.setHostPort(source.getHostPort());
         tidbSource.setDatabase(source.getDatabase());
         tidbSource.setDriver(source.getDriver());
@@ -99,9 +108,12 @@ public class DatasourceUtils {
     }
 
     public static HiveSource convertHiveSource(
-            com.linkedin.datasource.sources.HiveSource source) {
+            com.linkedin.datasource.sources.HiveSource source, boolean isOwner) {
         HiveSource hiveSource = new HiveSource();
-        hiveSource.setUsername(source.getUsername());
+        if (isOwner) {
+            hiveSource.setUsername(source.getUsername());
+            hiveSource.setPassword(source.getPassword());
+        }
         hiveSource.setHostPort(source.getHostPort());
         hiveSource.setDatabase(source.getDatabase());
         hiveSource.setDriver(source.getDriver());
@@ -120,9 +132,12 @@ public class DatasourceUtils {
     }
 
     public static OracleSource convertOracleSource(
-            com.linkedin.datasource.sources.OracleSource source) {
+            com.linkedin.datasource.sources.OracleSource source, boolean isOwner) {
         OracleSource oracleSource = new OracleSource();
-        oracleSource.setUsername(source.getUsername());
+        if (isOwner) {
+            oracleSource.setUsername(source.getUsername());
+            oracleSource.setPassword(source.getPassword());
+        }
         oracleSource.setHostPort(source.getHostPort());
         oracleSource.setServiceName(source.getServiceName());
         oracleSource.setDriver(source.getDriver());
@@ -141,9 +156,12 @@ public class DatasourceUtils {
     }
 
     public static PinotSource convertPinotSource(
-            com.linkedin.datasource.sources.PinotSource source) {
+            com.linkedin.datasource.sources.PinotSource source, boolean isOwner) {
         PinotSource pinotSource = new PinotSource();
-        pinotSource.setUsername(source.getUsername());
+        if (isOwner) {
+            pinotSource.setUsername(source.getUsername());
+            pinotSource.setPassword(source.getPassword());
+        }
         pinotSource.setHostPort(source.getHostPort());
         pinotSource.setDriver(source.getDriver());
         pinotSource.setMinSize(source.getMinSize());
@@ -160,9 +178,12 @@ public class DatasourceUtils {
     }
 
     public static PrestoSource convertPrestoSource(
-            com.linkedin.datasource.sources.PrestoSource source) {
+            com.linkedin.datasource.sources.PrestoSource source, boolean isOwner) {
         PrestoSource prestoSource = new PrestoSource();
-        prestoSource.setUsername(source.getUsername());
+        if (isOwner) {
+            prestoSource.setUsername(source.getUsername());
+            prestoSource.setPassword(source.getPassword());
+        }
         prestoSource.setHostPort(source.getHostPort());
         prestoSource.setCatalog(source.getCatalog());
         prestoSource.setSchema(source.getSchema());
@@ -182,9 +203,12 @@ public class DatasourceUtils {
     }
 
     public static TrinoSource convertTrinoSource(
-            com.linkedin.datasource.sources.TrinoSource source) {
+            com.linkedin.datasource.sources.TrinoSource source, boolean isOwner) {
         TrinoSource trinoSource = new TrinoSource();
-        trinoSource.setUsername(source.getUsername());
+        if (isOwner) {
+            trinoSource.setUsername(source.getUsername());
+            trinoSource.setPassword(source.getPassword());
+        }
         trinoSource.setHostPort(source.getHostPort());
         trinoSource.setCatalog(source.getCatalog());
         trinoSource.setSchema(source.getSchema());
@@ -204,9 +228,12 @@ public class DatasourceUtils {
     }
 
     public static SnowflakeSource convertSnowflakeSource(
-            com.linkedin.datasource.sources.SnowflakeSource source) {
+            com.linkedin.datasource.sources.SnowflakeSource source, boolean isOwner) {
         SnowflakeSource snowflakeSource = new SnowflakeSource();
-        snowflakeSource.setUsername(source.getUsername());
+        if (isOwner) {
+            snowflakeSource.setUsername(source.getUsername());
+            snowflakeSource.setPassword(source.getPassword());
+        }
         snowflakeSource.setHostPort(source.getHostPort());
         snowflakeSource.setDriver(source.getDriver());
         snowflakeSource.setMinSize(source.getMinSize());

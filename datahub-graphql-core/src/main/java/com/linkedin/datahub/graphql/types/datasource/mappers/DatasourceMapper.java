@@ -7,6 +7,7 @@ import com.linkedin.common.Ownership;
 import com.linkedin.common.Status;
 import com.linkedin.common.urn.Urn;
 import com.linkedin.data.DataMap;
+import com.linkedin.datahub.graphql.QueryContext;
 import com.linkedin.datahub.graphql.generated.FabricType;
 import com.linkedin.datahub.graphql.generated.*;
 import com.linkedin.datahub.graphql.types.common.mappers.InstitutionalMemoryMapper;
@@ -27,19 +28,25 @@ import com.linkedin.datasource.DatasourceInfo;
 import com.linkedin.domain.Domains;
 import com.linkedin.entity.EntityResponse;
 import com.linkedin.entity.EnvelopedAspectMap;
+import com.linkedin.identity.NativeGroupMembership;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.linkedin.metadata.Constants.*;
 
 @Slf4j
-public class DatasourceMapper implements ModelMapper<EntityResponse, Datasource> {
+public class DatasourceMapper implements ModelMapper<EntityResponse, Datasource>
+{
+    private final QueryContext context;
+    private final NativeGroupMembership groupMembership;
 
-    public static final DatasourceMapper INSTANCE = new DatasourceMapper();
-
-    public static Datasource map(@Nonnull final EntityResponse datasource) {
-        return INSTANCE.apply(datasource);
+    public static Datasource map(@Nonnull final EntityResponse datasource,
+                                 QueryContext context, NativeGroupMembership groupMembership) {
+        return new DatasourceMapper(context, groupMembership).apply(datasource);
     }
 
     public Datasource apply(@Nonnull final EntityResponse entityResponse) {
@@ -83,15 +90,38 @@ public class DatasourceMapper implements ModelMapper<EntityResponse, Datasource>
         return mappingHelper.getResult();
     }
 
+    public DatasourceMapper(QueryContext context, NativeGroupMembership groupMembership) {
+        this.context = context;
+        this.groupMembership = groupMembership;
+    }
+
+    private String ownerUrnStrOf(Owner owner) {
+        if (owner.getOwner() instanceof CorpUser) {
+            return ((CorpUser) owner.getOwner()).getUrn();
+        }
+        else {
+            return ((CorpGroup) owner.getOwner()).getUrn();
+        }
+    }
+
+    private boolean isOwner(@Nonnull Datasource datasource) {
+        List<String> ownerUrns = datasource.getOwnership().getOwners().stream()
+                .map(this::ownerUrnStrOf).collect(Collectors.toList());
+        String actor = context.getAuthentication().getActor().toUrnStr();
+        List<String> actorGroups = groupMembership.getNativeGroups().stream()
+                .map(Urn::toString).collect(Collectors.toList());
+        return ownerUrns.contains(actor) || ownerUrns.stream().anyMatch(actorGroups::contains);
+    }
+
     private void mapConnectionPrimary(@Nonnull Datasource datasource, @Nonnull DataMap dataMap) {
         DatasourceConnectionPrimary pri = new DatasourceConnectionPrimary(dataMap);
-        DatasourceConnection dataConn = DatasourceConnectionPrimaryMapper.map(pri);
+        DatasourceConnection dataConn = DatasourceConnectionPrimaryMapper.map(pri, isOwner(datasource));
         datasource.setPrimaryConn(dataConn);
     }
 
     private void mapConnectionGSB(@Nonnull Datasource datasource, @Nonnull DataMap dataMap) {
         DatasourceConnectionGSB gsb = new DatasourceConnectionGSB(dataMap);
-        DatasourceConnection dataConn = DatasourceConnectionGSBMapper.map(gsb);
+        DatasourceConnection dataConn = DatasourceConnectionGSBMapper.map(gsb, isOwner(datasource));
         datasource.setGsbConn(dataConn);
     }
 

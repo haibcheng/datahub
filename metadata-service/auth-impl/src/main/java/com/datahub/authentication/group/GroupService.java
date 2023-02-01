@@ -151,7 +151,7 @@ public class GroupService {
     userUrnList.forEach(userUrn -> addUserToNativeGroup(userUrn, groupUrn, authentication));
   }
 
-  NativeGroupMembership getExistingNativeGroupMembership(@Nonnull final Urn userUrn,
+  public NativeGroupMembership getExistingNativeGroupMembership(@Nonnull final Urn userUrn,
       final Authentication authentication) throws Exception {
     final EntityResponse entityResponse =
         _entityClient.batchGetV2(CORP_USER_ENTITY_NAME, Collections.singleton(userUrn),

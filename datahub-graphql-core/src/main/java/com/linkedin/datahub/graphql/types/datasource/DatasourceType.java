@@ -1,5 +1,6 @@
 package com.linkedin.datahub.graphql.types.datasource;
 
+import com.datahub.authentication.group.GroupService;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.linkedin.common.urn.CorpuserUrn;
@@ -26,6 +27,7 @@ import com.linkedin.datahub.graphql.types.mappers.UrnSearchResultsMapper;
 import com.linkedin.entity.Entity;
 import com.linkedin.entity.EntityResponse;
 import com.linkedin.entity.client.EntityClient;
+import com.linkedin.identity.NativeGroupMembership;
 import com.linkedin.metadata.authorization.PoliciesConfig;
 import com.linkedin.metadata.browse.BrowseResult;
 import com.linkedin.metadata.query.AutoCompleteResult;
@@ -68,9 +70,11 @@ public class DatasourceType implements SearchableEntityType<Datasource, String>,
     private static final String ENTITY_NAME = "datasource";
 
     private final EntityClient _datasourcesClient;
+    private final GroupService _groupService;
 
-    public DatasourceType(final EntityClient datasourcesClient) {
+    public DatasourceType(final EntityClient datasourcesClient, final GroupService groupService) {
         _datasourcesClient = datasourcesClient;
+        _groupService = groupService;
     }
 
     @Override
@@ -98,6 +102,8 @@ public class DatasourceType implements SearchableEntityType<Datasource, String>,
         @Nonnull final QueryContext context) {
 
         try {
+            NativeGroupMembership groupMembership = nativeGroupMembershipFor(context);
+
             final List<Urn> urns = urnStrs.stream()
                     .map(UrnUtils::getUrn)
                     .collect(Collectors.toList());
@@ -115,7 +121,7 @@ public class DatasourceType implements SearchableEntityType<Datasource, String>,
             }
             return gmsResults.stream()
                     .map(gmsDataset -> gmsDataset == null ? null : DataFetcherResult.<Datasource>newResult()
-                            .data(DatasourceMapper.map(gmsDataset))
+                            .data(DatasourceMapper.map(gmsDataset, context, groupMembership))
                             .build())
                     .collect(Collectors.toList());
         } catch (Exception e) {
@@ -205,7 +211,7 @@ public class DatasourceType implements SearchableEntityType<Datasource, String>,
     private DisjunctivePrivilegeGroup getAuthorizedPrivileges(final DatasourceUpdateInput updateInput) {
 
         final ConjunctivePrivilegeGroup allPrivilegesGroup = new ConjunctivePrivilegeGroup(ImmutableList.of(
-                PoliciesConfig.EDIT_ENTITY_PRIVILEGE.getType()
+                PoliciesConfig.EDIT_DATASOURCE_PRIVILEGE.getType()
         ));
 
         List<String> specificPrivileges = new ArrayList<>();
@@ -233,4 +239,10 @@ public class DatasourceType implements SearchableEntityType<Datasource, String>,
                 specificPrivilegeGroup
         ));
     }
+
+    private NativeGroupMembership nativeGroupMembershipFor(@Nonnull QueryContext context) throws Exception {
+        final CorpuserUrn actor = CorpuserUrn.createFromString(context.getAuthentication().getActor().toUrnStr());
+        return _groupService.getExistingNativeGroupMembership(actor, context.getAuthentication());
+    }
+
 }

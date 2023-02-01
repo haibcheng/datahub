@@ -366,7 +366,7 @@ public class GmsGraphQLEngine {
         this.featureFlags = featureFlags;
 
         this.datasetType = new DatasetType(entityClient);
-        this.datasourceType = new DatasourceType(entityClient);
+        this.datasourceType = new DatasourceType(entityClient, groupService);
         this.corpUserType = new CorpUserType(entityClient, featureFlags);
         this.corpGroupType = new CorpGroupType(entityClient);
         this.chartType = new ChartType(entityClient);
