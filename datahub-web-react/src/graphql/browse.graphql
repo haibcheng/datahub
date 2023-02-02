@@ -42,6 +42,7 @@ query getBrowseResults($input: BrowseInput!) {
                 name
                 alias
                 testQuerySql
+                owned
                 origin
                 description
                 platform {

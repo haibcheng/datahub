@@ -186,6 +186,7 @@ fragment lineageNodeProperties on EntityWithRelationships {
     ... on Datasource {
         name
         alias
+        owned
         testQuerySql
         origin
         description

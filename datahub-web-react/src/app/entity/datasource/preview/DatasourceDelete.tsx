@@ -1,7 +1,7 @@
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Button, Modal } from 'antd';
 import React, { useState } from 'react';
-import { useDeleteDatasourceMutation } from '../../../../graphql/datasource.generated';
+import { useDeleteDatasourceMutation, useGetDatasourceQuery } from '../../../../graphql/datasource.generated';
 import { showRequestResult } from '../service/NotificationUtil';
 
 export type Props = {
@@ -12,7 +12,13 @@ export type Props = {
 export default function DatasourceDelete({ urn, name }: Props) {
     const [deleteDatasourceMutation] = useDeleteDatasourceMutation();
     const [loading, updateLoading] = useState(false);
-
+    const data = useGetDatasourceQuery({
+        variables: {
+            urn,
+        },
+    });
+    const owned = data?.data?.datasource?.owned;
+    console.log('datasource delete res...', owned);
     const sendDataSourceSaveReq = () => {
         deleteDatasourceMutation({
             variables: {
@@ -60,10 +66,12 @@ export default function DatasourceDelete({ urn, name }: Props) {
 
     return (
         <>
-            <Button type="link" loading={loading} onClick={(e) => onDeleteBtnClick(e)}>
-                Delete
-                <DeleteOutlined />
-            </Button>
+            {owned && (
+                <Button type="link" loading={loading} onClick={(e) => onDeleteBtnClick(e)}>
+                    Delete
+                    <DeleteOutlined />
+                </Button>
+            )}
         </>
     );
 }

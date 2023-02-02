@@ -23,6 +23,7 @@ export default function DatasourceEdit({ datasource: { urn } }: Props) {
     });
     console.log('datasource edit res...', res);
     const dataSource = res?.data?.datasource;
+    const owned = res?.data?.datasource?.owned;
     const typeName = dataSource?.primaryConn?.connection?.__typename;
     const selectedType = sourceTypeList.find((item) => {
         return typeName?.toLocaleLowerCase().includes(item.value.toLocaleLowerCase());
@@ -64,7 +65,7 @@ export default function DatasourceEdit({ datasource: { urn } }: Props) {
     };
 
     const showEdit = () => {
-        return corpUserUrn !== undefined && corpUserUrn !== null;
+        return corpUserUrn !== undefined && corpUserUrn !== null && owned;
     };
 
     return (

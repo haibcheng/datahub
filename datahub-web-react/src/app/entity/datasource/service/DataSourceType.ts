@@ -57,6 +57,7 @@ export enum FormField {
     idleSize = 'idleSize',
     status = 'status',
     alias = 'alias',
+    owned = 'owned',
     testQuerySql = 'testQuerySql',
     dataCenter = 'dataCenter',
     connectionParams = 'connectionParams',
