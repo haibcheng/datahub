@@ -106,13 +106,17 @@ public class DatasourceMapper implements ModelMapper<EntityResponse, Datasource>
     }
 
     private void ownedDatasource(@Nonnull Datasource datasource) {
-        List<String> ownerUrns = datasource.getOwnership().getOwners().stream()
-                .map(this::ownerUrnStrOf).collect(Collectors.toList());
-        String actor = context.getAuthentication().getActor().toUrnStr();
-        List<String> actorGroups = groupMembership.getNativeGroups().stream()
-                .map(Urn::toString).collect(Collectors.toList());
-        boolean isOwner = ownerUrns.contains(actor) || ownerUrns.stream().anyMatch(actorGroups::contains);
-        datasource.setOwned(isOwner);
+        try {
+            List<String> ownerUrns = datasource.getOwnership().getOwners().stream()
+                    .map(this::ownerUrnStrOf).collect(Collectors.toList());
+            String actor = context.getAuthentication().getActor().toUrnStr();
+            List<String> actorGroups = groupMembership.getNativeGroups().stream()
+                    .map(Urn::toString).collect(Collectors.toList());
+            boolean isOwner = ownerUrns.contains(actor) || ownerUrns.stream().anyMatch(actorGroups::contains);
+            datasource.setOwned(isOwner);
+        } catch (Exception ex) {
+            datasource.setOwned(false);
+        }
     }
 
     private void mapConnectionPrimary(@Nonnull Datasource datasource, @Nonnull DataMap dataMap) {
