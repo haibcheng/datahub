@@ -75,7 +75,11 @@ public class DatasourceSync {
                 JsonNode sources = getDataSources(region, token);
                 for (int i1 = 0; i1 < sources.size(); ++i1) {
                     JsonNode eachNode = sources.get(i1);
-                    handleDataSources(failures, eachNode, "GERMANY".equals(region) ? "EMEA" : region);
+                    try {
+                        handleDataSources(failures, eachNode, "GERMANY".equals(region) ? "EMEA" : region);
+                    } catch (Exception inex) {
+                        log.error("Fail to handle datasource", inex);
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -105,7 +109,7 @@ public class DatasourceSync {
 
             JsonNode eachSource = dsIter.next();
             String type = getValueStr(eachSource, "dataSourceType");
-            String sourceName = getValueStr(eachSource, "dataSourceName");
+            String sourceName = getValueStr(eachSource, "dataSourceName").trim();
             Source.SourceBuilder builder = Source.builder()
                     .dataSourceName(sourceName)
                     .alias(getValueStr(eachSource, "alias"))
