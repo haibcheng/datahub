@@ -190,11 +190,11 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
         Map<String, Object> inputMap = environment.getArgument("input");
         final DatasourceCreateInput input = bindArgument(inputMap, DatasourceCreateInput.class);
 
-        String sourceName = input.getName();
+        String sourceName = input.getName().trim();
 
         final DatasourceInfo datasourceInfo = new DatasourceInfo();
 
-        String sourceRegion = input.getRegion();
+        String sourceRegion = input.getRegion().trim();
         datasourceInfo.setRegion(sourceRegion);
 
         if (input.getGroup() != null) {
