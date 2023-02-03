@@ -69,12 +69,12 @@ export class DatasourceEntity implements Entity<Datasource> {
 
     getCollectionName = () => 'Datasources';
 
-    getDelete = (urn: string, name: string) => {
-        return <DatasourceDelete urn={urn} name={name} />;
+    getDelete = (data: Datasource) => {
+        return data.owned ? <DatasourceDelete urn={data.urn} name={data.name} /> : null;
     };
 
     getEdit = (data: Datasource) => {
-        return <DatasourceEdit datasource={data} />;
+        return data.owned ? <DatasourceEdit datasource={data} /> : null;
     };
 
     renderProfile = (urn: string) => (
@@ -152,7 +152,7 @@ export class DatasourceEntity implements Entity<Datasource> {
                 globalTags={data.globalTags}
                 glossaryTerms={data.glossaryTerms}
                 domain={data.domain?.domain}
-                delEle={this.getDelete(data.urn, data.name)}
+                delEle={this.getDelete(data)}
                 editEle={this.getEdit(data)}
             />
         );
