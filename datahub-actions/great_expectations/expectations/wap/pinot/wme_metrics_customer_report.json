@@ -1,0 +1,39 @@
+{
+  "data_asset_type": null,
+  "expectation_suite_name": "wap.pinot.wme_metrics_customer_report",
+  "expectations": [
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "clientType",
+        "value_set": [
+          "MEETING_CENTER",
+          "RECORDING",
+          "SIP",
+          "TEAMS_CLIENT",
+          "TEAMS_DEVICE",
+          "VOICEA_CLIENT",
+          "EVENT_CENTER",
+          "TRAINING_CENTER",
+          "WEBEX_SDK"
+        ]
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "videoContentRxE2eJitter"
+      }
+    },
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 10
+      }
+    }
+  ],
+  "ge_cloud_id": null,
+  "meta": {
+    "great_expectations_version": "0.15.46"
+  }
+}
