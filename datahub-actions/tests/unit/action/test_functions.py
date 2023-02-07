@@ -14,16 +14,16 @@ class TestFunctions(unittest.TestCase):
             catalog='wpsj1_pinot',
             http_scheme='https',
             schema='default',
-            auth=trino.auth.BasicAuthentication(username='haicheng', password=pa),
-            verify='/Users/haicheng/Documents/App/trino/trinoroot.pem'
+            verify='/Users/haicheng/Documents/App/trino/trinoroot.pem',
+            auth=trino.auth.BasicAuthentication(username='datahub.gen', password=pa)
         )
         cur = conn.cursor()
         cur.arraysize = 1000  # sets the number of records the cursor will fetch at a time
-        cur.execute('SELECT * FROM wme_metrics_customer_report limit 5')
+        cur.execute('SELECT distinct clientType FROM wme_metrics_customer_report ORDER BY clientType')
         rows = cur.fetchmany()
         for row in rows:
             print(row)
-        self.assertTrue(len(rows) == 5)
+        self.assertTrue(len(rows) > 0)
 
     def test_notify(self):
 
