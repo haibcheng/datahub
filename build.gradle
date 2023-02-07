@@ -166,12 +166,6 @@ project.ext.externalDependency = [
     'typesafeConfig':'com.typesafe:config:1.4.1',
     'wiremock':'com.github.tomakehurst:wiremock:2.10.0',
     'zookeeper': 'org.apache.zookeeper:zookeeper:3.4.14',
-    'trinoJdbc': 'io.trino:trino-jdbc:405',
-    'hiveJdbc': 'org.apache.hive:hive-jdbc:3.1.3',
-    'prestoJdbc': 'com.facebook.presto:presto-jdbc:0.278.1',
-    'pinotJdbc': 'org.apache.pinot:pinot-jdbc-client:0.11.0',
-    'snowflakeJdbc': 'net.snowflake:snowflake-jdbc:3.13.26',
-    'oracleJdbc': 'com.oracle.database.jdbc:ojdbc10:19.17.0.0',
     'matsLogback': 'com.cisco.webex.mats:mats-monitoring-logback:0.0.1'
 ]
 
