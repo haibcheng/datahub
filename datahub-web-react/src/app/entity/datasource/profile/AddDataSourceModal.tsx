@@ -989,7 +989,7 @@ export default function AddDataSourceModal({
                 >
                     <Input
                         placeholder="Please input connection host port"
-                        disabled={isOracle() && info.tnsName !== '' && !formData.create}
+                        disabled={isOracle() && info.tnsName !== '' && info.tnsName !== null && !formData.create}
                         autoComplete="off"
                         defaultValue={info.hostPort}
                         onChange={(e) => updateDataSourceConnections(e.target.value, FormField.hostPort, index)}
@@ -1048,7 +1048,12 @@ export default function AddDataSourceModal({
                     <Input
                         placeholder="Please input connection TNS name"
                         autoComplete="off"
-                        disabled={isOracle() && (info.serviceName !== '' || info.hostPort !== '') && !formData.create}
+                        disabled={
+                            isOracle() &&
+                            (info.serviceName !== '' || info.hostPort !== '') &&
+                            (info.serviceName !== null || info.hostPort !== null) &&
+                            !formData.create
+                        }
                         defaultValue={info.tnsName}
                         onChange={(e) => updateDataSourceConnections(e.target.value, FormField.tnsName, index)}
                     />
@@ -1068,7 +1073,7 @@ export default function AddDataSourceModal({
                 >
                     <Input
                         placeholder="Please input connection service name"
-                        disabled={isOracle() && info.tnsName !== '' && !formData.create}
+                        disabled={isOracle() && info.tnsName !== '' && info.tnsName !== null && !formData.create}
                         autoComplete="off"
                         defaultValue={info.serviceName}
                         onChange={(e) => updateDataSourceConnections(e.target.value, FormField.serviceName, index)}
