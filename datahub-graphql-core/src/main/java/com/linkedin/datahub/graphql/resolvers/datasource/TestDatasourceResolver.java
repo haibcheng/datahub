@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.Base64;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
@@ -53,9 +54,7 @@ public class TestDatasourceResolver implements DataFetcher<CompletableFuture<Boo
             props.put("driver", new HiveSource().getDriver());
         } else if (sourceInput.getPinot() != null) {
             type = PINOT_SOURCE_NAME;
-            props.put("user", sourceInput.getPinot().getUsername());
-            props.put("password", sourceInput.getPinot().getPassword());
-            props.put("driver", new PinotSource().getDriver());
+            pinotProps(props, sourceInput.getPinot().getUsername(), sourceInput.getPinot().getPassword());
         } else if (sourceInput.getPresto() != null) {
             type = PRESTO_SOURCE_NAME;
             props.put("user", sourceInput.getPresto().getUsername());
@@ -186,6 +185,14 @@ public class TestDatasourceResolver implements DataFetcher<CompletableFuture<Boo
             jdbcUrl += jdbcParams;
         }
         return jdbcUrl;
+    }
+
+    private static void pinotProps(Properties props, String user, String password) {
+        String plainCredentials = user + ":" + password;
+        String base64Credentials = new String(Base64.getEncoder().encode(plainCredentials.getBytes()));
+        String authorizationHeader = "Basic " + base64Credentials;
+        props.setProperty("headers.Authorization", authorizationHeader);
+        props.put("driver", new PinotSource().getDriver());
     }
 
     private static boolean supportType(String type) {
