@@ -86,10 +86,11 @@ export default function AddDataSourceModal({
         return <Alert type="error" message={error?.message || 'Entity failed to load'} />;
     }
 
-    if (originData) {
+    if (!formData.create) {
         formData.group = originData.group;
         console.log('originData====', originData);
-    } else {
+    } else if (formData.create && formData.group === 'urn:li:corpGroup:none') {
+        console.log('formData.group111====', formData.group, groupList[0]?.urn, groupList);
         formData.group = groupList[0]?.urn;
     }
 
@@ -697,11 +698,14 @@ export default function AddDataSourceModal({
     const selectChangeHandler = (value: any, field) => {
         const updateInfo = {};
         updateInfo[field] = value;
+        console.log('Group----', updateInfo[field], field, value);
         const updatedData = {
             ...formData,
             ...updateInfo,
         };
         updateDataSourceFormData(updatedData);
+        formData[field] = value;
+        console.log('Group----', formData, formData.group, formData.sourceType);
     };
 
     const getConnectionTitle = (index) => {
@@ -985,7 +989,7 @@ export default function AddDataSourceModal({
                 <Form.Item
                     name={`hostPort_${info.id}`}
                     label="Host port"
-                    rules={[{ required: false, message: 'Please input connection host port!' }]}
+                    rules={[{ required: !isOracle(), message: 'Please input connection host port!' }]}
                 >
                     <Input
                         placeholder="Please input connection host port"
