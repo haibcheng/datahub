@@ -41,18 +41,22 @@ class UrlNotificationAction(CommonAction):
                     logger.info("The change[%s] is being notified...", urn)
                     self.notification.notify(url=target_url)
                     logger.info("The change[%s] has been notified!", urn)
+                    self.call_interval_reset()
                 except Exception as ex:
                     logger.error('Failed to notify the change[%s] -> %s', urn, repr(ex))
                     self._urn_dict.add_elements(urn)
+                    self.call_interval_add(self.CALL_INTERVAL)
         elif self.config.type == self.TYPE_CUD:
             urns_str = ','.join(urns)
             try:
                 logger.info("The change[%s] is being notified...", urns_str)
                 self.notification.notify(url=url, urns=urns)
                 logger.info("The change[%s] has been notified!", urns_str)
+                self.call_interval_reset()
             except Exception as ex:
                 logger.error('Failed to notify the change[%s] -> %s', urns_str, repr(ex))
                 self._urn_dict.add_elements(urns)
+                self.call_interval_add(self.CALL_INTERVAL)
 
     def __init__(self, config: UrlNotificationConfig, ctx: PipelineContext):
         super().__init__(config=config, ctx=ctx)

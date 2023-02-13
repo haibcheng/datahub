@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 class CommonAction(Action, ABC):
 
     SEPARATOR = "=/\\="
+    CALL_INTERVAL = 60
 
     def act(self, event: EventEnvelope) -> None:
         event_json = json.loads(event.as_json()).get("event")
@@ -42,7 +43,7 @@ class CommonAction(Action, ABC):
     def _notify_change(self):
         while not self._close:
             sleep(1)
-            if self._counter.increment_get() < 30:
+            if self._counter.increment_get() < self._call_interval:
                 continue
             self._counter.reset()
             n_set = self._urn_dict.fetch_elements()
@@ -72,6 +73,14 @@ class CommonAction(Action, ABC):
     def _send_notification(self, url: str, urns: list[str]):
         pass
 
+    def call_interval_add(self, num: int):
+        if num < 0 or self._call_interval > 24 * 60 * 60:
+            return
+        self._call_interval += num
+
+    def call_interval_reset(self):
+        self._call_interval = self.CALL_INTERVAL
+
     def __init__(self, config: UrlNotificationConfig, ctx: PipelineContext):
         self.config = config
         for matcher in self._matchers():
@@ -79,6 +88,7 @@ class CommonAction(Action, ABC):
                 self.matcher = matcher
         self._cache = FileCache(config.actions_home + "/cache", ctx.pipeline_name + ".txt")
         self._counter = AtomicInteger()
+        self._call_interval = self.CALL_INTERVAL
         self._urn_dict = AtomicDict(unique_value=True, cache=self._cache, separator=self.SEPARATOR)
         self._close = False
         self._thread = Thread(target=self._notify_change)
