@@ -13,6 +13,8 @@ import com.linkedin.datahub.graphql.authorization.AuthorizationUtils;
 import com.linkedin.datahub.graphql.authorization.ConjunctivePrivilegeGroup;
 import com.linkedin.datahub.graphql.authorization.DisjunctivePrivilegeGroup;
 import com.linkedin.datahub.graphql.exception.AuthorizationException;
+import com.linkedin.datahub.graphql.exception.DataHubGraphQLErrorCode;
+import com.linkedin.datahub.graphql.exception.DataHubGraphQLException;
 import com.linkedin.datahub.graphql.generated.CorpGroup;
 import com.linkedin.datahub.graphql.generated.DatasourceCreateInput;
 import com.linkedin.datahub.graphql.generated.DatasourceSourceInput;
@@ -202,7 +204,7 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
             datasourceInfo.setGroup(corpGroupUrn);
         }
         if(input.getGroup() == null || input.getGroup().equalsIgnoreCase("urn:li:corpGroup:none")) {
-            throw new RuntimeException("No group was found");
+            throw new DataHubGraphQLException("No group was found", DataHubGraphQLErrorCode.BAD_REQUEST);
         }
 
         if (input.getAlias() != null) {
@@ -223,7 +225,7 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
 
         final DatasourceUrn sourceUrn = new DatasourceUrn(primaryPlatformUrn, sourceName.toLowerCase(), sourceRegion);
         if (input.getCreate() && entityService.exists(sourceUrn)) {
-            throw new IllegalArgumentException("Failed to add data source, duplicate data source!");
+            throw new DataHubGraphQLException("Duplicate data source", DataHubGraphQLErrorCode.BAD_REQUEST);
         }
 
         DatasourceConnectionGSB gsbConn = null;
@@ -239,7 +241,8 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
         }
 
         if (gsbPlatformUrn != null && !primaryPlatformUrn.equals(gsbPlatformUrn)) {
-            throw new IllegalArgumentException("GSB platform was different from primary platform.");
+            throw new DataHubGraphQLException("GSB platform was different from primary platform",
+                    DataHubGraphQLErrorCode.BAD_REQUEST);
         }
 
         final MetadataChangeProposal sourceInfoProposal = new MetadataChangeProposal();
