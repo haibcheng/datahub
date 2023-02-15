@@ -30,6 +30,7 @@ import com.linkedin.entity.EntityResponse;
 import com.linkedin.entity.EnvelopedAspectMap;
 import com.linkedin.identity.NativeGroupMembership;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 
@@ -152,6 +153,9 @@ public class DatasourceMapper implements ModelMapper<EntityResponse, Datasource>
         datasource.setRegion(datasourceInfo.getRegion());
         datasource.setAlias(datasourceInfo.getAlias());
         datasource.setTestQuerySql(datasourceInfo.getTestQuerySql());
+        if(StringUtils.isNotEmpty(datasourceInfo.getName())) {
+            datasource.setName(datasourceInfo.getName());
+        }
     }
 
     private void mapDatasourceProperties(@Nonnull Datasource datasource,

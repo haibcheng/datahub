@@ -331,7 +331,8 @@ public class DatasourceService {
         }
     }
 
-    public void createDatasource(DatasourceSync.Source source, String sourceRegion, String groupName) throws Exception {
+    public void createDatasource(DatasourceSync.Source source,
+                                 String sourceRegion, String groupName, boolean forceUpdated) throws Exception {
 
         String sourceName = source.getDataSourceName();
 
@@ -340,6 +341,7 @@ public class DatasourceService {
 
         CorpGroupUrn corpGroupUrn = CorpGroupUrn.createFromString("urn:li:corpGroup:" + groupName);
         datasourceInfo.setGroup(corpGroupUrn);
+        datasourceInfo.setName(sourceName);
 
         if (source.getAlias() != null) {
             datasourceInfo.setAlias(source.getAlias());
@@ -354,7 +356,7 @@ public class DatasourceService {
         ConnectInfo connectInfo = parseConnection(source, primaryConn, gsbConn);
         final DatasourceUrn sourceUrn = new DatasourceUrn(connectInfo.getUrn(), sourceName.toLowerCase(), sourceRegion);
 
-        if (entityService.exists(sourceUrn)) {
+        if (!forceUpdated && entityService.exists(sourceUrn)) {
             log.info("Datasource[" + sourceUrn + "] exists!!!");
             return;
         }

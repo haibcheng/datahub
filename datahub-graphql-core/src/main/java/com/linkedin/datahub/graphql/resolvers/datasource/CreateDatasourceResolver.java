@@ -198,6 +198,7 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
 
         String sourceRegion = input.getRegion().trim();
         datasourceInfo.setRegion(sourceRegion);
+        datasourceInfo.setName(sourceName);
 
         if (input.getGroup() != null) {
             CorpGroupUrn corpGroupUrn = CorpGroupUrn.createFromString(input.getGroup());

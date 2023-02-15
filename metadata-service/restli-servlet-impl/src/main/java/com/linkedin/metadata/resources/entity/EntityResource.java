@@ -423,6 +423,32 @@ public class EntityResource extends CollectionResourceTaskTemplate<String, Entit
     }, MetricRegistry.name(this.getClass(), "deleteAll"));
   }
 
+  @Inject
+  @Named("javaEntityClient")
+  private com.linkedin.metadata.client.JavaEntityClient _entityClient;
+
+  @Inject
+  @Named("wapDataHub")
+  private com.datahub.cisco.wap.CITokenInfo wapDataHub;
+
+  @Inject
+  @Named("ciTokenService")
+  private com.datahub.cisco.wap.CITokenService ciTokenService;
+
+  @Action(name = "ingest_datasource")
+  @Nonnull
+  @WithSpan
+  public Task<StringArray> ingestDatasource(@ActionParam("url") @Nonnull String url,
+    @ActionParam("regions") @Optional String regions,
+    @ActionParam("forceUpdated") @Optional Boolean forceUpdated) throws URISyntaxException {
+    com.linkedin.metadata.resources.entity.datasource.DatasourceSync ds =
+            new com.linkedin.metadata.resources.entity.datasource.DatasourceSync(
+                    _entityService, _entityClient, _graphService,
+                    this.wapDataHub, this.ciTokenService, url, regions, forceUpdated);
+    return RestliUtil.toTask(() -> new StringArray(ds.sync()),
+            MetricRegistry.name(this.getClass(), "ingestDatasource"));
+  }
+
   /**
    * Deletes all data related to an individual urn(entity).
    * @param urnStr - the urn of the entity.

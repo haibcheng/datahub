@@ -21,5 +21,7 @@ record DatasourceInfo {
 
   group: CorpGroupUrn
 
+  name: optional string
+
   testQuerySql: optional string
 }

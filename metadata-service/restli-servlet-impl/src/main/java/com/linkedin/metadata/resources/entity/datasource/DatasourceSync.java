@@ -41,6 +41,7 @@ public class DatasourceSync {
     private CITokenService ciTokenService;
     private String url;
     private String regions;
+    private boolean forceUpdated;
 
     public DatasourceSync(EntityService entityService,
                           JavaEntityClient entityClient,
@@ -48,7 +49,8 @@ public class DatasourceSync {
                           CITokenInfo ciTokenInfo,
                           CITokenService ciTokenService,
                           String url,
-                          String regions) {
+                          String regions,
+                          boolean forceUpdated) {
         this.entityService = entityService;
         this.entityClient = entityClient;
         this.graphClient = new JavaGraphClient(graphService);
@@ -59,6 +61,7 @@ public class DatasourceSync {
         this.ciTokenService = ciTokenService;
         this.url = url;
         this.regions = regions;
+        this.forceUpdated = forceUpdated;
     }
 
     public List<String> sync() {
@@ -191,6 +194,7 @@ public class DatasourceSync {
                         || "trino".equalsIgnoreCase(type)) {
                     catalog = matcher.group("catalog");
                     schema = matcher.group("schema");
+                    jdbcParams = matcher.group("jdbcParams");
                 } else if (!"pinot".equalsIgnoreCase(type)) {
                     database = matcher.group("database");
                     jdbcParams = matcher.group("jdbcParams");
@@ -269,7 +273,7 @@ public class DatasourceSync {
             log.info("Creating datasource[" + region + "," + group + ","
                     + source.getDataSourceType() + "," + source.getDataSourceName() + "]...");
             try {
-                this.datasourceService.createDatasource(source, region, group);
+                this.datasourceService.createDatasource(source, region, group, forceUpdated);
             } catch (Exception ex) {
                 logFailure(failures, region, region, source, ex.getMessage());
             }
