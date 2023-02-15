@@ -807,7 +807,7 @@ export default function AddDataSourceModal({
                     rules={[{ required: false, message: 'Please input dataSource alias!' }]}
                 >
                     <Input
-                        disabled={!formData.create}
+                        // disabled={!formData.create}
                         placeholder="Please input dataSource alias"
                         autoComplete="off"
                         defaultValue={formData.alias}
@@ -820,7 +820,7 @@ export default function AddDataSourceModal({
                     rules={[{ required: false, message: 'Please input test query sql!' }]}
                 >
                     <Input
-                        disabled={!formData.create}
+                        // disabled={!formData.create}
                         placeholder="Please input test query sql"
                         autoComplete="off"
                         defaultValue={formData.testQuerySql}
