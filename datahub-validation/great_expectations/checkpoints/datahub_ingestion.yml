@@ -1,4 +1,4 @@
-name: datahub-ingestion
+name: datahub_ingestion
 config_version: 1.0
 module_name: great_expectations.checkpoint
 class_name: Checkpoint
