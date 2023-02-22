@@ -36,8 +36,16 @@ def sync_expectation(root, suite, value):
     value_dict = json.loads(value)
     json_object = json.dumps(value_dict, indent=4)
 
-    path = suite.replace(".", "/")
-    name_o = root + "/expectations/" + path + ".json"
+    path = root + "/expectations"
+    paths = suite.split(".")
+    for idx, p in enumerate(paths):
+        if idx == len(paths) - 1:
+            break
+        path += "/" + p
+        if not os.path.exists(path):
+            os.makedirs(path)
+
+    name_o = path + "/" + paths[len(paths)-1] + ".json"
     with open(name_o, "w") as outfile:
         outfile.write(json_object)
 
