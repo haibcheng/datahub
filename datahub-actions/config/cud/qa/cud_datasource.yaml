@@ -26,10 +26,10 @@ action:
       machine_account_pass: ${CI_MACHINE_PASS:-pass}
     callbacks:
       - region: AMER
-        url: https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh
+        url: https://davis.qa.webex.com/davis/api/v1/data-sources/refresh
       - region: CANADA
-        url: https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh
+        url: https://davis.qa.webex.com/davis/api/v1/data-sources/refresh
       - region: EMEA
-        url: https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh
+        url: https://davis.qa.webex.com/davis/api/v1/data-sources/refresh
       - region: FedRAMP
-        url: https://davis5.qa.webex.com/davis/api/v1/data-sources/refresh
+        url: https://davis.qa.webex.com/davis/api/v1/data-sources/refresh
