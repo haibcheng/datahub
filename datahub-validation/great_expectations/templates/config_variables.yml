@@ -1,0 +1,37 @@
+
+# This config file supports variable substitution which enables: 1) keeping
+# secrets out of source control & 2) environment-based configuration changes
+# such as staging vs prod.
+#
+# When GX encounters substitution syntax (like `my_key: ${my_value}` or
+# `my_key: $my_value`) in the great_expectations.yml file, it will attempt
+# to replace the value of `my_key` with the value from an environment
+# variable `my_value` or a corresponding key read from this config file,
+# which is defined through the `config_variables_file_path`.
+# Environment variables take precedence over variables defined here.
+#
+# Substitution values defined here can be a simple (non-nested) value,
+# nested value such as a dictionary, or an environment variable (i.e. ${ENV_VAR})
+#
+#
+# https://docs.greatexpectations.io/docs/guides/setup/configuring_data_contexts/how_to_configure_credentials
+
+instance_id: b3fc78da-06ae-40f5-9964-8b46abe3d390
+
+db_creds:
+  drivername: ${DB_SOURCE_DRIVER_NAME}
+  host: ${DB_SOURCE_HOST}
+  port: ${DB_SOURCE_PORT}
+  username: ${DB_SOURCE_USER}
+  password: ${DB_SOURCE_PASSWORD}
+  database: ${DB_SOURCE_NAME}
+
+ge_data_asset_name: ${GE_DATE_ASSET_NAME}
+ge_expectation_suite: ${GE_EXPECTATION_SUITE}
+
+gms_platform_alias: ${GMS_PLATFORM_ALIAS}
+#gms_platform_instance_map: { "datahub": ${GMS_PLATFORM_INSTANCE_MAP_DATAHUB} }
+gms_platform_instance_map: { "datahub": "" }
+gms_exclude_dbname: ${GMS_EXCLUDE_DBNAME}
+gms_server_url: ${GMS_SERVER_URL}
+gms_token: ${GMS_TOKEN}

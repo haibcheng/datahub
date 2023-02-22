@@ -23,3 +23,6 @@ validations:
       data_connector_query:
         index: -1
     expectation_suite_name: ${ge_expectation_suite}
+#profilers: []
+#ge_cloud_id:
+#expectation_suite_ge_cloud_id:
