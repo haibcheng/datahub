@@ -30,7 +30,6 @@ ge_data_asset_name: ${GE_DATE_ASSET_NAME}
 ge_expectation_suite: ${GE_EXPECTATION_SUITE}
 
 gms_platform_alias: ${GMS_PLATFORM_ALIAS}
-#gms_platform_instance_map: { "datahub": ${GMS_PLATFORM_INSTANCE_MAP_DATAHUB} }
 gms_platform_instance_map: { "datahub": "" }
 gms_exclude_dbname: ${GMS_EXCLUDE_DBNAME}
 gms_server_url: ${GMS_SERVER_URL}

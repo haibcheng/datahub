@@ -1,6 +1,6 @@
 {
     "data_asset_type": null,
-    "expectation_suite_name": "wap.pinot.wme_metrics_customer_report",
+    "expectation_suite_name": "pinot.wap.sjc.default.wme_metrics_customer_report",
     "expectations": [
         {
             "expectation_type": "expect_column_values_to_be_in_set",

@@ -31,15 +31,19 @@ RUN python3 -m pip install --upgrade snowflake-connector-python snowflake-sqlalc
 RUN python3 -m pip install --upgrade presto-python-client
 RUN python3 -m pip install --upgrade oracledb
 #RUN python3 -m pip install --upgrade pinotdb
+RUN pip install python-dotenv
 
 USER root
 
-COPY ./datahub-actions/great_expectations /home/rhel/great_expectations
-RUN rm -f /home/rhel/great_expectations/expectations/.ge_store_backend_id \
-    && rm -rf /home/rhel/great_expectations/uncommitted/validations/*
+COPY ./datahub-validation/great_expectations /home/rhel/great_expectations
+COPY ./datahub-validation/src /home/rhel/bin
+RUN rm -rf /home/rhel/great_expectations/expectations/* \
+    && rm -rf /home/rhel/great_expectations/uncommitted/*
 
 COPY ./docker/mats-validation/start.sh /home/rhel/start.sh
 RUN chown -R rhel:rhel /home/rhel/great_expectations \
+    && chown -R rhel:rhel /home/rhel/bin \
+    && chmod -R +x /home/rhel/bin \
     && chown rhel:rhel /home/rhel/start.sh \
     && chmod +x /home/rhel/start.sh
 

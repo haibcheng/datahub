@@ -1,7 +1,8 @@
 #!/bin/bash
 
-cd /home/rhel/great_expectations
+cd /home/rhel/bin
+python3 main.py
 
-export SSL_CERT_FILE=/home/rhel/great_expectations/uncommitted/trinoroot.pem
+cd /home/rhel/great_expectations
 
 great_expectations checkpoint run $CHECK_POINT
