@@ -42,7 +42,23 @@ class TestFunctions(unittest.TestCase):
 
         token_service = CITokenService(ci_config=ci_config)
         token = token_service.access_token_of()
-        print(token)
+        print("BTS: " + token)
+        self.assertTrue(token != '')
+
+        pcp = os.getenv('PRO_CLIENT_PASSWORD')
+        ci_config = CITokenConfig(
+            access_token_url='https://idbroker.webex.com/idb/oauth2/v1/access_token',
+            username='C51206cd701b886ee1ae9aa9157c0c8624787c8f10bfa9ce267164dda01f5df91',
+            password=pcp,
+            bearer_token_url='https://idbroker.webex.com/idb/token/6078fba4-49d9-4291-9f7b-80116aab6974'
+                             '/v2/actions/GetBearerToken/invoke',
+            machine_account_name='CTGWAP-DATAHUB',
+            machine_account_pass=mpa
+        )
+
+        token_service = CITokenService(ci_config=ci_config)
+        token = token_service.access_token_of()
+        print("PROD: " + token)
         self.assertTrue(token != '')
 
 
