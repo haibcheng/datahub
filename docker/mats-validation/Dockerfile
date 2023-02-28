@@ -16,21 +16,19 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-$(arch).sh 
 
 RUN python3 -m ensurepip --upgrade
 RUN python3 -m pip install --upgrade pip wheel setuptools
+RUN python3 -m pip install 'acryl-datahub[great-expectations]'
+RUN python3 -m pip install sqlalchemy
+RUN python3 -m pip install psycopg2-binary
+RUN python3 -m pip install sqlalchemy-redshift
+RUN python3 -m pip install pyodbc
+RUN python3 -m pip install PyMySQL
+RUN python3 -m pip install trino
+RUN python3 -m pip install sqlalchemy-bigquery
+RUN python3 -m pip install snowflake-connector-python snowflake-sqlalchemy
+RUN python3 -m pip install presto-python-client
+RUN python3 -m pip install oracledb
 RUN python3 -m pip install --upgrade acryl-datahub
 RUN python3 -m pip install --upgrade great_expectations
-RUN python3 -m pip install --upgrade 'acryl-datahub[great-expectations]'
-
-RUN python3 -m pip install --upgrade sqlalchemy
-RUN python3 -m pip install --upgrade psycopg2-binary
-RUN python3 -m pip install --upgrade sqlalchemy-redshift
-RUN python3 -m pip install --upgrade pyodbc
-RUN python3 -m pip install --upgrade PyMySQL
-RUN python3 -m pip install --upgrade trino
-RUN python3 -m pip install --upgrade sqlalchemy-bigquery
-RUN python3 -m pip install --upgrade snowflake-connector-python snowflake-sqlalchemy
-RUN python3 -m pip install --upgrade presto-python-client
-RUN python3 -m pip install --upgrade oracledb
-#RUN python3 -m pip install --upgrade pinotdb
 RUN pip install python-dotenv
 
 USER root

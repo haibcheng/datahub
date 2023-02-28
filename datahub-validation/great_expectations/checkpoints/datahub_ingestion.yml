@@ -20,6 +20,4 @@ validations:
       datasource_name: datahub
       data_connector_name: default_inferred_data_connector_name
       data_asset_name: ${ge_data_asset_name}
-      data_connector_query:
-        index: -1
     expectation_suite_name: ${ge_expectation_suite}

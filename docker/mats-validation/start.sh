@@ -5,4 +5,6 @@ python3 main.py
 
 cd /home/rhel/great_expectations
 
+great_expectations --version
+
 great_expectations checkpoint run $CHECK_POINT
