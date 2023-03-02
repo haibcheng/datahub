@@ -1,9 +1,9 @@
 ARG FIPS=nonfips
-ARG OSAAS_VERSION=1.14.202212
+ARG OSAAS_VERSION=1.16.202302
 
-FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
+FROM registry-rmc.webex.com/mats/osaas-${FIPS}:${OSAAS_VERSION} as base
 
-ENV KAFKA_VERSION=3.3.1
+ENV KAFKA_VERSION=3.3.2
 RUN yum install -y WBXjava-1.8.0-openjdk-hardening WBXFIPSJar
 
 FROM base as download

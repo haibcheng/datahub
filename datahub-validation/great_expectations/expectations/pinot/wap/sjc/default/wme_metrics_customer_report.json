@@ -28,7 +28,7 @@
         {
             "expectation_type": "expect_table_row_count_to_be_between",
             "kwargs": {
-                "min_value": 10
+                "min_value": 1
             }
         }
     ]

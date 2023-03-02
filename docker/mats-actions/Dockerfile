@@ -1,12 +1,15 @@
 ARG FIPS=nonfips
-ARG OSAAS_VERSION=1.14.202212
+ARG OSAAS_VERSION=1.16.202302
 
-FROM registry-rmc.webex.com/mats/rhel8-osaas-${FIPS}:${OSAAS_VERSION} as base
+FROM registry-rmc.webex.com/mats/osaas-${FIPS}:${OSAAS_VERSION} as base
 
-RUN yum install -y WBXjava-1.8.0-openjdk-hardening WBXFIPSJar python39 curl
+ENV PATH="/home/rhel/miniconda3/bin:${PATH}"
+ARG PATH="/home/rhel/miniconda3/bin:${PATH}"
 
 ENV DATAHUB_ACTIONS_HOME=/opt/datahub/actions
 ENV DATAHUB_ACTIONS_CONF=/etc/datahub/actions
+
+RUN yum install -y WBXjava-1.8.0-openjdk-hardening WBXFIPSJar curl wget
 
 ENV DR_VERSION v0.6.1
 RUN if [ $(arch) = "aarch64" ]; then \
@@ -18,37 +21,45 @@ RUN if [ $(arch) = "aarch64" ]; then \
     fi \
     && curl -L https://github.com/treff7es/dockerize/releases/download/$DR_VERSION/dockerize-linux-${DR_ARCH}-$DR_VERSION.tar.gz | tar -C /usr/local/bin -xzv
 
-RUN python3 -m ensurepip --upgrade \
-    && python3 -m pip install --upgrade pip wheel setuptools \
-    && python3 -m pip install --upgrade acryl-datahub==v0.9.5 \
-    && python3 -m pip install --upgrade acryl-datahub-actions==v0.0.10 \
-    && pip install 'acryl-datahub-actions[executor]'
+COPY datahub-actions/src/wap_actions /home/rhel/datahub-actions/src/wap_actions
+COPY datahub-actions/setup.py /home/rhel/datahub-actions/setup.py
+COPY docker/mats-actions/start.sh /home/rhel/start_datahub_actions.sh
 
-COPY datahub-actions/src/wap_actions /datahub-actions/src/wap_actions
-COPY datahub-actions/setup.py /datahub-actions/setup.py
-COPY docker/mats-actions/start.sh /start_datahub_actions.sh
-
-RUN chmod +x /datahub-actions/setup.py \
-    && cd /datahub-actions  \
-    && pip install . \
-    && cd .. && rm -rf /datahub-actions \
-    && chmod a+x /start_datahub_actions.sh
+RUN chown -R 1000:1000 /home/rhel/datahub-actions \
+    && chmod +x /home/rhel/datahub-actions/setup.py \
+    && chown 1000:1000 /home/rhel/start_datahub_actions.sh \
+    && chmod a+x /home/rhel/start_datahub_actions.sh
 
 RUN mkdir -p $DATAHUB_ACTIONS_HOME \
     && mkdir -p $DATAHUB_ACTIONS_CONF  \
     && mkdir -p /tmp/datahub/logs/actions/system
 
 COPY datahub-actions/config $DATAHUB_ACTIONS_CONF
-COPY docker/mats-actions/executor.yaml $DATAHUB_ACTIONS_CONF/system/
+COPY docker/mats-actions/executor.yaml $DATAHUB_ACTIONS_CONF
 
-RUN chown -R rhel:rhel $DATAHUB_ACTIONS_HOME \
+RUN chown -R 1000:1000 $DATAHUB_ACTIONS_HOME \
+    && chown -R 1000:1000 $DATAHUB_ACTIONS_CONF \
     && chmod -R 755 $DATAHUB_ACTIONS_CONF \
-    && chown -R rhel:rhel /tmp/datahub
+    && chown -R 1000:1000 /tmp/datahub
 
-RUN mkdir -p /home/rhel/.cache \
-    && mv /root/.cache/pip /home/rhel/.cache/pip \
-    && chown -R rhel /home/rhel/.cache/pip
+USER rhel
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-$(arch).sh \
+    && mkdir /home/rhel/.conda \
+    && bash Miniconda3-latest-Linux-$(arch).sh -b \
+    && rm -f Miniconda3-latest-Linux-$(arch).sh
+
+RUN python3 -m ensurepip --upgrade \
+    && python3 -m pip install --upgrade pip wheel setuptools \
+    && python3 -m pip install --upgrade acryl-datahub==v0.9.5 \
+    && python3 -m pip install --upgrade acryl-datahub-actions==v0.0.10 \
+    && pip install 'acryl-datahub-actions[executor]'
+
+RUN cd /home/rhel/datahub-actions  \
+    && pip install . \
+    && cd .. && rm -rf datahub-actions
+
+USER root
 
 STOPSIGNAL SIGINT
 
-CMD dockerize -wait http://$DATAHUB_GMS_HOST:$DATAHUB_GMS_PORT/health -timeout 240s /start_datahub_actions.sh
+CMD ["/bin/sh", "-c", "dockerize -wait http://$DATAHUB_GMS_HOST:$DATAHUB_GMS_PORT/health -timeout 240s /home/rhel/start_datahub_actions.sh"]
