@@ -1,15 +1,29 @@
 ARG FIPS=nonfips
-ARG OSAAS_VERSION=1.14.202212
+ARG OSAAS_VERSION=1.16.202302
 
-FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
+FROM registry-rmc.webex.com/mats/osaas-${FIPS}:${OSAAS_VERSION} as base
+
+ENV PATH="/home/rhel/miniconda3/bin:${PATH}"
+ARG PATH="/home/rhel/miniconda3/bin:${PATH}"
 
 ENV COMPONENT=schema-registry
-RUN yum install -y WBXjava-1.8.0-openjdk-hardening WBXFIPSJar python3.9 python39-pip python39-setuptools git
+RUN yum install -y WBXjava-1.8.0-openjdk-hardening WBXFIPSJar wget
+
+USER rhel
+
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-$(arch).sh \
+    && mkdir /home/rhel/.conda \
+    && bash Miniconda3-latest-Linux-$(arch).sh -b \
+    && rm -f Miniconda3-latest-Linux-$(arch).sh \
+    && conda install git
+
+RUN python3 -m ensurepip --upgrade \
+    && python3 -m pip install --upgrade pip wheel setuptools
 
 ENV PYTHON_CONFLUENT_DOCKER_UTILS_INSTALL_SPEC=git+https://github.com/confluentinc/confluent-docker-utils@v0.0.52
-RUN python3.9 -m pip install --prefer-binary --prefix=/usr/local --upgrade "${PYTHON_CONFLUENT_DOCKER_UTILS_INSTALL_SPEC}"
+RUN python3 -m pip install --upgrade "${PYTHON_CONFLUENT_DOCKER_UTILS_INSTALL_SPEC}"
 
-RUN yum remove -y git || true
+USER root
 
 COPY ./docker/mats-confluent/confluent-7.2.0/bin/schema-registry-run-class /usr/bin/
 COPY ./docker/mats-confluent/confluent-7.2.0/bin/schema-registry-start /usr/bin/
@@ -24,11 +38,12 @@ COPY ./docker/mats-confluent/cp-schema-registry/docker /etc/confluent/docker/
 
 RUN echo "===> Setting up ${COMPONENT} dirs" \
     && mkdir -p /etc/${COMPONENT}/secrets /usr/logs \
-    && chown -R 1000:1000 /etc/${COMPONENT} /usr/logs /etc/confluent/docker \
+    && chown -R rhel:rhel /etc/${COMPONENT} /usr/logs /etc/confluent/docker \
     && chmod -R ug+w /etc/${COMPONENT} /etc/confluent/docker \
-    && chmod -R 755 /usr/bin && chmod -R 755 /usr/share/java
+    && chmod -R 755 /usr/bin && chmod -R 755 /usr/share/java \
+    && dnf -y install hostname
 
-EXPOSE 8082
+EXPOSE 8081
 
 ENV JAVA_OPTS=""
 

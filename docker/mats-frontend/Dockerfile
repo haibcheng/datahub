@@ -1,9 +1,9 @@
 # Defining environment
 ARG APP_ENV=prod
 ARG FIPS=nonfips
-ARG OSAAS_VERSION=1.14.202212
+ARG OSAAS_VERSION=1.16.202302
 
-FROM containers.cisco.com/rhel8/osaas-${FIPS}:${OSAAS_VERSION} as base
+FROM registry-rmc.webex.com/mats/osaas-${FIPS}:${OSAAS_VERSION} as base
 
 RUN yum install -y wget
 
