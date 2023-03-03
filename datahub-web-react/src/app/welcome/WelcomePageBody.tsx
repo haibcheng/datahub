@@ -1907,10 +1907,9 @@ export const WelcomePageBody = () => {
                 </CardFigure>
                 <CardFigureP>Data Exploration</CardFigureP>
                 <CardFigurePSlibing>
-                    Data exploration solution provide an easy and fast way for data users to discovery data sources,
-                    schemas and tables as well as sample data query Apache Superset is good for connecting to multiple
-                    data sources using sqlachemy and provide unified data exploration features. Datahub provide data and
-                    user privileges for Superset RBAC support.
+                    Data exploration solution provide an easy and fast way for data users to connect data sources,
+                    discover schemas and tables as well as query sample data. Data exploration is critical for ad hoc
+                    analytics, experimentation, and generally improving business strategy.
                 </CardFigurePSlibing>
                 <CardFigureP>
                     <ButtonGhost onClick={goToLink(IlinkType.DATA_EXPLORATION)}>VIEW DATA EXPLORATION</ButtonGhost>
