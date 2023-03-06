@@ -32,6 +32,7 @@ class CommonAction(Action, ABC):
                 self._urn_dict.add(key=entity_urn)
             else:
                 self._urn_dict.add(key=entity_urn, value=json.dumps(target))
+            self.call_interval_reset()
             logger.info("Received datasource -> %s", entity_urn)
 
     def close(self) -> None:
