@@ -98,7 +98,7 @@ const goToLink = (type: IlinkType) => {
                 break;
             }
             case IlinkType.DATA_EXPLORATION: {
-                window.location.href = 'http://mtsj2web001.webex.com:8088/superset/sqllab/';
+                window.location.href = 'https://wapdataexp.webex.com/superset/sqllab/';
                 break;
             }
             default: {
