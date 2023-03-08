@@ -24,7 +24,11 @@ IFS=',' read -r -a action_files <<< "$DATAHUB_ACTION_FILES"
 
 for action_file in "${action_files[@]}"
 do
-  config_files+="-c $action_file "
+  if [[ $action_file == /* ]]; then
+    config_files+="-c $action_file "
+  else
+    config_files+="-c $DATAHUB_ACTIONS_CONF/$action_file "
+  fi
 done
 
 datahub-actions actions $config_files
