@@ -1,5 +1,5 @@
-import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Card, Form, Input, Modal, Space, Select, Alert, Switch } from 'antd';
+import { InfoCircleOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Card, Form, Input, Modal, Space, Select, Alert, Switch, Tooltip } from 'antd';
 import React, { useState } from 'react';
 import { FormField, IDatasourceSourceInput, IFormConnectionData, IFormData } from '../service/DataSourceType';
 import { showMessageByNotification, showRequestResult } from '../service/NotificationUtil';
@@ -808,6 +808,12 @@ export default function AddDataSourceModal({
                 >
                     <Input
                         // disabled={!formData.create}
+                        // visibilityToggle=
+                        suffix={
+                            <Tooltip title="Please input dataSource alias!">
+                                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                            </Tooltip>
+                        }
                         placeholder="Please input dataSource alias"
                         autoComplete="off"
                         defaultValue={formData.alias}
@@ -821,6 +827,11 @@ export default function AddDataSourceModal({
                 >
                     <Input
                         // disabled={!formData.create}
+                        suffix={
+                            <Tooltip title="Please input test query sql!">
+                                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                            </Tooltip>
+                        }
                         placeholder="Please input test query sql"
                         autoComplete="off"
                         defaultValue={formData.testQuerySql}
@@ -849,6 +860,11 @@ export default function AddDataSourceModal({
                             rules={[{ required: true, message: 'Please input connection hive meta store uri!' }]}
                         >
                             <Input
+                                suffix={
+                                    <Tooltip title="Please input connection hive meta store uri!">
+                                        <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                                    </Tooltip>
+                                }
                                 placeholder="Please input connection hive meta store uri"
                                 autoComplete="off"
                                 defaultValue={info.hiveMetastoreUris}
@@ -909,6 +925,11 @@ export default function AddDataSourceModal({
                             rules={[{ required: true, message: 'Please input connection Bootstrap Server!' }]}
                         >
                             <Input
+                                suffix={
+                                    <Tooltip title="Please input connection bootstrap Server!">
+                                        <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                                    </Tooltip>
+                                }
                                 placeholder="Please input connection bootstrap Server"
                                 autoComplete="off"
                                 defaultValue={info.bootstrap}
@@ -923,7 +944,12 @@ export default function AddDataSourceModal({
                             rules={[{ required: false, message: 'Please input connection Schema Registry URL!' }]}
                         >
                             <Input
-                                placeholder="Please input connection bootstrap Server"
+                                suffix={
+                                    <Tooltip title="Please input connection Schema Registry URL!">
+                                        <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                                    </Tooltip>
+                                }
+                                placeholder="Please input connection Schema Registry URL"
                                 autoComplete="off"
                                 defaultValue={info.bootstrap}
                                 onChange={(e) =>
@@ -937,6 +963,11 @@ export default function AddDataSourceModal({
                             rules={[{ required: false, message: 'Please input connection topic pattern allow!' }]}
                         >
                             <Input
+                                suffix={
+                                    <Tooltip title="Please input connection topic pattern allow!">
+                                        <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                                    </Tooltip>
+                                }
                                 placeholder="Please input connection topic pattern allow"
                                 autoComplete="off"
                                 defaultValue={info.topicPatternsAllow}
@@ -960,6 +991,11 @@ export default function AddDataSourceModal({
                 >
                     {/* username as value ,will input issue */}
                     <Input
+                        suffix={
+                            <Tooltip title="Please input connection userName!">
+                                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                            </Tooltip>
+                        }
                         placeholder="Please input connection username"
                         autoComplete="off"
                         onBlur={(e) => updateDataSourceConnections(e.target.value, FormField.username, index)}
@@ -992,6 +1028,11 @@ export default function AddDataSourceModal({
                     rules={[{ required: !isOracle(), message: 'Please input connection host port!' }]}
                 >
                     <Input
+                        suffix={
+                            <Tooltip title="Please input connection host port!">
+                                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                            </Tooltip>
+                        }
                         placeholder="Please input connection host port"
                         disabled={isOracle() && info.tnsName !== '' && info.tnsName !== null && !formData.create}
                         autoComplete="off"
@@ -1012,6 +1053,11 @@ export default function AddDataSourceModal({
                     rules={[{ required: databaseRequired, message: 'Please input connection database!' }]}
                 >
                     <Input
+                        suffix={
+                            <Tooltip title="Please input connection database!">
+                                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                            </Tooltip>
+                        }
                         placeholder="Please input connection database"
                         autoComplete="off"
                         defaultValue={info.database}
@@ -1031,6 +1077,11 @@ export default function AddDataSourceModal({
                     rules={[{ required: false, message: 'Please input connection Params!' }]}
                 >
                     <Input
+                        suffix={
+                            <Tooltip title="Please input connection Params!">
+                                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                            </Tooltip>
+                        }
                         placeholder="Please input connection Params"
                         autoComplete="off"
                         defaultValue={info.connectionParams}
@@ -1050,6 +1101,11 @@ export default function AddDataSourceModal({
                     rules={[{ required: false, message: 'Please input connection tns name!' }]}
                 >
                     <Input
+                        suffix={
+                            <Tooltip title="Please input connection tns name!">
+                                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                            </Tooltip>
+                        }
                         placeholder="Please input connection TNS name"
                         autoComplete="off"
                         disabled={
@@ -1076,6 +1132,11 @@ export default function AddDataSourceModal({
                     rules={[{ required: false, message: 'Please input connection service name!' }]}
                 >
                     <Input
+                        suffix={
+                            <Tooltip title="Please input connection service name!">
+                                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                            </Tooltip>
+                        }
                         placeholder="Please input connection service name"
                         disabled={isOracle() && info.tnsName !== '' && info.tnsName !== null && !formData.create}
                         autoComplete="off"
@@ -1105,6 +1166,11 @@ export default function AddDataSourceModal({
                     rules={[{ required: false, message: 'Please input JDBC Params!' }]}
                 >
                     <Input
+                        suffix={
+                            <Tooltip title="Please input JDBC Params!">
+                                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                            </Tooltip>
+                        }
                         placeholder="Please input JDBC Params"
                         autoComplete="off"
                         defaultValue={info.jdbcParams}
@@ -1124,6 +1190,11 @@ export default function AddDataSourceModal({
                     rules={[{ required: false, message: 'Please input connection min size!' }]}
                 >
                     <Input
+                        suffix={
+                            <Tooltip title="Please input connection min size!">
+                                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                            </Tooltip>
+                        }
                         placeholder="Please input connection min size"
                         autoComplete="off"
                         defaultValue={info.minSize}
@@ -1136,6 +1207,11 @@ export default function AddDataSourceModal({
                     rules={[{ required: false, message: 'Please input connection max size!' }]}
                 >
                     <Input
+                        suffix={
+                            <Tooltip title="Please input connection max size!">
+                                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                            </Tooltip>
+                        }
                         placeholder="Please input connection max size"
                         autoComplete="off"
                         defaultValue={info.maxSize}
@@ -1148,6 +1224,11 @@ export default function AddDataSourceModal({
                     rules={[{ required: false, message: 'Please input connection idle size!' }]}
                 >
                     <Input
+                        suffix={
+                            <Tooltip title="Please input connection idle size!">
+                                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                            </Tooltip>
+                        }
                         placeholder="Please input connection idle size"
                         autoComplete="off"
                         defaultValue={info.idleSize}
@@ -1180,6 +1261,11 @@ export default function AddDataSourceModal({
                     rules={[{ required: false, message: 'Please input connection catalog!' }]}
                 >
                     <Input
+                        suffix={
+                            <Tooltip title="Please input connection catalog!">
+                                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                            </Tooltip>
+                        }
                         placeholder="Please input connection catalog"
                         autoComplete="off"
                         defaultValue={info.catalog}
@@ -1192,6 +1278,11 @@ export default function AddDataSourceModal({
                     rules={[{ required: false, message: 'Please input connection schema!' }]}
                 >
                     <Input
+                        suffix={
+                            <Tooltip title="Please input connection schema!">
+                                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                            </Tooltip>
+                        }
                         placeholder="Please input connection schema"
                         autoComplete="off"
                         defaultValue={info.schema}
@@ -1268,6 +1359,11 @@ export default function AddDataSourceModal({
                             rules={[{ required: false, message: 'Please input connection table pattern allow!' }]}
                         >
                             <Input
+                                suffix={
+                                    <Tooltip title="Please input connection table pattern allow!">
+                                        <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                                    </Tooltip>
+                                }
                                 placeholder="Please input connection table pattern allow"
                                 autoComplete="off"
                                 defaultValue={info.tablePatternAllow}
@@ -1282,6 +1378,11 @@ export default function AddDataSourceModal({
                             rules={[{ required: false, message: 'Please input connection schema pattern allow!' }]}
                         >
                             <Input
+                                suffix={
+                                    <Tooltip title="Please input connection schema pattern allow!">
+                                        <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                                    </Tooltip>
+                                }
                                 placeholder="Please input connection schema pattern allow"
                                 autoComplete="off"
                                 defaultValue={info.schemaPatternAllow}
@@ -1339,7 +1440,7 @@ export default function AddDataSourceModal({
                                 title="Connection Information"
                                 extra={
                                     <>
-                                        {formData.connections?.length < 2 && (
+                                        {formData.connections?.length < 2 && formData.create && (
                                             <Button type="link" onClick={onAddMoreBtnClick}>
                                                 Add GSB
                                             </Button>
