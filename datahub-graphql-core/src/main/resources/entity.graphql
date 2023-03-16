@@ -9670,17 +9670,17 @@ type DatasourceProperties {
     origin: FabricType!
 
     """
-    Read only technical description for dataset
+    Read only technical description for Datasource
     """
     description: String
 
     """
-    Custom properties of the Dataset
+    Custom properties of the Datasource
     """
     customProperties: [StringMapEntry!]
 
     """
-    External URL associated with the Dataset
+    External URL associated with the Datasource
     """
     externalUrl: String
 }

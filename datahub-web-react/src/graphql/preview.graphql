@@ -39,6 +39,25 @@ fragment entityPreview on Entity {
             ...deprecationFields
         }
     }
+    ... on Datasource {
+        name
+        origin
+        uri
+        platform {
+            ...platformFields
+        }
+        editableProperties {
+            description
+        }
+        platformNativeType
+        properties {
+            description
+            customProperties {
+                key
+                value
+            }
+        }
+    }
     ... on CorpUser {
         username
         info {

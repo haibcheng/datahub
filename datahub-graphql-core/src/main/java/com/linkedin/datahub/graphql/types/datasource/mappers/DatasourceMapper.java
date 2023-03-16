@@ -168,8 +168,7 @@ public class DatasourceMapper implements ModelMapper<EntityResponse, Datasource>
 
         dsProperties.setDescription(datasourceProperties.getDescription());
         dsProperties.setCustomProperties(StringMapMapper.map(datasourceProperties.getCustomProperties()));
-        dsProperties.setExternalUrl(datasourceProperties.getExternalUrl().toString());
-        datasource.setProperties(dsProperties);
+
         if (datasourceProperties.getUri() != null) {
             datasource.setUri(datasourceProperties.getUri().toString());
         }
@@ -177,8 +176,10 @@ public class DatasourceMapper implements ModelMapper<EntityResponse, Datasource>
             datasource.setDescription(datasourceProperties.getDescription());
         }
         if (datasourceProperties.getExternalUrl() != null) {
+            dsProperties.setExternalUrl(datasourceProperties.getExternalUrl().toString());
             datasource.setExternalUrl(datasourceProperties.getExternalUrl().toString());
         }
+        datasource.setProperties(dsProperties);
     }
 
     private void mapEditableDatasourceProperties(@Nonnull Datasource datasource,
