@@ -19,10 +19,6 @@ record DatasourceConnectionPrimary {
   /**
   * Datasource platform urn associated with the datasource
   */
-  @Searchable = {
-    "fieldType": "TEXT_PARTIAL",
-    "enableAutocomplete": true
-  }
   dataCenter: string
 
   connection: union[IcebergSource, KafkaMetadataSource, MysqlSource, OracleSource, PostgresSource, TiDBSource, TrinoSource, PinotSource, HiveSource, PrestoSource, SnowflakeSource]

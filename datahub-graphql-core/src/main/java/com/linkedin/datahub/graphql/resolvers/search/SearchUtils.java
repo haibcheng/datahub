@@ -15,6 +15,7 @@ public class SearchUtils {
   public static final List<EntityType> SEARCHABLE_ENTITY_TYPES =
       ImmutableList.of(
           EntityType.DATASET,
+          EntityType.DATASOURCE,
           EntityType.DASHBOARD,
           EntityType.CHART,
           EntityType.MLMODEL,
@@ -39,6 +40,7 @@ public class SearchUtils {
   public static final List<EntityType> AUTO_COMPLETE_ENTITY_TYPES =
       ImmutableList.of(
           EntityType.DATASET,
+          EntityType.DATASOURCE,
           EntityType.DASHBOARD,
           EntityType.CHART,
           EntityType.MLMODEL,
