@@ -1,24 +1,20 @@
 # Defining environment
 ARG APP_ENV=prod
 ARG FIPS=nonfips
-ARG OSAAS_VERSION=1.14.202212
 
-FROM registry-rmc.webex.com/mats/rhel8-osaas-${FIPS}:${OSAAS_VERSION} as base
+FROM registry-rmc.webex.com/mats/alma8-${FIPS}:1.4.202303 as base
+ENV USER=alma
 
-RUN yum install -y wget
+COPY ./docker/mats-libs/alma8/adoptium.repo /etc/yum.repos.d/adoptium.repo
 
-RUN cd /root  \
-    && wget https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.16.1%2B1/OpenJDK11U-jdk_x64_linux_hotspot_11.0.16.1_1.tar.gz -O openjdk.tar.gz \
-    && tar -zxvf openjdk.tar.gz \
-    && rm -f openjdk.tar.gz \
-    && mv jdk-11.0.16.1+1 /usr/lib/jvm \
-    && chmod -R +x /usr/lib/jvm/bin
+RUN yum install -y curl \
+    && yum install -y temurin-11-jdk
 
-ENV PATH="${PATH}:/usr/lib/jvm/bin"
-
-RUN yum remove -y wget || true
+ENV JAVA_HOME=/usr/lib/jvm/temurin-11-jdk
 
 FROM base AS prod-build
+
+COPY ./docker/mats-libs/alma8/almalinux.repo /etc/yum.repos.d/almalinux.repo
 
 RUN yum module -y enable nodejs:16 \
     && yum install -y unzip npm perl && npm install --global yarn
@@ -43,7 +39,7 @@ FROM base as prod-install
 COPY --from=prod-build /datahub-frontend /datahub-frontend/
 COPY ./docker/mats-frontend/start.sh /datahub-frontend/bin/start.sh
 
-RUN chown -R 1000:1000 /datahub-frontend && chmod 755 /datahub-frontend
+RUN chown -R $USER:$USER /datahub-frontend && chmod 755 /datahub-frontend
 
 FROM base as dev-install
 # Dummy stage for development. Assumes code is built on your machine and mounted to this image.
@@ -53,7 +49,7 @@ VOLUME [ "/datahub-frontend" ]
 FROM ${APP_ENV}-install as final
 
 ENV LOG_DIR=/tmp/datahub/logs/frontend
-RUN mkdir -p $LOG_DIR && chown -R rhel:rhel /tmp/datahub
+RUN mkdir -p $LOG_DIR && chown -R $USER:$USER /tmp/datahub
 
 WORKDIR /
 ARG SERVER_PORT=9002

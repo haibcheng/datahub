@@ -1,23 +1,16 @@
 # Defining environment
 ARG APP_ENV=prod
 ARG FIPS=nonfips
-ARG OSAAS_VERSION=1.14.202212
 
-FROM registry-rmc.webex.com/mats/rhel8-osaas-${FIPS}:${OSAAS_VERSION} as base
+FROM registry-rmc.webex.com/mats/alma8-${FIPS}:1.4.202303 as base
+ENV USER=alma
 
-ENV USER=rhel
+COPY ./docker/mats-libs/alma8/adoptium.repo /etc/yum.repos.d/adoptium.repo
 
-RUN yum install -y curl wget
+RUN yum install -y curl wget \
+    && yum install -y temurin-11-jdk
 
-RUN cd /root  \
-    && wget https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.16.1%2B1/OpenJDK11U-jdk_x64_linux_hotspot_11.0.16.1_1.tar.gz -O openjdk.tar.gz \
-    && tar -zxvf openjdk.tar.gz \
-    && rm -f openjdk.tar.gz \
-    && mv jdk-11.0.16.1+1 /usr/lib/jvm \
-    && chmod -R +x /usr/lib/jvm/bin
-
-ENV PATH="${PATH}:/usr/lib/jvm/bin"
-
+ENV JAVA_HOME=/usr/lib/jvm/temurin-11-jdk
 ENV DR_VERSION v0.6.1
 
 RUN if [ $(arch) = "aarch64" ]; then \
@@ -37,6 +30,8 @@ RUN if [ $(arch) = "aarch64" ]; then \
 RUN yum remove -y wget || true
 
 FROM base AS prod-build
+
+COPY ./docker/mats-libs/alma8/almalinux.repo /etc/yum.repos.d/almalinux.repo
 
 RUN yum install -y perl
 
@@ -67,7 +62,7 @@ FROM base as dev-install
 FROM ${APP_ENV}-install as final
 
 ENV LOG_DIR=/tmp/datahub/logs/gms
-RUN mkdir -p $LOG_DIR && chown -R rhel:rhel /tmp/datahub
+RUN mkdir -p $LOG_DIR && chown -R $USER:$USER /tmp/datahub
 
 COPY docker/mats-gms/retention.yaml /etc/datahub/plugins/retention/
 RUN mkdir -p /etc/datahub/plugins/auth/resources \
