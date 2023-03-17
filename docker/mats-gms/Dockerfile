@@ -3,7 +3,7 @@ ARG APP_ENV=prod
 ARG FIPS=nonfips
 ARG OSAAS_VERSION=1.16.202302
 
-FROM registry-rmc.webex.com/mats/osaas-${FIPS}:${OSAAS_VERSION} as base
+FROM registry-rmc.webex.com/mats/rhel8-${FIPS}:${OSAAS_VERSION} as base
 
 RUN yum install -y curl wget
 
