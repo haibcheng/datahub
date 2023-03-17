@@ -1,8 +1,6 @@
 ARG FIPS=nonfips
-ARG OSAAS_VERSION=1.16.202302
 
-FROM registry-rmc.webex.com/mats/rhel8-${FIPS}:${OSAAS_VERSION} as base
-
+FROM registry-rmc.webex.com/mats/rhel8-${FIPS}:1.16.202302 as base
 ENV USER=rhel
 
 ENV PATH="/home/$USER/miniconda3/bin:${PATH}"
