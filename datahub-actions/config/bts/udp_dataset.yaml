@@ -10,10 +10,9 @@ source:
       mcl: ${METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME:-DataHubMetadataChangeLog_Versioned_v1}
       pe: ${PLATFORM_EVENT_TOPIC_NAME:-DataHubPlatformEvent_v1}
 action:
-  type: "wap_actions.change_monitor:UrlNotificationAction"
+  type: "wap_actions.change_monitor:UdpNodeStatusAction"
   config:
-    type: UDP
-    output_json: ${OUTPUT_JSON:-true}
+    output_json: ${OUTPUT_JSON:-false}
     actions_home: ${DATAHUB_ACTIONS_HOME}
     entity_types:
       - dataset

@@ -7,9 +7,6 @@ class Matcher:
     def matches(self, event_json):
         return True
 
-    def matches_type(self):
-        return False
-
 
 class EntityTypeMatcher(Matcher):
 
@@ -20,12 +17,8 @@ class EntityTypeMatcher(Matcher):
                 return False, None
         return True, None
 
-    def matches_type(self):
-        return self.match_type == self.config.type
-
-    def __init__(self, config: UrlNotificationConfig, match_type: str):
+    def __init__(self, config: UrlNotificationConfig):
         self.config = config
-        self.match_type = match_type
 
 
 class PropValueMatcher(EntityTypeMatcher):
@@ -47,12 +40,13 @@ class PropValueMatcher(EntityTypeMatcher):
         for each_prop in self.config.entity_props:
             pos = each_prop.index("=")
             key = each_prop[0:pos].strip()
-            if key not in props.keys():
+            value = each_prop[pos+1:len(each_prop)].strip()
+            if key not in props.keys() or props[key] == "":
                 return False
-            if props[key] != each_prop[pos+1:len(each_prop)].strip():
+            if value != "*" and props[key] != value:
                 return False
         return True
 
-    def __init__(self, config: UrlNotificationConfig, match_type: str, aspect_name: str):
-        super().__init__(config=config, match_type=match_type)
+    def __init__(self, config: UrlNotificationConfig, aspect_name: str):
+        super().__init__(config=config)
         self.aspect_name = aspect_name

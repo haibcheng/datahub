@@ -1,5 +1,5 @@
-# cud_datasource.yaml
-name: "cud_datasource"
+# cud_dataset.yaml
+name: "cud_dataset"
 source:
   type: "kafka"
   config:
@@ -10,12 +10,14 @@ source:
       mcl: ${METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME:-DataHubMetadataChangeLog_Versioned_v1}
       pe: ${PLATFORM_EVENT_TOPIC_NAME:-DataHubPlatformEvent_v1}
 action:
-  type: "wap_actions.change_monitor:CudDatasourceRefreshAction"
+  type: "wap_actions.change_monitor:CudDatasetCacheRefreshAction"
   config:
     output_json: ${OUTPUT_JSON:-false}
     actions_home: ${DATAHUB_ACTIONS_HOME}
     entity_types:
-      - datasource
+      - dataset
+    entity_props:
+      - TABLE_NAME=*
     ci_config:
       access_token_url: ${CI_ACCESS_TOKEN_URL:-https://idbrokerbts.webex.com/idb/oauth2/v1/access_token}
       username: ${CI_ACCESS_TOKEN_USER:-C4d7507eca0d56509f82db6919ec550fd1cd76dd67d125fc14e1fe9c2b24d5e10}
@@ -24,11 +26,5 @@ action:
       machine_account_name: ${CI_MACHINE_NAME:-CTGWAP-DATAHUB}
       machine_account_pass: ${CI_MACHINE_PASS:-pass}
     callbacks:
-      - region: AMER
-        url: https://davis.qa.webex.com/davis/api/v1/data-sources/refresh
-      - region: CANADA
-        url: https://davis.qa.webex.com/davis/api/v1/data-sources/refresh
-      - region: EMEA
-        url: https://davis.qa.webex.com/davis/api/v1/data-sources/refresh
-      - region: FedRAMP
-        url: https://davis.qa.webex.com/davis/api/v1/data-sources/refresh
+      - region: All
+        url: https://wapdavisbts.webex.com/davis/api/v1/reload-cache/

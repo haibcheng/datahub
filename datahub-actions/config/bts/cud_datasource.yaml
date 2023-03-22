@@ -10,16 +10,15 @@ source:
       mcl: ${METADATA_CHANGE_LOG_VERSIONED_TOPIC_NAME:-DataHubMetadataChangeLog_Versioned_v1}
       pe: ${PLATFORM_EVENT_TOPIC_NAME:-DataHubPlatformEvent_v1}
 action:
-  type: "wap_actions.change_monitor:UrlNotificationAction"
+  type: "wap_actions.change_monitor:CudDatasourceRefreshAction"
   config:
-    type: CUD
-    output_json: ${OUTPUT_JSON:-true}
+    output_json: ${OUTPUT_JSON:-false}
     actions_home: ${DATAHUB_ACTIONS_HOME}
     entity_types:
       - datasource
     ci_config:
       access_token_url: ${CI_ACCESS_TOKEN_URL:-https://idbrokerbts.webex.com/idb/oauth2/v1/access_token}
-      username: ${CI_ACCESS_TOKEN_USER:-user}
+      username: ${CI_ACCESS_TOKEN_USER:-C4d7507eca0d56509f82db6919ec550fd1cd76dd67d125fc14e1fe9c2b24d5e10}
       password: ${CI_ACCESS_TOKEN_PASS:-pass}
       bearer_token_url: ${CI_BEARER_TOKEN_URL:-https://idbrokerbts.webex.com/idb/token/6078fba4-49d9-4291-9f7b-80116aab6974/v2/actions/GetBearerToken/invoke}
       machine_account_name: ${CI_MACHINE_NAME:-CTGWAP-DATAHUB}

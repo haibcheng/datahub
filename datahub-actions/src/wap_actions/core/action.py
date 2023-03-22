@@ -33,7 +33,7 @@ class CommonAction(Action, ABC):
             else:
                 self._urn_dict.add(key=entity_urn, value=json.dumps(target))
             self.call_interval_reset()
-            logger.info("Received datasource -> %s", entity_urn)
+            logger.info("Received entity -> %s", entity_urn)
 
     def close(self) -> None:
         self._close = True
@@ -84,9 +84,7 @@ class CommonAction(Action, ABC):
 
     def __init__(self, config: UrlNotificationConfig, ctx: PipelineContext):
         self.config = config
-        for matcher in self._matchers():
-            if matcher.matches_type():
-                self.matcher = matcher
+        self.matcher = self._matchers()
         self._cache = FileCache(config.actions_home + "/cache", ctx.pipeline_name + ".txt")
         self._counter = AtomicInteger()
         self._call_interval = self.CALL_INTERVAL

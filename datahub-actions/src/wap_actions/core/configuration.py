@@ -9,7 +9,6 @@ class CallbackApi(BaseModel):
 
 
 class UrlNotificationConfig(BaseModel):
-    type: str
     output_json: Optional[bool]
     actions_home: str
     entity_types: Optional[list[str]]
