@@ -24,12 +24,12 @@ class CudDatasourceRefreshAction(CommonAction):
     def _send_notification(self, url: str, urns: list[str]):
         urns_str = ','.join(urns)
         try:
-            logger.info("%s >> the change[%s] is being notified...", type(self), urns_str)
+            logger.info("%s >> the change[%s] is being notified...", type(self).__name__, urns_str)
             self.notification.notify(url=url, urns=urns)
-            logger.info("%s >> the change[%s] has been notified!", type(self), urns_str)
+            logger.info("%s >> the change[%s] has been notified!", type(self).__name__, urns_str)
             self.call_interval_reset()
         except Exception as ex:
-            logger.error('%s >> failed to notify the change[%s] -> %s', type(self), urns_str, repr(ex))
+            logger.error('%s >> failed to notify the change[%s] -> %s', type(self).__name__, urns_str, repr(ex))
             self._urn_dict.add_elements(urns)
             self.call_interval_add(self.CALL_INTERVAL)
 
@@ -57,12 +57,12 @@ class CudDatasetCacheRefreshAction(CommonAction):
             table_name = urn_value.get("TABLE_NAME")
             target_url = url + table_name
             try:
-                logger.info("%s >> the change[%s] is being notified...", type(self), urn)
+                logger.info("%s >> the change[%s] is being notified...", type(self).__name__, urn)
                 self.notification.notify(url=target_url)
-                logger.info("%s >> the change[%s] has been notified!", type(self), urn)
+                logger.info("%s >> the change[%s] has been notified!", type(self).__name__, urn)
                 self.call_interval_reset()
             except Exception as ex:
-                logger.error('%s >> failed to notify the change[%s] -> %s', type(self), urn, repr(ex))
+                logger.error('%s >> failed to notify the change[%s] -> %s', type(self).__name__, urn, repr(ex))
                 self._urn_dict.add_elements(urn)
                 self.call_interval_add(self.CALL_INTERVAL)
 
@@ -91,12 +91,12 @@ class UdpNodeStatusAction(CommonAction):
             status = urn_value.get("udp_callback_status")
             target_url = url + "?nodeId=" + node + "&status=" + status
             try:
-                logger.info("%s >> the change[%s] is being notified...", type(self), urn)
+                logger.info("%s >> the change[%s] is being notified...", type(self).__name__, urn)
                 self.notification.notify(url=target_url)
-                logger.info("%s >> the change[%s] has been notified!", type(self), urn)
+                logger.info("%s >> the change[%s] has been notified!", type(self).__name__, urn)
                 self.call_interval_reset()
             except Exception as ex:
-                logger.error('%s >> failed to notify the change[%s] -> %s', type(self), urn, repr(ex))
+                logger.error('%s >> failed to notify the change[%s] -> %s', type(self).__name__, urn, repr(ex))
                 self._urn_dict.add_elements(urn)
                 self.call_interval_add(self.CALL_INTERVAL)
 
