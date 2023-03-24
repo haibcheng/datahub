@@ -14,8 +14,8 @@
       operation_type: "QA-Done"
       type: docker
       jenkins-id: "mats_credential_id_github_token"
-      publish: false
-      publish-always: false  # only used in workshop, for publish branch images.
+      publish: true
+      publish-always: true  # only used in workshop, for publish branch images.
       docker:
         - dockerfile: ./docker/mats-confluent/cp-schema-registry/alma8/Dockerfile
           lint:
