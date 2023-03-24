@@ -34,47 +34,59 @@ public class TestDatasourceResolver implements DataFetcher<CompletableFuture<Boo
         Properties props = new Properties();
         if (sourceInput.getPostgres() != null) {
             type = POSTGRES_SOURCE_NAME;
-            props.put("user", sourceInput.getPostgres().getUsername());
-            props.put("password", sourceInput.getPostgres().getPassword());
-            props.put("driver", new PostgresSource().getDriver());
+            putProperties(props,
+                    sourceInput.getPostgres().getUsername(),
+                    sourceInput.getPostgres().getPassword(),
+                    new PostgresSource().getDriver(), null);
         } else if (sourceInput.getOracle() != null) {
             type = ORACLE_SOURCE_NAME;
-            props.put("user", sourceInput.getOracle().getUsername());
-            props.put("password", sourceInput.getOracle().getPassword());
-            props.put("driver", new OracleSource().getDriver());
+            putProperties(props,
+                    sourceInput.getOracle().getUsername(),
+                    sourceInput.getOracle().getPassword(),
+                    new OracleSource().getDriver(), null);
         } else if (sourceInput.getMysql() != null) {
             type = MYSQL_SOURCE_NAME;
-            props.put("user", sourceInput.getMysql().getUsername());
-            props.put("password", sourceInput.getMysql().getPassword());
-            props.put("driver", new MysqlSource().getDriver());
+            putProperties(props,
+                    sourceInput.getMysql().getUsername(),
+                    sourceInput.getMysql().getPassword(),
+                    new MysqlSource().getDriver(), null);
         } else if (sourceInput.getHive() != null) {
             type = HIVE_SOURCE_NAME;
-            props.put("user", sourceInput.getHive().getUsername());
-            props.put("password", sourceInput.getHive().getPassword());
-            props.put("driver", new HiveSource().getDriver());
+            putProperties(props,
+                    sourceInput.getHive().getUsername(),
+                    sourceInput.getHive().getPassword(),
+                    new HiveSource().getDriver(), null);
         } else if (sourceInput.getPinot() != null) {
             type = PINOT_SOURCE_NAME;
-            pinotProps(props, sourceInput.getPinot().getUsername(), sourceInput.getPinot().getPassword());
+            pinotProps(props,
+                    sourceInput.getPinot().getUsername(),
+                    sourceInput.getPinot().getPassword());
         } else if (sourceInput.getPresto() != null) {
             type = PRESTO_SOURCE_NAME;
-            props.put("user", sourceInput.getPresto().getUsername());
-            props.put("password", sourceInput.getPresto().getPassword());
-            props.put("driver", new PrestoSource().getDriver());
+            putProperties(props,
+                    sourceInput.getPresto().getUsername(),
+                    sourceInput.getPresto().getPassword(),
+                    null, sourceInput.getPresto().getJdbcParams());
+            sourceInput.getPresto().setJdbcParams("");
         } else if (sourceInput.getTrino() != null) {
             type = TRINO_SOURCE_NAME;
-            props.put("user", sourceInput.getTrino().getUsername());
-            props.put("password", sourceInput.getTrino().getPassword());
-            props.put("driver", new TrinoSource().getDriver());
+            putProperties(props,
+                    sourceInput.getTrino().getUsername(),
+                    sourceInput.getTrino().getPassword(),
+                    null, sourceInput.getTrino().getJdbcParams());
+            sourceInput.getTrino().setJdbcParams("");
         } else if (sourceInput.getTiDB() != null) {
             type = TIDB_SOURCE_NAME;
-            props.put("user", sourceInput.getTiDB().getUsername());
-            props.put("password", sourceInput.getTiDB().getPassword());
-            props.put("driver", new TiDBSource().getDriver());
+            putProperties(props,
+                    sourceInput.getTiDB().getUsername(),
+                    sourceInput.getTiDB().getPassword(),
+                    new TiDBSource().getDriver(), null);
         } else if (sourceInput.getSnowflake() != null) {
             type = SNOWFLAKE_SOURCE_NAME;
-            props.put("user", sourceInput.getSnowflake().getUsername());
-            props.put("password", sourceInput.getSnowflake().getPassword());
-            props.put("driver", new SnowflakeSource().getDriver());
+            putProperties(props,
+                    sourceInput.getSnowflake().getUsername(),
+                    sourceInput.getSnowflake().getPassword(),
+                    new SnowflakeSource().getDriver(), null);
         } else if (sourceInput.getIceberg() != null) {
             type = ICEBERG_SOURCE_NAME;
         } else if (sourceInput.getKafka() != null) {
@@ -170,6 +182,24 @@ public class TestDatasourceResolver implements DataFetcher<CompletableFuture<Boo
         }
 
         throw new IllegalArgumentException("Not support the type:" + type);
+    }
+
+    private static void putProperties(
+            Properties props, String user, String password, String driver, String jdbcParams) {
+        props.put("user", user);
+        props.put("password", password);
+
+        if(StringUtils.isNotEmpty(driver)) {
+            props.put("driver", driver);
+        }
+        if(StringUtils.isNotEmpty(jdbcParams)) {
+            String[] params = StringUtils.split(jdbcParams, "&");
+            for(String each : params) {
+                String[] keyValue = StringUtils.split(each, "=");
+                props.put(keyValue[0], keyValue[1]);
+            }
+        }
+
     }
 
     private static String urlFor(String type, String hostPort, String catalog, String schema, String jdbcParams) {
