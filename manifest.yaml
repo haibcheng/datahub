@@ -17,7 +17,7 @@
       publish: true
       publish-always: true  # only used in workshop, for publish branch images.
       docker:
-        - dockerfile: ./docker/mats-confluent/cp-schema-registry/alma8/Dockerfile
+        - dockerfile: ./Dockerfile4Csr
           lint:
             enable: false # skip in workshop
           scan:
