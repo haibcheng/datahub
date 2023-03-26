@@ -111,8 +111,8 @@ pipeline {
                 }
                 script {
                     echo "Build CI for ${params.DATAHUB_SERVICE}"
-                    sh '''echo "Build CI for \${params.DATAHUB_SERVICE}"
-                    '''
+                    sh """echo "Build CI for \${params.DATAHUB_SERVICE}"
+                    """
                     if (params.DATAHUB_SERVICE == 'csr') {
                         buildCI(this, buildArgsCsr)
                     } else if (params.DATAHUB_SERVICE == 'gms') {
