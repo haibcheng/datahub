@@ -110,7 +110,9 @@ pipeline {
                     buildArgsFrontend = [component: "frontend", tag: frontend_imageTag(), metadata: frontend_metaBody]
                 }
                 script {
-                    sh 'echo "Build CI for ${params.DATAHUB_SERVICE}"'
+                    echo "Build CI for ${params.DATAHUB_SERVICE}"
+                    sh '''echo "Build CI for \${params.DATAHUB_SERVICE}"
+                    '''
                     if (params.DATAHUB_SERVICE == 'csr') {
                         buildCI(this, buildArgsCsr)
                     } else if (params.DATAHUB_SERVICE == 'gms') {
