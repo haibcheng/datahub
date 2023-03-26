@@ -106,10 +106,11 @@ pipeline {
                 script {
                     buildArgsCsr = [component: "csr", tag: csr_imageTag(), metadata: csr_metaBody]
                     buildArgsGms = [component: "gms", tag: gms_imageTag(), metadata: gms_metaBody]
-                    buildArgsActions = [component: "csr", tag: actions_imageTag(), metadata: actions_metaBody]
+                    buildArgsActions = [component: "actions", tag: actions_imageTag(), metadata: actions_metaBody]
                     buildArgsFrontend = [component: "frontend", tag: frontend_imageTag(), metadata: frontend_metaBody]
                 }
                 script {
+                    sh 'echo "Build CI for ${params.DATAHUB_SERVICE}"'
                     if (params.DATAHUB_SERVICE == 'csr') {
                         buildCI(this, buildArgsCsr)
                     } else if (params.DATAHUB_SERVICE == 'gms') {
