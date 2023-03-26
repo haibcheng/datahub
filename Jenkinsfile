@@ -1,9 +1,11 @@
 @Library(['ciHelper@master']) _
 
-def buildArgs1 = [:]
-def buildArgs2 = [:]
+def buildArgsCsr = [:]
+def buildArgsGms = [:]
+def buildArgsActions = [:]
+def buildArgsFrontend = [:]
 
-def imageTag() {
+def csr_imageTag() {
 //     gitCommitHash = sh (script: "git log -n 1 --pretty=format:'%h'", returnStdout: true).trim()
 //     // TODO: please put your cec-id as the image tags. NOTE: no space in cec-id please.
 //     gitCommitUser = "bange"
@@ -15,13 +17,52 @@ def imageTag() {
 }
 
 def csr_metaBody = {
-    artifact_id = imageTag() + "_csr"
-    image_tag = imageTag()
+    artifact_id = csr_imageTag() + "_csr"
+    image_tag = csr_imageTag()
     describe = "datahub csr ci pipeline"
+}
+
+def gms_imageTag() {
+    appVersion = "1.3.0"
+    tag = "${appVersion}" + "-" + "${BUILD_NUMBER}"
+    return tag
+}
+
+def gms_metaBody = {
+    artifact_id = gms_imageTag() + "_gms"
+    image_tag = gms_imageTag()
+    describe = "datahub gms ci pipeline"
+}
+
+def actions_imageTag() {
+    appVersion = "1.3.0"
+    tag = "${appVersion}" + "-" + "${BUILD_NUMBER}"
+    return tag
+}
+
+def actions_metaBody = {
+    artifact_id = actions_imageTag() + "_actions"
+    image_tag = actions_imageTag()
+    describe = "datahub actions ci pipeline"
+}
+
+def frontend_imageTag() {
+    appVersion = "1.3.0"
+    tag = "${appVersion}" + "-" + "${BUILD_NUMBER}"
+    return tag
+}
+
+def frontend_metaBody = {
+    artifact_id = frontend_imageTag() + "_frontend"
+    image_tag = frontend_imageTag()
+    describe = "datahub frontend ci pipeline"
 }
 
 pipeline {
     agent { label 'SJC' }
+    parameters {
+        choice(name: 'DATAHUB_SERVICE', choices: ['csr', 'gms', 'actions', 'frontend'], description: 'Pick datahub service')
+    }
     tools {
         // Install the Maven version configured as "M3" and add it to the path.
         maven "Maven3.6.3"
@@ -63,10 +104,21 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    buildArgs1 = [component: "csr", tag: imageTag(), metadata: csr_metaBody]
+                    buildArgsCsr = [component: "csr", tag: csr_imageTag(), metadata: csr_metaBody]
+                    buildArgsGms = [component: "gms", tag: gms_imageTag(), metadata: gms_metaBody]
+                    buildArgsActions = [component: "csr", tag: actions_imageTag(), metadata: actions_metaBody]
+                    buildArgsFrontend = [component: "frontend", tag: frontend_imageTag(), metadata: frontend_metaBody]
                 }
                 script {
-                    buildCI(this, buildArgs1)
+                    if (params.DATAHUB_SERVICE == 'csr') {
+                        buildCI(this, buildArgsCsr)
+                    } else if (params.DATAHUB_SERVICE == 'gms') {
+                        buildCI(this, buildArgsGms)
+                    } else if (params.DATAHUB_SERVICE == 'actions') {
+                        buildCI(this, buildArgsActions)
+                    } else if (params.DATAHUB_SERVICE == 'frontend') {
+                        buildCI(this, buildArgsFrontend)
+                    }
                 }
             }
         }

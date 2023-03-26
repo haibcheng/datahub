@@ -23,6 +23,54 @@
           scan:
             enable: false # skip in workshop
           build: true
+    - name: "registry-qa.webex.com"
+      namespace: "wap-datahub"
+      component: "gms"
+      service_group: "webex-wap"
+      operation_type: "QA-Done"
+      type: docker
+      jenkins-id: "mats_credential_id_github_token"
+      publish: true
+      publish-always: true  # only used in workshop, for publish branch images.
+      docker:
+        - dockerfile: ./Dockerfile4Gms
+          lint:
+            enable: false # skip in workshop
+          scan:
+            enable: false # skip in workshop
+          build: true
+    - name: "registry-qa.webex.com"
+      namespace: "wap-datahub"
+      component: "actions"
+      service_group: "webex-wap"
+      operation_type: "QA-Done"
+      type: docker
+      jenkins-id: "mats_credential_id_github_token"
+      publish: true
+      publish-always: true  # only used in workshop, for publish branch images.
+      docker:
+        - dockerfile: ./Dockerfile4Actions
+          lint:
+            enable: false # skip in workshop
+          scan:
+            enable: false # skip in workshop
+          build: true
+    - name: "registry-qa.webex.com"
+      namespace: "wap-datahub"
+      component: "frontend"
+      service_group: "webex-wap"
+      operation_type: "QA-Done"
+      type: docker
+      jenkins-id: "mats_credential_id_github_token"
+      publish: true
+      publish-always: true  # only used in workshop, for publish branch images.
+      docker:
+        - dockerfile: ./Dockerfile4Frontend
+          lint:
+            enable: false # skip in workshop
+          scan:
+            enable: false # skip in workshop
+          build: true
 #    - name: "registry-qa.webex.com"
 #      namespace: "webexkubed"
 #      component: "iw-backend"
