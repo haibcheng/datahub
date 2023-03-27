@@ -185,6 +185,15 @@ export interface IOracleSourceInput extends IBasicDataSourceInput {
     status?: string;
 }
 
+export interface ISnowflakeSourceInput extends IBasicDataSourceInput {
+    hostPort?: string;
+    minSize?: number;
+    maxSize?: number;
+    idleSize?: number;
+    status?: string;
+    connectionParams?: string;
+}
+
 export interface IDatasourceSourceInput {
     dataCenter: string;
     iceberg?: IIcebergSourceInput;
@@ -197,4 +206,5 @@ export interface IDatasourceSourceInput {
     presto?: IPrestoSourceInput;
     trino?: ITrinoSourceInput;
     pinot?: IPinotSourceInput;
+    snowflake?: ISnowflakeSourceInput;
 }

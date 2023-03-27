@@ -466,6 +466,18 @@ export default function AddDataSourceModal({
                 };
                 break;
             }
+            case DbSourceTypeData.Snowflake: {
+                conn = {
+                    ...conn,
+                    snowflake: {
+                        username: formData.connections[ix].username || '',
+                        password: formData.connections[ix].password || '',
+                        hostPort: formData.connections[ix].hostPort || '',
+                        connectionParams: formData.connections[ix].connectionParams || '',
+                    },
+                };
+                break;
+            }
             default: {
                 break;
             }
