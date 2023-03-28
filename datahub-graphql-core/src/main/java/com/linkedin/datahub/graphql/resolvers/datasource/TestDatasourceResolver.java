@@ -7,11 +7,14 @@ import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.pinot.client.PinotDriver;
 
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.Base64;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
@@ -100,6 +103,11 @@ public class TestDatasourceResolver implements DataFetcher<CompletableFuture<Boo
             final String jdbcUrl = parseJdbcUrl(type, sourceInput);
 
             return CompletableFuture.supplyAsync(() -> {
+
+                if(!changedPinotDriverOrder) {
+                    changePinotOrder();
+                }
+
                 try (Connection conn = DriverManager.getConnection(jdbcUrl, props);
                      Statement stat = conn.createStatement()) {
                     stat.executeQuery(input.getTestQuerySql());
@@ -113,6 +121,28 @@ public class TestDatasourceResolver implements DataFetcher<CompletableFuture<Boo
         }
 
         throw new IllegalArgumentException("Not support type:" + type);
+    }
+
+    private static volatile boolean changedPinotDriverOrder = false;
+    private static synchronized void changePinotOrder() {
+        if(changedPinotDriverOrder) {
+            return;
+        }
+        Driver target = null;
+        for(Iterator<Driver> iter = DriverManager.getDrivers().asIterator(); iter.hasNext();) {
+            target = iter.next();
+            if(target instanceof PinotDriver) {
+                break;
+            }
+        }
+        if(target != null) {
+            try {
+                DriverManager.deregisterDriver(target);
+                DriverManager.registerDriver(target);
+            } catch (Exception ignored) {
+            }
+        }
+        changedPinotDriverOrder = true;
     }
 
     private static String parseJdbcUrl(String type, DatasourceSourceInput sourceInput) {
