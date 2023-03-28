@@ -114,8 +114,14 @@ pipeline {
                     sh """#!/bin/bash -xe
                           echo \"Build CI for ${params.DATAHUB_SERVICE}\"
                     """
+
                     if (params.DATAHUB_SERVICE == 'csr') {
-//                         buildCI(this, buildArgsCsr)
+                        buildCI(this, buildArgsCsr)
+
+                        sh """#!/bin/bash -xe
+                              echo `docker images -a | grep \"${params.DATAHUB_SERVICE}\"`
+                              echo `docker images -a`
+                        """
 
                         imageTag = "csr:" + csr_imageTag()
                         sh """#!/bin/bash -xe
@@ -126,6 +132,11 @@ pipeline {
                     } else if (params.DATAHUB_SERVICE == 'gms') {
                         buildCI(this, buildArgsGms)
 
+                        sh """#!/bin/bash -xe
+                              echo `docker images -a | grep \"${params.DATAHUB_SERVICE}\"`
+                              echo `docker images -a`
+                        """
+
                         imageTag = "gms:" + gms_imageTag()
                         sh """#!/bin/bash -xe
                               echo \"Removing ${imageTag}\"
@@ -135,6 +146,11 @@ pipeline {
                     } else if (params.DATAHUB_SERVICE == 'actions') {
                         buildCI(this, buildArgsActions)
 
+                        sh """#!/bin/bash -xe
+                              echo `docker images -a | grep \"${params.DATAHUB_SERVICE}\"`
+                              echo `docker images -a`
+                        """
+
                         imageTag = "actions:" + actions_imageTag()
                         sh """#!/bin/bash -xe
                               echo \"Removing ${imageTag}\"
@@ -143,6 +159,11 @@ pipeline {
                         """
                     } else if (params.DATAHUB_SERVICE == 'frontend') {
                         buildCI(this, buildArgsFrontend)
+
+                        sh """#!/bin/bash -xe
+                              echo `docker images -a | grep \"${params.DATAHUB_SERVICE}\"`
+                              echo `docker images -a`
+                        """
 
                         imageTag = "frontend:" + frontend_imageTag()
                         sh """#!/bin/bash -xe
