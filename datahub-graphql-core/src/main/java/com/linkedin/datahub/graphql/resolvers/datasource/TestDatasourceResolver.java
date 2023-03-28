@@ -1,5 +1,7 @@
 package com.linkedin.datahub.graphql.resolvers.datasource;
 
+import com.linkedin.datahub.graphql.exception.DataHubGraphQLErrorCode;
+import com.linkedin.datahub.graphql.exception.DataHubGraphQLException;
 import com.linkedin.datahub.graphql.generated.DatasourceSourceInput;
 import com.linkedin.datahub.graphql.generated.DatasourceTestInput;
 import com.linkedin.datasource.sources.*;
@@ -32,6 +34,10 @@ public class TestDatasourceResolver implements DataFetcher<CompletableFuture<Boo
 
         final DatasourceTestInput input = bindArgument(inputMap, DatasourceTestInput.class);
         DatasourceSourceInput sourceInput = input.getConnection();
+
+        if(StringUtils.isEmpty(input.getTestQuerySql())) {
+            throw new DataHubGraphQLException("Test sql is required", DataHubGraphQLErrorCode.BAD_REQUEST);
+        }
 
         String type;
         Properties props = new Properties();
