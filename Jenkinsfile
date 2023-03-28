@@ -151,6 +151,10 @@ pipeline {
                               echo \"Remove local ${imageTag} successfully\"
                         """
                     }
+
+                    sh """#!/bin/bash -xe
+                          docker images -a | grep \"${params.DATAHUB_SERVICE}\"
+                    """
                 }
             }
         }
