@@ -1816,7 +1816,7 @@ export const WelcomePageBody = () => {
             </CardContainer>
         );
     };
-    const cardThree = () => {
+    const cardFour = () => {
         return (
             <CardContainer>
                 <CardFigure>
@@ -1859,7 +1859,7 @@ export const WelcomePageBody = () => {
             </CardContainer>
         );
     };
-    const cardFour = () => {
+    const cardThree = () => {
         return (
             <CardContainer>
                 <CardFigure>
