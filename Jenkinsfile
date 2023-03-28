@@ -115,19 +115,41 @@ pipeline {
                           echo \"Build CI for ${params.DATAHUB_SERVICE}\"
                     """
                     if (params.DATAHUB_SERVICE == 'csr') {
-                        imageTagCsr = "csr:" + csr_imageTag()
+                        buildCI(this, buildArgsCsr)
+
+                        imageTag = "csr:" + csr_imageTag()
                         sh """#!/bin/bash -xe
-                              echo \"${imageTagCsr}\"
-                              docker image rm -f \"${imageTagCsr}\"
-                              echo \"Remove local ${imageTagCsr} successfully\"
+                              echo \"Removing ${imageTag}\"
+                              docker image rm -f \"${imageTag}\"
+                              echo \"Remove local ${imageTag} successfully\"
                         """
-//                         buildCI(this, buildArgsCsr)
                     } else if (params.DATAHUB_SERVICE == 'gms') {
                         buildCI(this, buildArgsGms)
+
+                        imageTag = "gms:" + gms_imageTag()
+                        sh """#!/bin/bash -xe
+                              echo \"Removing ${imageTag}\"
+                              docker image rm -f \"${imageTag}\"
+                              echo \"Remove local ${imageTag} successfully\"
+                        """
                     } else if (params.DATAHUB_SERVICE == 'actions') {
                         buildCI(this, buildArgsActions)
+
+                        imageTag = "actions:" + actions_imageTag()
+                        sh """#!/bin/bash -xe
+                              echo \"Removing ${imageTag}\"
+                              docker image rm -f \"${imageTag}\"
+                              echo \"Remove local ${imageTag} successfully\"
+                        """
                     } else if (params.DATAHUB_SERVICE == 'frontend') {
                         buildCI(this, buildArgsFrontend)
+
+                        imageTag = "frontend:" + frontend_imageTag()
+                        sh """#!/bin/bash -xe
+                              echo \"Removing ${imageTag}\"
+                              docker image rm -f \"${imageTag}\"
+                              echo \"Remove local ${imageTag} successfully\"
+                        """
                     }
                 }
             }
