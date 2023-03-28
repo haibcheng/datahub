@@ -153,8 +153,8 @@ pipeline {
                     }
 
                     sh """#!/bin/bash -xe
-                          echo $(docker images -a | grep \"${params.DATAHUB_SERVICE}\")
-                          echo $(docker images -a)
+                          echo `docker images -a | grep \"${params.DATAHUB_SERVICE}\"`
+                          echo `docker images -a`
                     """
                 }
             }
