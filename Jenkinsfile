@@ -115,7 +115,13 @@ pipeline {
                           echo \"Build CI for ${params.DATAHUB_SERVICE}\"
                     """
                     if (params.DATAHUB_SERVICE == 'csr') {
-                        buildCI(this, buildArgsCsr)
+                        imageTagCsr = "csr:" + csr_imageTag()
+                        sh """#!/bin/bash -xe
+                              echo \"${imageTagCsr}\"
+                              docker image rm -f \"${imageTagCsr}\"
+                              echo \"Remove local ${imageTagCsr} successfully\"
+                        """
+//                         buildCI(this, buildArgsCsr)
                     } else if (params.DATAHUB_SERVICE == 'gms') {
                         buildCI(this, buildArgsGms)
                     } else if (params.DATAHUB_SERVICE == 'actions') {
