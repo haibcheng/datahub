@@ -1,29 +1,9 @@
 import os
-import trino
 import unittest
 from wap_actions.service.ci_token import CITokenConfig, CITokenService
 
 
 class TestFunctions(unittest.TestCase):
-
-    def test_trino(self):
-        pa = os.getenv('MY_TRINO_PASSWORD')
-        conn = trino.dbapi.connect(
-            host='hdsj1ptc001.webex.com',
-            port=8443,
-            catalog='wpsj1_pinot',
-            http_scheme='https',
-            schema='default',
-            verify='/Users/haicheng/Documents/App/trino/trinoroot.pem',
-            auth=trino.auth.BasicAuthentication(username='datahub.gen', password=pa)
-        )
-        cur = conn.cursor()
-        cur.arraysize = 1000  # sets the number of records the cursor will fetch at a time
-        cur.execute('SELECT distinct clientType FROM wme_metrics_customer_report ORDER BY clientType')
-        rows = cur.fetchmany()
-        for row in rows:
-            print(row)
-        self.assertTrue(len(rows) > 0)
 
     def test_notify(self):
 
