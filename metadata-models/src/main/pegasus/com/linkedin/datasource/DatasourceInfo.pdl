@@ -1,6 +1,7 @@
 namespace com.linkedin.datasource
 
 import com.linkedin.common.CorpGroupUrn
+import com.linkedin.common.AuditStamp
 
 @Aspect = {
   "name": "datasourceInfo"
@@ -24,4 +25,9 @@ record DatasourceInfo {
   name: optional string
 
   testQuerySql: optional string
+
+  lastModified: AuditStamp = {
+    "time": 0,
+    "actor": "urn:li:corpuser:unknown"
+  }
 }
