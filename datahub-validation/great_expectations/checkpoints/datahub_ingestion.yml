@@ -4,6 +4,9 @@ module_name: great_expectations.checkpoint
 class_name: Checkpoint
 run_name_template: '%Y%m%d-%H%M%S'
 action_list:
+  - name: store_validation_result
+    action:
+      class_name: StoreValidationResultAction
   - name: datahub_action
     action:
       module_name: datahub.integrations.great_expectations.action

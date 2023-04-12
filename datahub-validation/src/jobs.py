@@ -100,6 +100,20 @@ class OnceJob:
             self.value_of(params_dict, Constant.db_source_password)
         config_variables['db_creds']['database'] = \
             self.value_of(params_dict, Constant.db_source_name)
+
+        config_variables['store_db_creds']['drivername'] = \
+            self.value_of(params_dict, Constant.db_target_driver_name)
+        config_variables['store_db_creds']['host'] = \
+            self.value_of(params_dict, Constant.db_target_host)
+        config_variables['store_db_creds']['port'] = \
+            int(self.value_of(params_dict, Constant.db_target_port))
+        config_variables['store_db_creds']['username'] = \
+            self.value_of(params_dict, Constant.db_target_user)
+        config_variables['store_db_creds']['password'] = \
+            self.value_of(params_dict, Constant.db_target_password)
+        config_variables['store_db_creds']['database'] = \
+            self.value_of(params_dict, Constant.db_target_name)
+
         config_variables['gms_platform_alias'] = \
             self.value_of(params_dict, Constant.gms_platform_alias)
         config_variables['gms_exclude_dbname'] = \
