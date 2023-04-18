@@ -107,7 +107,7 @@ pipeline {
                     sh """#!/bin/sh
                         # prune docker images older than 4 hours
 
-                        docker image prune -a -f --filter "until=4h"
+                        docker image prune -a -f --filter "until=1h"
                         echo 'y'| docker builder prune
                     """
 
