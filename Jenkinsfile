@@ -80,24 +80,8 @@ pipeline {
 //                 script {
 //                     sh "sed -i 's/: $SERVICE_ID/: $SERVICE_ID$HELM_SUFFIX/g' $SERVICE_ID/src/main/resources/bootstrap.yaml"
 //                 }
-//                 echo "Build by maven."
-//                 sh '. /etc/profile'
-//                 sh 'which mvn'
-//                 sh 'which java'
-//                 sh 'mvn --version'
                 sh 'pwd'
                 sh 'ls -la'
-//                 sh 'cd WBXmatsrainierSAPservice'
-//                 sh 'pwd'
-//                 sh 'cd WBXmatsrainierSAPservice && mvn clean'
-//                 sh 'rm -rf WBXmatsrainierSAPservice/advanced-diagnostic-meeting/lib/* || echo "delete lib error"'
-//                 sh 'cp WBXmatsrainierSAPservice/advanced-diagnostic-meeting/settings.xml ~/.m2/'
-//                 sh 'cp WBXmatsrainierSAPservice/advanced-diagnostic-meeting/settings-security.xml ~/.m2/'
-//                 sh 'ls -la'
-//                 sh 'cd WBXmatsrainierSAPservice && mvn install -pl advanced-diagnostic-common -Dmaven.test.skip=true'
-//                 sh 'cd WBXmatsrainierSAPservice && mvn install -pl advanced-diagnostic-data -Dmaven.test.skip=true'
-//                 sh 'cd WBXmatsrainierSAPservice/advanced-diagnostic-meeting && mvn package -Dmaven.test.skip=true'
-//                 sh 'cd WBXmatsrainierSAPservice/advanced-diagnostic-meeting && ls -al lib'
             }
         }
 
@@ -118,6 +102,13 @@ pipeline {
                     sh """#!/bin/bash -xe
                           echo `docker images -a | grep \"${params.DATAHUB_SERVICE}\"`
                           echo `docker images -a`
+                    """
+
+                    sh """#!/bin/sh
+                        # prune docker images older than 4 hours
+
+                        docker image prune -a -f --filter "until=4h"
+                        echo 'y'| docker builder prune
                     """
 
                     if (params.DATAHUB_SERVICE == 'csr') {
