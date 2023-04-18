@@ -26,6 +26,14 @@ db_creds:
   password: ${DB_SOURCE_PASSWORD}
   database: ${DB_SOURCE_NAME}
 
+store_db_creds:
+  drivername: ${DB_TARGET_DRIVER_NAME}
+  host: ${DB_TARGET_HOST}
+  port: ${DB_TARGET_PORT}
+  username: ${DB_TARGET_USER}
+  password: ${DB_TARGET_PASSWORD}
+  database: ${DB_TARGET_NAME}
+
 ge_data_asset_name: ${GE_DATE_ASSET_NAME}
 ge_expectation_suite: ${GE_EXPECTATION_SUITE}
 

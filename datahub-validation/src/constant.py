@@ -16,6 +16,13 @@ class Constant:
     ge_data_asset_name = 'GE_DATA_ASSET_NAME'
     ge_expectation_suite = 'GE_EXPECTATION_SUITE'
 
+    db_target_name = 'DB_TARGET_NAME'
+    db_target_driver_name = 'DB_TARGET_DRIVER_NAME'
+    db_target_host = 'DB_TARGET_HOST'
+    db_target_port = 'DB_TARGET_PORT'
+    db_target_user = 'DB_TARGET_USER'
+    db_target_password = 'DB_TARGET_PASSWORD'
+
     '''
     Configuration in env file
     '''

@@ -1,6 +1,6 @@
 ARG FIPS=nonfips
 
-FROM registry-rmc.webex.com/mats/alma8-${FIPS}:1.4.202303 as base
+FROM registry-rmc.webex.com/mats/alma8-${FIPS}:1.5.202304 as base
 ENV USER=alma
 
 ENV ZK_VERSION=3.7.1

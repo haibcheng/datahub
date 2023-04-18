@@ -34,6 +34,7 @@ import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 
 import javax.annotation.Nonnull;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -199,6 +200,11 @@ public class CreateDatasourceResolver implements DataFetcher<CompletableFuture<S
         String sourceRegion = input.getRegion().trim();
         datasourceInfo.setRegion(sourceRegion);
         datasourceInfo.setName(sourceName);
+
+        AuditStamp lastModified = new AuditStamp();
+        lastModified.setTime(new Date().getTime());
+        lastModified.setActor(UrnUtils.getUrn(context.getActorUrn()));
+        datasourceInfo.setLastModified(lastModified);
 
         if (input.getGroup() != null) {
             CorpGroupUrn corpGroupUrn = CorpGroupUrn.createFromString(input.getGroup());
